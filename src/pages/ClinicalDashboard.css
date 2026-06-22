@@ -1,0 +1,64 @@
+.clinical-dashboard {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.clinical-dashboard__center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.clinical-dashboard__twin-controls {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-muted);
+  background: rgba(11, 14, 20, 0.6);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.clinical-dashboard__state-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clinical-dashboard__state-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-full);
+  color: var(--on-surface-variant);
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.clinical-dashboard__state-btn:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: var(--state-color, var(--outline));
+  color: var(--state-color, var(--on-surface));
+}
+
+.clinical-dashboard__state-btn--active {
+  background: color-mix(in srgb, var(--state-color, var(--primary)) 15%, transparent);
+  border-color: var(--state-color, var(--primary));
+  color: var(--state-color, var(--primary));
+}
+
+.clinical-dashboard__state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

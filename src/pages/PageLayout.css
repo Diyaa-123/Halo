@@ -1,0 +1,73 @@
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 24px;
+}
+
+.page-layout__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 24px 0;
+}
+
+.page-layout__title-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-layout__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin-bottom: 4px;
+}
+
+.page-layout__subtitle {
+  font-size: 13px;
+  color: var(--on-surface-variant);
+}
+
+.page-layout__filters {
+  display: flex;
+  gap: 8px;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-muted);
+}
+
+.page-layout__filter-btn {
+  background: transparent;
+  border: none;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.page-layout__filter-btn:hover {
+  color: var(--on-surface);
+}
+
+.page-layout__filter-btn--active {
+  background: var(--primary-container);
+  color: var(--primary);
+}
+
+.page-layout__content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px; /* For scrollbar breathing room */
+}
+
+.page-layout__content::-webkit-scrollbar {
+  display: none;
+}

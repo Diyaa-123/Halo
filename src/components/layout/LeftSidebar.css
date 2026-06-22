@@ -1,0 +1,46 @@
+.left-sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--surface-container-low);
+  border-right: 1px solid var(--border-muted);
+  padding: 12px 10px;
+}
+
+.left-sidebar__vitals-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 6px 4px;
+  flex-shrink: 0;
+}
+
+.left-sidebar__vitals-live {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--secondary);
+}
+
+.left-sidebar__vitals-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--secondary);
+  animation: blink 1s ease-in-out infinite;
+}
+
+.left-sidebar__vitals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}

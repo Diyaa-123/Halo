@@ -1,0 +1,101 @@
+/* ============================================
+   SilentSense Design Tokens
+   Light Glassmorphic Theme (Home Care Context)
+   ============================================ */
+
+:root {
+  /* === SURFACE COLORS === */
+  --surface: #ffffff;
+  --surface-dim: #f8f9fa;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8f9fa;
+  --surface-container: #f1f3f5;
+  --surface-container-high: #e9ecef;
+  --surface-container-highest: #dee2e6;
+  --surface-variant: #e9ecef;
+
+  /* === ON-SURFACE COLORS === */
+  --on-surface: #1E293B; /* Dark slate for primary text */
+  --on-surface-variant: #64748B; /* Gray for secondary text */
+
+  /* === OUTLINE === */
+  --outline: #94A3B8;
+  --outline-variant: #CBD5E1;
+  --border-muted: #E2E8F0;
+
+  /* === PRIMARY (Vibrant Blue) === */
+  --primary: #1a56db;
+  --primary-hover: #1e40af;
+  --on-primary: #ffffff;
+  --primary-container: #dbeafe;
+  --on-primary-container: #1e3a8a;
+  
+  /* === SECONDARY (Healthy Green) === */
+  --secondary: #22C55E;
+  --on-secondary: #ffffff;
+  --secondary-container: #dcfce7;
+  --on-secondary-container: #14532d;
+
+  /* === BACKGROUND === */
+  --background: #F4F4F0; /* Off-white/beige background */
+  --on-background: #1E293B;
+
+  /* === STATUS COLORS === */
+  --emergency-red: #EF4444;
+  --warning-amber: #F59E0B;
+  --healthy-green: #22C55E;
+  --stable-blue: #3B82F6;
+
+  /* === TYPOGRAPHY === */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  --font-size-display-lg: 48px;
+  --font-weight-display-lg: 700;
+  --line-height-display-lg: 56px;
+
+  --font-size-headline-lg: 32px;
+  --font-weight-headline-lg: 700;
+  --line-height-headline-lg: 40px;
+
+  --font-size-headline-md: 20px;
+  --font-weight-headline-md: 600;
+  --line-height-headline-md: 28px;
+
+  --font-size-body-lg: 16px;
+  --font-weight-body-lg: 500;
+  --line-height-body-lg: 24px;
+
+  --font-size-body-md: 14px;
+  --font-weight-body-md: 400;
+  --line-height-body-md: 20px;
+
+  --font-size-label-md: 12px;
+  --font-weight-label-md: 600;
+  --line-height-label-md: 16px;
+  --letter-spacing-label-md: 0.02em;
+
+  /* === SPACING === */
+  --grid-margin: 24px;
+  --gutter: 16px;
+  --stack-sm: 8px;
+  --stack-md: 16px;
+  --stack-lg: 24px;
+
+  /* === BORDER RADIUS === */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* === SHADOWS (Soft, diffused for light theme) === */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.03);
+  
+  /* === TRANSITIONS === */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+}

@@ -1,0 +1,113 @@
+.twin-card {
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.twin-top-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 10;
+}
+
+.twin-controls-group {
+  display: flex;
+  gap: 8px;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-muted);
+}
+
+.twin-controls-group .btn-icon {
+  width: 36px;
+  height: 36px;
+  box-shadow: none;
+}
+
+.twin-view-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.twin-fab {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 16px rgba(26, 86, 219, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.twin-fab:hover {
+  transform: translateY(-50%) scale(1.05);
+  background: #1d4ed8;
+}
+
+.twin-bottom-controls {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10;
+}
+
+.twin-zoom-controls {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-muted);
+  padding: 4px;
+  gap: 4px;
+}
+
+.twin-zoom-controls .btn-icon {
+  box-shadow: none;
+}
+
+.twin-zoom-divider {
+  width: 16px;
+  height: 1px;
+  background: var(--border-muted);
+  margin: 0 auto;
+}
+
+/* Light mode overrides for the SVG twin */
+.twin-light-mode .hologram-grid,
+.twin-light-mode .hologram-rings {
+  opacity: 0.1;
+  stroke: var(--primary);
+}
+
+.twin-light-mode .twin-body-base {
+  fill: #e2e8f0;
+  stroke: #cbd5e1;
+}
+
+.twin-light-mode .twin-body-glow {
+  opacity: 0 !important;
+}
