@@ -2,6 +2,26 @@ import React from 'react';
 import './ProfileColumn.css';
 
 export default function ProfileColumn({ isNightMode = true }) {
+  const resident = {
+    name: 'Mr. Raghav Iyer',
+    title: 'Resident Profile',
+    age: 79,
+    gender: 'Male',
+    location: 'Bedroom 2',
+    ward: 'Assisted Living - West Wing',
+    monitoring: 'Active',
+    healthStatus: 'Stable',
+    avatarInitials: 'RI',
+    condition: 'Hypertension, mild arthritis, and sleep apnea watch',
+    allergies: 'Penicillin, peanuts',
+    mobilityStatus: 'Walks with cane; supervised at night',
+    lastCheckIn: 'Today, 08:40 AM',
+    physician: 'Dr. Meera Rao',
+    emergencyContact: 'Anita Iyer, Daughter',
+    medication: 'Amlodipine, evening oxygen support',
+    residentId: 'RS-2048-19',
+  };
+
   return (
     <>
       <div className="glass-card profile-card">
@@ -9,29 +29,75 @@ export default function ProfileColumn({ isNightMode = true }) {
         <div className="profile-header">
           <div className="profile-plan">
             <span className="material-icons icon-sm" style={{ color: 'var(--primary)' }}>house</span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--primary)' }}>SilentSense Home</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--primary)' }}>{resident.title}</span>
           </div>
-          <h2 className="profile-name">Dad (Arun)</h2>
+          <h2 className="profile-name">{resident.name}</h2>
+          <p className="profile-blurb">{resident.condition}</p>
         </div>
 
         {/* Basic Info */}
         <div className="profile-info-block">
-          <img src="https://i.pravatar.cc/150?img=68" alt="Profile" className="profile-avatar" />
+          <div className="profile-avatar" aria-hidden="true">
+            <span className="profile-avatar__initials">{resident.avatarInitials}</span>
+          </div>
           <div className="profile-stats">
             <div className="stat-group">
               <span className="stat-label">Monitoring Active</span>
-              <span className="stat-val" style={{ color: 'var(--secondary)' }}>Yes</span>
+              <span className="stat-val" style={{ color: 'var(--secondary)' }}>{resident.monitoring}</span>
             </div>
-            <div style={{ display: 'flex', gap: 24, marginTop: 12 }}>
+            <div className="profile-meta-row">
               <div className="stat-group">
                 <span className="stat-label">Age</span>
-                <span className="stat-val">76</span>
+                <span className="stat-val">{resident.age}</span>
+              </div>
+              <div className="stat-group">
+                <span className="stat-label">Gender</span>
+                <span className="stat-val">{resident.gender}</span>
               </div>
               <div className="stat-group">
                 <span className="stat-label">Location</span>
-                <span className="stat-val">Living Room</span>
+                <span className="stat-val">{resident.location}</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="profile-detail-grid">
+          <div className="profile-detail-item">
+            <span className="stat-label">Ward</span>
+            <span className="stat-val">{resident.ward}</span>
+          </div>
+          <div className="profile-detail-item">
+            <span className="stat-label">Resident ID</span>
+            <span className="stat-val">{resident.residentId}</span>
+          </div>
+          <div className="profile-detail-item">
+            <span className="stat-label">Physician</span>
+            <span className="stat-val">{resident.physician}</span>
+          </div>
+          <div className="profile-detail-item">
+            <span className="stat-label">Emergency Contact</span>
+            <span className="stat-val">{resident.emergencyContact}</span>
+          </div>
+        </div>
+
+        <div className="profile-note">
+          <span className="material-icons icon-sm">pill</span>
+          <span>{resident.medication}</span>
+        </div>
+
+        <div className="profile-clinical-grid">
+          <div className="profile-clinical-item">
+            <span className="stat-label">Allergies</span>
+            <span className="stat-val">{resident.allergies}</span>
+          </div>
+          <div className="profile-clinical-item">
+            <span className="stat-label">Mobility Status</span>
+            <span className="stat-val">{resident.mobilityStatus}</span>
+          </div>
+          <div className="profile-clinical-item">
+            <span className="stat-label">Last Check-In</span>
+            <span className="stat-val">{resident.lastCheckIn}</span>
           </div>
         </div>
 

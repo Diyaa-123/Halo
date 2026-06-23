@@ -1,32 +1,39 @@
 import React, { useState } from 'react';
 import './PageLayout.css';
+import './AnalyticsPage.css';
 
 function MiniSparkline({ data, color, w = 120, h = 40 }) {
-  const min = Math.min(...data), max = Math.max(...data);
+  const min = Math.min(...data);
+  const max = Math.max(...data);
   const range = max - min || 1;
-  const pts = data.map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * (h - 6) - 3}`);
-  const area = `M${pts[0]} L${pts.join(' L')} L${w},${h} L0,${h} Z`;
+  const points = data.map((value, index) => {
+    const x = (index / (data.length - 1)) * w;
+    const y = h - ((value - min) / range) * (h - 6) - 3;
+    return `${x},${y}`;
+  });
+  const area = `M${points[0]} L${points.join(' L')} L${w},${h} L0,${h} Z`;
+
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h}>
       <defs>
-        <linearGradient id={`g${color}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.3"/>
-          <stop offset="100%" stopColor={color} stopOpacity="0"/>
+        <linearGradient id={`g-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.28" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={area} fill={`url(#g${color})`}/>
-      <polyline points={pts.join(' ')} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      <path d={area} fill={`url(#g-${color.replace('#', '')})`} />
+      <polyline points={points.join(' ')} fill="none" stroke={color} strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 const analyticsData = {
-  breathing: [14,13,12,11,12,10,9,11,12,11,10,9,8,10,12,13,11,10,9,8,9,10,11,12],
-  heart: [72,74,73,71,72,75,78,76,74,73,72,71,70,72,74,73,72,71,70,72,74,75,73,72],
-  sleep: [82,80,78,75,72,70,68,72,75,78,80,82,85,83,80,78,76,74,72,70,68,70,72,75],
-  agitation: [10,12,15,18,20,22,24,25,22,20,18,20,22,25,28,30,28,25,22,20,18,16,14,12],
-  mobility: [75,74,73,72,71,70,69,68,67,65,64,65,66,67,68,67,66,65,64,63,62,63,64,65],
-  nutrition: [80,82,83,81,80,78,76,78,80,82,83,81,80,78,76,74,72,74,76,78,80,82,84,82],
+  breathing: [14, 13, 12, 11, 12, 10, 9, 11, 12, 11, 10, 9, 8, 10, 12, 13, 11, 10, 9, 8, 9, 10, 11, 12],
+  heart: [72, 74, 73, 71, 72, 75, 78, 76, 74, 73, 72, 71, 70, 72, 74, 73, 72, 71, 70, 72, 74, 75, 73, 72],
+  sleep: [82, 80, 78, 75, 72, 70, 68, 72, 75, 78, 80, 82, 85, 83, 80, 78, 76, 74, 72, 70, 68, 70, 72, 75],
+  agitation: [10, 12, 15, 18, 20, 22, 24, 25, 22, 20, 18, 20, 22, 25, 28, 30, 28, 25, 22, 20, 18, 16, 14, 12],
+  mobility: [75, 74, 73, 72, 71, 70, 69, 68, 67, 65, 64, 65, 66, 67, 68, 67, 66, 65, 64, 63, 62, 63, 64, 65],
+  nutrition: [80, 82, 83, 81, 80, 78, 76, 78, 80, 82, 83, 81, 80, 78, 76, 74, 72, 74, 76, 78, 80, 82, 84, 82],
 };
 
 const chartConfigs = [
@@ -38,75 +45,105 @@ const chartConfigs = [
   { key: 'nutrition', label: 'Nutrition Adherence', unit: '%', color: '#4edea3', icon: 'restaurant', status: 'stable' },
 ];
 
+const heatmapZones = ['Bedroom', 'Bathroom', 'Living', 'Kitchen', 'Corridor'];
+const heatmapValues = Array.from({ length: 24 }, (_, hour) =>
+  heatmapZones.map((_, zoneIndex) => {
+    const rhythm = Math.sin((hour + zoneIndex * 3) / 3.2) * 0.32 + 0.5;
+    return Math.max(0.08, Math.min(0.96, rhythm + zoneIndex * 0.05 - (zoneIndex === 1 && hour >= 1 && hour <= 4 ? 0.18 : 0)));
+  })
+);
+
 export default function AnalyticsPage() {
   const [filter, setFilter] = useState('24h');
   const filters = ['24h', '7d', '30d', '90d'];
 
   return (
-    <div className="page-layout">
+    <div className="page-layout analytics-page">
       <div className="page-layout__header">
         <div className="page-layout__title-group">
           <span className="material-icons icon-lg" style={{ color: 'var(--primary)' }}>analytics</span>
           <div>
-            <h1 className="page-layout__title">Analytics</h1>
-            <p className="page-layout__subtitle">Hospital-grade intelligence dashboard — Aarav Mehta</p>
+            <h1 className="page-layout__title">Analytics Overview</h1>
+            <p className="page-layout__subtitle">Hospital-grade intelligence dashboard for Mr. Raghav Iyer</p>
           </div>
         </div>
         <div className="page-layout__filters">
-          {filters.map(f => (
+          {filters.map(item => (
             <button
-              key={f}
-              className={`page-layout__filter-btn ${filter === f ? 'page-layout__filter-btn--active' : ''}`}
-              onClick={() => setFilter(f)}
+              key={item}
+              className={`page-layout__filter-btn ${filter === item ? 'page-layout__filter-btn--active' : ''}`}
+              onClick={() => setFilter(item)}
             >
-              {f}
+              {item}
             </button>
           ))}
         </div>
       </div>
 
       <div className="page-layout__content">
-        {/* Summary KPIs */}
-        <div className="analytics-kpis">
+        <section className="analytics-hero glass-card">
+          <div>
+            <span className="analytics-hero__eyebrow">Unified Summary</span>
+            <h2 className="analytics-hero__title">Cross-domain monitoring with stable clinical signals</h2>
+            <p className="analytics-hero__text">
+              Breathing, sleep, agitation, and mobility all remain within a watchful but stable range. The only notable pressure point is mobility score drift in the evening window.
+            </p>
+          </div>
+
+          <div className="analytics-hero__stats">
+            {[
+              { label: 'Health score', value: '82/100' },
+              { label: 'Alerts today', value: '5' },
+              { label: 'Avg breathing', value: '10.8 BPM' },
+              { label: 'Sleep efficiency', value: '74%' },
+            ].map(item => (
+              <div key={item.label} className="analytics-hero__stat">
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="analytics-kpi-grid">
           {[
             { label: 'Health Score', value: '82', unit: '/100', trend: '-3', color: '#adc6ff' },
             { label: 'Alerts Today', value: '5', unit: 'events', trend: '+2', color: '#EF4444' },
             { label: 'Avg Breathing', value: '10.8', unit: 'BPM', trend: '-1.2', color: '#F59E0B' },
             { label: 'Sleep Efficiency', value: '74', unit: '%', trend: '-4', color: '#ffb786' },
           ].map(kpi => (
-            <div key={kpi.label} className="analytics-kpi glass-card" style={{ '--kpi-color': kpi.color }}>
-              <span className="analytics-kpi__label">{kpi.label}</span>
+            <div key={kpi.label} className="glass-card analytics-kpi" style={{ borderTop: `4px solid ${kpi.color}` }}>
+              <div className="analytics-kpi__label">{kpi.label}</div>
               <div className="analytics-kpi__value-row">
                 <span className="analytics-kpi__value" style={{ color: kpi.color }}>{kpi.value}</span>
                 <span className="analytics-kpi__unit">{kpi.unit}</span>
               </div>
-              <span className="analytics-kpi__trend" style={{ color: kpi.trend.startsWith('+') ? '#EF4444' : '#4edea3' }}>
+              <div className={`analytics-kpi__trend ${kpi.trend.startsWith('+') ? 'analytics-kpi__trend--up' : 'analytics-kpi__trend--down'}`}>
                 {kpi.trend.startsWith('+') ? '↑' : '↓'} {kpi.trend}
-              </span>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Chart Grid */}
-        <div className="analytics-charts">
-          {chartConfigs.map(cfg => {
-            const data = analyticsData[cfg.key];
+        <div className="analytics-grid">
+          {chartConfigs.map(config => {
+            const data = analyticsData[config.key];
             const current = data[data.length - 1];
             return (
-              <div key={cfg.key} className="analytics-chart glass-card">
+              <div key={config.key} className="glass-card analytics-chart">
                 <div className="analytics-chart__header">
                   <div className="analytics-chart__title-row">
-                    <span className="material-icons" style={{ color: cfg.color, fontSize: 16 }}>{cfg.icon}</span>
-                    <span className="analytics-chart__title">{cfg.label}</span>
+                    <span className="material-icons" style={{ color: config.color, fontSize: 16 }}>{config.icon}</span>
+                    <span className="analytics-chart__title">{config.label}</span>
                   </div>
-                  <span className={`badge badge-${cfg.status}`}>{cfg.status.toUpperCase()}</span>
+                  <span className={`badge badge-${config.status}`}>{config.status.toUpperCase()}</span>
                 </div>
                 <div className="analytics-chart__value">
-                  <span style={{ color: cfg.color, fontSize: 28, fontWeight: 800 }}>{current}</span>
-                  <span style={{ color: 'var(--outline)', fontSize: 12, marginLeft: 4 }}>{cfg.unit}</span>
+                  <span style={{ color: config.color }}>{current}</span>
+                  <small>{config.unit}</small>
                 </div>
-                <MiniSparkline data={data} color={cfg.color} w={200} h={60} />
-                <div className="analytics-chart__xaxis">
+                <MiniSparkline data={data} color={config.color} w={220} h={64} />
+                <div className="analytics-chart__axis">
                   <span>00:00</span>
                   <span>06:00</span>
                   <span>12:00</span>
@@ -118,33 +155,74 @@ export default function AnalyticsPage() {
           })}
         </div>
 
-        {/* Occupancy Heatmap */}
-        <div className="analytics-heatmap glass-card">
-          <div className="analytics-heatmap__title">
-            <span className="material-icons" style={{ color: 'var(--primary)', fontSize: 16 }}>map</span>
-            Occupancy Heatmap — 24h
-          </div>
-          <div className="analytics-heatmap__grid">
-            {Array.from({ length: 24 }, (_, h) => (
-              <div key={h} className="analytics-heatmap__col">
-                <div className="analytics-heatmap__hour">{h.toString().padStart(2, '0')}</div>
-                {['Bedroom', 'Bathroom', 'Living', 'Kitchen', 'Corridor'].map(zone => {
-                  const activity = Math.random();
-                  const color = activity > 0.7 ? 'rgba(77,142,255,0.7)'
-                    : activity > 0.4 ? 'rgba(77,142,255,0.35)'
-                    : activity > 0.1 ? 'rgba(77,142,255,0.12)'
-                    : 'rgba(255,255,255,0.02)';
-                  return (
-                    <div key={zone} className="analytics-heatmap__cell" style={{ background: color }} title={`${zone}: ${h}:00`} />
-                  );
-                })}
+        <div className="analytics-bottom-grid">
+          <div className="glass-card analytics-heatmap">
+            <div className="analytics-heatmap__header">
+              <div>
+                <h3 className="analytics-section-title">Occupancy Heatmap</h3>
+                <p className="analytics-section-subtitle">24-hour zone activity using deterministic hardcoded patterns</p>
               </div>
-            ))}
+              <span className="badge badge-stable">24h</span>
+            </div>
+
+            <div className="analytics-heatmap__grid">
+              {Array.from({ length: 24 }, (_, hour) => (
+                <div key={hour} className="analytics-heatmap__col">
+                  <div className="analytics-heatmap__hour">{hour.toString().padStart(2, '0')}</div>
+                  {heatmapZones.map((zone, zoneIndex) => {
+                    const intensity = heatmapValues[hour][zoneIndex];
+                    return (
+                      <div
+                        key={zone}
+                        className="analytics-heatmap__cell"
+                        style={{ background: `rgba(77, 142, 255, ${intensity})` }}
+                        title={`${zone} at ${hour}:00`}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+
+            <div className="analytics-heatmap__legend">
+              <span>Low</span>
+              <div className="analytics-heatmap__legend-bar" />
+              <span>High activity</span>
+            </div>
           </div>
-          <div className="analytics-heatmap__legend">
-            <span>Low</span>
-            <div className="analytics-heatmap__legend-bar" />
-            <span>High Activity</span>
+
+          <div className="analytics-side">
+            <div className="glass-card analytics-side__card">
+              <h3 className="analytics-section-title">Clinical Highlights</h3>
+              <div className="analytics-highlight-list">
+                {[
+                  { title: 'Breathing', body: 'Stable range most of the day, no prolonged apnea clusters.' },
+                  { title: 'Mobility', body: 'Evening walk speed drift is the main area under watch.' },
+                  { title: 'Sleep', body: 'Single Friday disruption, otherwise steady overnight recovery.' },
+                ].map(item => (
+                  <div key={item.title} className="analytics-highlight">
+                    <strong>{item.title}</strong>
+                    <p>{item.body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass-card analytics-side__card">
+              <h3 className="analytics-section-title">Snapshot Notes</h3>
+              <div className="analytics-notes">
+                {[
+                  { key: 'Resident', value: 'Mr. Raghav Iyer' },
+                  { key: 'Current watch', value: 'Mobility + sleep' },
+                  { key: 'Observation', value: 'Stable, low agitation' },
+                ].map(item => (
+                  <div key={item.key} className="analytics-note-row">
+                    <span>{item.key}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

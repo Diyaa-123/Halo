@@ -125,6 +125,11 @@
   background: rgba(26, 86, 219, 0.08);
 }
 
+.top-nav__icon-btn--active {
+  color: var(--primary);
+  background: rgba(26, 86, 219, 0.1);
+}
+
 .top-nav__notif-dot {
   position: absolute;
   top: 6px;
