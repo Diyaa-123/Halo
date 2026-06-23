@@ -48,6 +48,7 @@ function BodyPin({ x, y, label, value, tone, pulse = false }) {
 export default function RoomSimPanel({ isNightMode = false }) {
   const [stateIdx, setStateIdx] = useState(isNightMode ? 2 : 0);
   const [respiration, setRespiration] = useState(14.2);
+  const [zoom, setZoom] = useState(1.12);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -70,40 +71,64 @@ export default function RoomSimPanel({ isNightMode = false }) {
     return () => clearInterval(id);
   }, []);
 
+  useEffect(() => {
+    setZoom(isNightMode ? 1.08 : 1.12);
+  }, [isNightMode]);
+
   const activity = STATES[stateIdx];
   const meta = STATE_META[activity];
   const isSleeping = activity === 'sleeping';
-  const pulseTone = isSleeping ? '#4edea3' : activity === 'moving' ? '#F59E0B' : '#3B82F6';
+
+  const clampZoom = (nextZoom) => Math.min(1.8, Math.max(0.82, Math.round(nextZoom * 100) / 100));
+
+  const handleWheel = (event) => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    setZoom((current) => clampZoom(current + (event.deltaY > 0 ? -0.08 : 0.08)));
+  };
 
   return (
     <div className="glass-card room-sim-card human-twin">
       <div className="room-sim-header">
         <div className="room-sim-title">
-          <span className="material-icons" style={{ fontSize: 16, color: 'var(--primary)' }}>
-            accessibility_new
-          </span>
+          <span className="material-icons room-sim-title__icon">accessibility_new</span>
           <div>
             <h3>Human Body Twin</h3>
-            <p>Front view - biometric posture and organ activity</p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="room-sim-header__status">
           <div
             className="room-sim-state-pill"
             style={{ background: meta.bg, border: `1px solid ${meta.border}`, color: meta.color }}
           >
-            <span className="material-icons" style={{ fontSize: 12 }}>
-              {meta.icon}
-            </span>
+            <span className="material-icons room-sim-state-pill__icon">{meta.icon}</span>
             {meta.label}
           </div>
-          <div style={{ fontSize: 9, color: 'var(--outline)' }}>auto-cycles 5s</div>
         </div>
       </div>
 
-      <div className="room-sim-svg-wrap human-twin__stage">
-        <svg viewBox="0 0 440 340" preserveAspectRatio="xMidYMid meet" className="human-twin__svg">
+      <div className="room-sim-body">
+        <div className="room-sim-stage-viewport" onWheel={handleWheel}>
+          <div className="room-sim-float-controls">
+            <button className="btn-icon room-sim-icon-btn" title="Zoom out" onClick={() => setZoom((z) => clampZoom(z - 0.12))}>
+              <span className="material-icons icon-sm">zoom_out</span>
+            </button>
+            <button className="btn-icon room-sim-icon-btn" title="Reset zoom" onClick={() => setZoom(isNightMode ? 1.08 : 1.12)}>
+              <span className="material-icons icon-sm">center_focus_strong</span>
+            </button>
+            <button className="btn-icon room-sim-icon-btn" title="Zoom in" onClick={() => setZoom((z) => clampZoom(z + 0.12))}>
+              <span className="material-icons icon-sm">zoom_in</span>
+            </button>
+          </div>
+
+          <div
+            className="room-sim-stage-scene"
+            style={{
+              transform: `scale(${zoom})`,
+            }}
+          >
+            <svg viewBox="0 0 440 340" preserveAspectRatio="xMidYMid meet" className="human-twin__svg">
           <defs>
             <radialGradient id="humanGlow" cx="50%" cy="42%" r="58%">
               <stop offset="0%" stopColor={meta.color} stopOpacity="0.28" />
@@ -287,26 +312,9 @@ export default function RoomSimPanel({ isNightMode = false }) {
           <BodyPin x={287} y={170} label="ARM" value="120/78" tone={meta.accent} />
           <BodyPin x={182} y={282} label="LEG" value="gait 65" tone={meta.accent} />
           <BodyPin x={258} y={282} label="LEG" value="mobility 71" tone={meta.accent} />
-        </svg>
-      </div>
-
-      <div className="human-twin__summary">
-        <div className="human-twin__metric">
-          <span className="human-twin__metric-label">Respiration</span>
-          <span className="human-twin__metric-value">{isSleeping ? `${respiration.toFixed(1)} brpm` : '14.2 brpm'}</span>
+            </svg>
+          </div>
         </div>
-        <div className="human-twin__metric">
-          <span className="human-twin__metric-label">Posture</span>
-          <span className="human-twin__metric-value">{activity === 'moving' ? 'in motion' : 'stable'}</span>
-        </div>
-        <div className="human-twin__metric">
-          <span className="human-twin__metric-label">Tissue sync</span>
-          <span className="human-twin__metric-value">active</span>
-        </div>
-      </div>
-
-      <div className="room-sim-disclaimer">
-        Real-time body twin mockup. Visual position is illustrative, not sensor-derived.
       </div>
     </div>
   );
