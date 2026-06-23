@@ -1,0 +1,191 @@
+/* RoomSimPanel.css */
+
+.room-sim-card {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 20px 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.room-sim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.room-sim-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.room-sim-title h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin: 0;
+}
+
+.room-sim-title p {
+  font-size: 10px;
+  color: var(--outline);
+  margin: 0;
+}
+
+.room-sim-state-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.room-sim-svg-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.human-twin__stage {
+  position: relative;
+}
+
+.human-twin__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.human-twin__figure {
+  transform-origin: center;
+  animation: bodyFloat 5s ease-in-out infinite;
+}
+
+.human-twin__figure--resting {
+  filter: drop-shadow(0 0 18px rgba(59, 130, 246, 0.2));
+}
+
+.human-twin__figure--moving {
+  filter: drop-shadow(0 0 22px rgba(245, 158, 11, 0.22));
+}
+
+.human-twin__figure--sleeping {
+  filter: drop-shadow(0 0 22px rgba(78, 222, 163, 0.24));
+}
+
+.human-twin__organ-pulse {
+  animation: organPulse 2.8s ease-in-out infinite;
+}
+
+.human-twin__pin-group {
+  pointer-events: none;
+}
+
+.human-twin__pin-pulse {
+  fill: none;
+  stroke-width: 1.5;
+  opacity: 0.45;
+  animation: pinPulse 1.9s ease-out infinite;
+}
+
+.human-twin__pin-core {
+  opacity: 0.95;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.human-twin__pin-label {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.human-twin__pin-value {
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--on-surface);
+  opacity: 0.8;
+}
+
+.human-twin__summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.human-twin__metric {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.human-twin__metric-label {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--outline);
+  margin-bottom: 4px;
+}
+
+.human-twin__metric-value {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--on-surface);
+}
+
+.room-sim-disclaimer {
+  flex-shrink: 0;
+  margin-top: 10px;
+  font-size: 10px;
+  color: var(--outline);
+  text-align: center;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+@keyframes bodyFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes organPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes pinPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.45;
+  }
+  70% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1280px) {
+  .human-twin__summary {
+    grid-template-columns: 1fr;
+  }
+}

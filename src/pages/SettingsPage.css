@@ -1,0 +1,228 @@
+/* ================================================
+   SettingsPage.css
+   ================================================ */
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Card heading */
+.settings-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-muted);
+}
+
+/* Generic row inside a card */
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-muted);
+  font-size: 12px;
+  color: var(--on-surface-variant);
+  gap: 8px;
+}
+
+.settings-row__val {
+  font-weight: 600;
+  color: var(--on-surface);
+  font-size: 12px;
+  text-align: right;
+}
+
+/* Profile block */
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0 14px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.settings-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary-container);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* Toggle switch */
+.toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--surface-container-high);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.22s;
+  flex-shrink: 0;
+}
+
+.toggle--on {
+  background: var(--primary);
+}
+
+.toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.22s;
+  display: block;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.toggle--on .toggle__thumb {
+  transform: translateX(20px);
+}
+
+/* Time inputs */
+.time-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius);
+  background: var(--surface-container-low);
+  color: var(--on-surface);
+  font-size: 13px;
+  font-family: var(--font-family);
+  transition: border-color 0.15s;
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.time-input:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Threshold sliders */
+.threshold-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.threshold-block__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.threshold-block__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.threshold-block__value {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+input[type='range'].slider {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  border-radius: 999px;
+  background: var(--surface-container-high);
+  outline: none;
+}
+
+input[type='range'].slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* Privacy rows */
+.privacy-row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.privacy-row__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.privacy-row__name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.privacy-row__status--yes {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4edea3;
+}
+
+.privacy-row__status--no {
+  font-size: 11px;
+  font-weight: 700;
+  color: #EF4444;
+}
+
+.privacy-row__desc {
+  font-size: 11px;
+  color: var(--on-surface-variant);
+  line-height: 1.45;
+}
+
+/* Contact rows */
+.contact-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.contact-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-row__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.contact-row__meta {
+  font-size: 11px;
+  color: var(--outline);
+}

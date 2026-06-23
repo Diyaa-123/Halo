@@ -7,7 +7,7 @@ export default function HomeDashboard() {
   const [isNightMode, setIsNightMode] = useState(true);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', minHeight: 0 }}>
       {/* Top Controls for Demo / Testing */}
       <div style={{ padding: '0 0 16px 0', display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
         <button 
@@ -24,7 +24,7 @@ export default function HomeDashboard() {
         </button>
       </div>
 
-      <div className="home-dashboard" style={{ flex: 1 }}>
+      <div className="home-dashboard" style={{ flex: 1, minHeight: 0 }}>
         <div className="home-col">
           <ProfileColumn isNightMode={isNightMode} />
         </div>
