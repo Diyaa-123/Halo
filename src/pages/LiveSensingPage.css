@@ -4,8 +4,9 @@
 
 .live-grid {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.82fr);
+  gap: 18px;
+  align-items: start;
 }
 
 /* LIVE badge */
@@ -94,6 +95,117 @@
   border-radius: 8px;
   background: var(--surface-container-low);
   border: 1px solid var(--border-muted);
+}
+
+.floor-plan-svg--realtime {
+  display: block;
+  min-height: 520px;
+}
+
+.live-floor-card {
+  min-height: 720px;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at top left, rgba(122,117,240,0.10), transparent 34%),
+    radial-gradient(circle at top right, rgba(245,158,11,0.08), transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,0.82), rgba(252,251,247,0.92));
+  border: 1px solid rgba(122,117,240,0.12);
+  box-shadow: 0 18px 40px rgba(24, 28, 43, 0.08);
+}
+
+.live-floor-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.live-floor-card__stage {
+  flex: 1;
+  min-height: 570px;
+  display: flex;
+  align-items: center;
+}
+
+.live-floor-card__stage .floor-plan-svg {
+  flex: 1;
+  min-height: 570px;
+}
+
+.live-floor-card__legend {
+  display: flex;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.live-floor-card__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--on-surface-variant);
+}
+
+.live-pillar-card {
+  padding: 16px;
+  background:
+    radial-gradient(circle at top right, rgba(167,139,250,0.12), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,0.92), rgba(250,248,255,0.96));
+  border: 1px solid rgba(167,139,250,0.18);
+  box-shadow: 0 16px 30px rgba(45, 37, 75, 0.08);
+}
+
+.live-pillar-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.live-pillar-card__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.live-pillar-card .pillar-meter {
+  gap: 4px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.74);
+  border: 1px solid rgba(167,139,250,0.09);
+}
+
+.live-pillar-card .pillar-meter__title {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+}
+
+.live-pillar-card .pillar-meter__score {
+  font-size: 12px;
+}
+
+.live-pillar-card .pillar-meter__track {
+  height: 5px;
+}
+
+.live-pillar-card .pillar-meter__desc {
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.confidence-footer--compact {
+  margin-top: 12px;
+  padding: 10px 12px;
+}
+
+.confidence-footer--compact .confidence-footer__value {
+  font-size: 20px;
 }
 
 /* Day mode overlay on vitals card */

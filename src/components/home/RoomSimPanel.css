@@ -4,72 +4,172 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 20px 20px 14px;
+  flex: 1;
+  padding: 14px 16px 12px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 10px;
   position: relative;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(26, 86, 219, 0.06), transparent 32%),
+    radial-gradient(circle at 15% 85%, rgba(34, 197, 94, 0.08), transparent 26%),
+    linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,248,243,0.72));
 }
 
 .room-sim-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
+  align-items: flex-start;
   flex-shrink: 0;
+  gap: 12px;
 }
 
 .room-sim-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  min-width: 0;
+}
+
+.room-sim-title__icon {
+  font-size: 20px !important;
+  color: var(--primary);
+  filter: drop-shadow(0 0 10px rgba(26, 86, 219, 0.18));
 }
 
 .room-sim-title h3 {
-  font-size: 14px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--on-surface);
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
-.room-sim-title p {
-  font-size: 10px;
-  color: var(--outline);
-  margin: 0;
+.room-sim-header__status {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  justify-content: flex-end;
 }
 
 .room-sim-state-pill {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
+  padding: 10px 16px;
   border-radius: 999px;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
+  box-shadow: 0 10px 30px rgba(11, 14, 20, 0.08);
 }
 
-.room-sim-svg-wrap {
+.room-sim-state-pill__icon {
+  font-size: 15px !important;
+}
+
+.room-sim-body {
   flex: 1;
   min-height: 0;
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
+  gap: 0;
+}
+
+.room-sim-icon-btn {
+  width: 36px !important;
+  height: 36px !important;
+  box-shadow: none;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.room-sim-stage-viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y;
+  border-radius: 28px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(26, 86, 219, 0.09), transparent 32%),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.85));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 18px 40px rgba(15, 23, 42, 0.04);
+  scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+}
+
+.room-sim-float-controls {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.room-sim-stage-viewport::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.1));
+  pointer-events: none;
+}
+
+.room-sim-stage-viewport::after {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.05);
+  pointer-events: none;
+}
+
+.room-sim-stage-scene {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  min-width: 0;
+  margin: auto;
+  padding: 18px 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  transition: transform 180ms ease;
 }
 
 .human-twin__stage {
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .human-twin__svg {
   width: 100%;
   height: 100%;
+  display: block;
 }
 
 .human-twin__figure {
   transform-origin: center;
-  animation: bodyFloat 5s ease-in-out infinite;
+  animation: bodyFloat 5.5s ease-in-out infinite;
 }
 
 .human-twin__figure--resting {
@@ -105,58 +205,17 @@
 }
 
 .human-twin__pin-label {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .human-twin__pin-value {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   fill: var(--on-surface);
   opacity: 0.8;
-}
-
-.human-twin__summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 8px;
-  flex-shrink: 0;
-}
-
-.human-twin__metric {
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-}
-
-.human-twin__metric-label {
-  display: block;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--outline);
-  margin-bottom: 4px;
-}
-
-.human-twin__metric-value {
-  display: block;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--on-surface);
-}
-
-.room-sim-disclaimer {
-  flex-shrink: 0;
-  margin-top: 10px;
-  font-size: 10px;
-  color: var(--outline);
-  text-align: center;
-  font-style: italic;
-  line-height: 1.4;
 }
 
 @keyframes bodyFloat {
@@ -185,7 +244,25 @@
 }
 
 @media (max-width: 1280px) {
-  .human-twin__summary {
-    grid-template-columns: 1fr;
+  .room-sim-stage-scene {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .room-sim-card {
+    padding: 12px;
+  }
+
+  .room-sim-header {
+    flex-direction: column;
+  }
+
+  .room-sim-header__status {
+    justify-content: flex-start;
+  }
+
+  .room-sim-stage-scene {
+    padding: 12px;
   }
 }

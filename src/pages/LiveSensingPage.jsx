@@ -146,63 +146,110 @@ function PillarMeter({ title, score, color, desc, delay }) {
 ───────────────────────────────────────── */
 function FloorPlan({ mode }) {
   const isNight = mode === 'night';
-  const activeSensorColor = isNight ? '#4edea3' : '#adc6ff';
-  const residentColor     = '#4edea3';
+  const bedroomColor = isNight ? '#6f6be8' : '#7a75f0';
+  const livingColor = '#f59e0b';
+  const residentColor = '#7a75f0';
+  const scanColor = isNight ? 'rgba(111,107,232,0.22)' : 'rgba(122,117,240,0.18)';
+  const roomFill = isNight ? 'rgba(111,107,232,0.08)' : 'rgba(122,117,240,0.07)';
 
   return (
-    <svg viewBox="0 0 300 220" className="floor-plan-svg">
-      {/* Background */}
-      <rect x="10" y="10" width="280" height="200" rx="6" fill="var(--surface-container-low)" stroke="var(--outline-variant)" strokeWidth="1.5" />
+    <svg viewBox="0 0 960 650" className="floor-plan-svg floor-plan-svg--realtime" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="realtimeFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor={isNight ? '#f6f4ff' : '#fffdf8'} />
+          <stop offset="100%" stopColor={isNight ? '#fcfbff' : '#fbfaf5'} />
+        </linearGradient>
+        <linearGradient id="bedroomFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor={roomFill} />
+          <stop offset="100%" stopColor="rgba(111,107,232,0.02)" />
+        </linearGradient>
+        <linearGradient id="livingFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="rgba(245,158,11,0.09)" />
+          <stop offset="100%" stopColor="rgba(245,158,11,0.03)" />
+        </linearGradient>
+        <radialGradient id="residentGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(122,117,240,0.62)" />
+          <stop offset="100%" stopColor="rgba(122,117,240,0)" />
+        </radialGradient>
+        <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="8" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
 
-      {/* Room dividers */}
-      <line x1="155" y1="10"  x2="155" y2="210" stroke="var(--outline-variant)" strokeWidth="1.2" strokeDasharray="5 3" />
-      <line x1="10"  y1="110" x2="155" y2="110" stroke="var(--outline-variant)" strokeWidth="1.2" strokeDasharray="5 3" />
-      <line x1="155" y1="115" x2="290" y2="115" stroke="var(--outline-variant)" strokeWidth="1.2" strokeDasharray="5 3" />
+      <rect x="24" y="20" width="912" height="584" rx="22" fill="url(#realtimeFrame)" stroke="rgba(42,46,60,0.22)" strokeWidth="1.8" />
+      <rect x="38" y="34" width="884" height="556" rx="18" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" strokeWidth="1" />
+      <rect x="24" y="20" width="430" height="330" rx="18" fill="url(#bedroomFill)" stroke={bedroomColor} strokeWidth="2.6" />
+      <rect x="454" y="20" width="482" height="330" rx="18" fill="url(#livingFill)" stroke={livingColor} strokeWidth="2.6" strokeDasharray="9 7" />
+      <rect x="24" y="350" width="300" height="254" rx="18" fill="rgba(255,255,255,0.32)" stroke="rgba(140,145,164,0.55)" strokeWidth="1.7" />
+      <rect x="324" y="350" width="300" height="254" rx="18" fill="rgba(255,255,255,0.32)" stroke="rgba(140,145,164,0.55)" strokeWidth="1.7" />
+      <rect x="624" y="350" width="292" height="254" rx="18" fill="rgba(255,255,255,0.32)" stroke="rgba(140,145,164,0.55)" strokeWidth="1.7" />
 
-      {/* Room labels */}
-      <text x="82"  y="34" textAnchor="middle" fontSize="9"  fill="var(--outline)" fontFamily="Inter" fontWeight="600">BEDROOM</text>
-      <text x="222" y="34" textAnchor="middle" fontSize="9"  fill="var(--outline)" fontFamily="Inter" fontWeight="600">LIVING ROOM</text>
-      <text x="55"  y="168" textAnchor="middle" fontSize="9" fill="var(--outline)" fontFamily="Inter" fontWeight="600">BATHROOM</text>
-      <text x="222" y="168" textAnchor="middle" fontSize="9" fill="var(--outline)" fontFamily="Inter" fontWeight="600">KITCHEN</text>
+      <line x1="454" y1="20" x2="454" y2="350" stroke="rgba(245,158,11,0.65)" strokeWidth="2.2" strokeDasharray="9 7" />
+      <line x1="24" y1="350" x2="916" y2="350" stroke="rgba(140,145,164,0.42)" strokeWidth="1.8" />
+      <line x1="324" y1="350" x2="324" y2="604" stroke="rgba(140,145,164,0.38)" strokeWidth="1.5" />
+      <line x1="624" y1="350" x2="624" y2="604" stroke="rgba(140,145,164,0.38)" strokeWidth="1.5" />
 
-      {/* Sensor coverage circles (faint) */}
-      <circle cx="82"  cy="70"  r="38" fill="none" stroke={activeSensorColor} strokeWidth="0.8" strokeDasharray="3 4" opacity="0.4">
-        {isNight && <animate attributeName="r" values="38;45;38" dur="3s" repeatCount="indefinite" />}
+      <text x="239" y="58" textAnchor="middle" fontSize="22" fill={bedroomColor} fontWeight="800" letterSpacing="1.2">BEDROOM</text>
+      <text x="239" y="82" textAnchor="middle" fontSize="11" fill="rgba(95,91,123,0.92)" fontWeight="600">target zone</text>
+      <text x="239" y="104" textAnchor="middle" fontSize="10" fill="rgba(95,91,123,0.72)" fontWeight="500">high confidence</text>
+      <text x="695" y="58" textAnchor="middle" fontSize="22" fill="#9a6a1f" fontWeight="800" letterSpacing="1.2">LIVING ROOM</text>
+      <text x="695" y="82" textAnchor="middle" fontSize="11" fill="rgba(144,99,18,0.95)" fontWeight="600">occupancy sensor</text>
+      <text x="695" y="104" textAnchor="middle" fontSize="10" fill="rgba(144,99,18,0.74)" fontWeight="500">no identity</text>
+
+      <text x="170" y="388" textAnchor="middle" fontSize="15" fill="rgba(106,109,124,0.9)" fontWeight="800" letterSpacing="1">BATHROOM</text>
+      <text x="170" y="409" textAnchor="middle" fontSize="11" fill="rgba(118,122,136,0.9)">empty</text>
+      <text x="474" y="388" textAnchor="middle" fontSize="15" fill="rgba(106,109,124,0.9)" fontWeight="800" letterSpacing="1">KITCHEN</text>
+      <text x="474" y="409" textAnchor="middle" fontSize="11" fill="rgba(118,122,136,0.9)">empty</text>
+      <text x="770" y="388" textAnchor="middle" fontSize="15" fill="rgba(106,109,124,0.9)" fontWeight="800" letterSpacing="1">HALLWAY</text>
+      <text x="770" y="409" textAnchor="middle" fontSize="11" fill="rgba(118,122,136,0.9)">no sensor</text>
+
+      <rect x="30" y="90" width="20" height="24" rx="6" fill="#5b52cf" />
+      <text x="40" y="107" textAnchor="middle" fontSize="11" fill="#fff" fontWeight="800">TX</text>
+      <rect x="436" y="90" width="20" height="24" rx="6" fill="#5b52cf" />
+      <text x="446" y="107" textAnchor="middle" fontSize="11" fill="#fff" fontWeight="800">RX</text>
+      <line x1="50" y1="102" x2="436" y2="102" stroke="rgba(91,82,207,0.32)" strokeWidth="2" strokeDasharray="6 6" />
+      <text x="240" y="116" textAnchor="middle" fontSize="10" fill="rgba(108,114,255,0.92)" fontWeight="600" letterSpacing="0.04em">CSI sensing link · 100 Hz</text>
+
+      <circle cx="239" cy="184" r="30" fill="none" stroke={bedroomColor} strokeWidth="1.8" opacity="0.32">
+        <animate attributeName="r" values="28;34;28" dur="3.2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.32;0.12;0.32" dur="3.2s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="239" cy="184" r="18" fill="url(#residentGlow)" opacity="0.36" />
+      <circle cx="239" cy="184" r="10" fill="rgba(255,255,255,0.95)" stroke={bedroomColor} strokeWidth="2" />
+      <circle cx="239" cy="184" r="3.8" fill={residentColor} filter="url(#softGlow)" />
+      <circle cx="239" cy="184" r="44" fill="none" stroke={scanColor} strokeWidth="1.1" strokeDasharray="7 10" opacity="0.48">
+        <animate attributeName="stroke-dashoffset" from="0" to="120" dur="9s" repeatCount="indefinite" />
       </circle>
 
-      {/* Sensor nodes */}
-      {/* S1 — Bedroom — ACTIVE */}
-      <circle cx="82" cy="70" r="9" fill={`${activeSensorColor}33`} stroke={activeSensorColor} strokeWidth="1.8">
-        <animate attributeName="r" values="9;13;9" dur="2.5s" repeatCount="indefinite" />
-        <animate attributeName="stroke-opacity" values="1;0.4;1" dur="2.5s" repeatCount="indefinite" />
-      </circle>
-      <text x="82" y="73" textAnchor="middle" fontSize="7" fill={activeSensorColor} fontWeight="800">S1</text>
+      <text x="239" y="228" textAnchor="middle" fontSize="15" fill={bedroomColor} fontWeight="800">87% confidence</text>
+      <rect x="199" y="242" width="80" height="24" rx="8" fill="rgba(122,117,240,0.10)" />
+      <text x="239" y="258" textAnchor="middle" fontSize="12" fill="#5f56c3" fontWeight="700">14.2 brpm</text>
+      <text x="239" y="278" textAnchor="middle" fontSize="11" fill="rgba(95,91,123,0.88)" fontWeight="500">resident A · sedentary</text>
 
-      {/* S2 — Living Room — idle */}
-      <circle cx="222" cy="70" r="7" fill="rgba(173,198,255,0.15)" stroke="#adc6ff" strokeWidth="1.5" />
-      <text x="222" y="73" textAnchor="middle" fontSize="7" fill="#adc6ff" fontWeight="700">S2</text>
+      <circle cx="685" cy="156" r="10" fill="rgba(245,158,11,0.18)" stroke={livingColor} strokeWidth="3" />
+      <circle cx="685" cy="156" r="4.5" fill={livingColor} />
+      <text x="685" y="182" textAnchor="middle" fontSize="14" fill="#8d5b08" fontWeight="700">occupancy only</text>
+      <circle cx="646" cy="220" r="12" fill="none" stroke="rgba(140,145,164,0.55)" strokeWidth="1.6" strokeDasharray="4 5" />
+      <text x="646" y="225" textAnchor="middle" fontSize="15" fill="rgba(140,145,164,0.7)" fontWeight="700">?</text>
+      <circle cx="725" cy="214" r="12" fill="none" stroke="rgba(140,145,164,0.55)" strokeWidth="1.6" strokeDasharray="4 5" />
+      <text x="725" y="219" textAnchor="middle" fontSize="15" fill="rgba(140,145,164,0.7)" fontWeight="700">?</text>
+      <circle cx="722" cy="152" r="52" fill="none" stroke="rgba(245,158,11,0.16)" strokeWidth="1.2" />
+      <circle cx="685" cy="156" r="38" fill="none" stroke="rgba(245,158,11,0.12)" strokeWidth="1.2" strokeDasharray="4 6" />
+      <text x="685" y="286" textAnchor="middle" fontSize="15" fill={livingColor} fontWeight="700">2 detected · monitoring paused</text>
 
-      {/* S3 — Bathroom — idle */}
-      <circle cx="55" cy="160" r="7" fill="rgba(173,198,255,0.15)" stroke="#adc6ff" strokeWidth="1.5" />
-      <text x="55" y="163" textAnchor="middle" fontSize="7" fill="#adc6ff" fontWeight="700">S3</text>
+      <circle cx="170" cy="510" r="10" fill="rgba(140,145,164,0.13)" stroke="rgba(140,145,164,0.72)" strokeWidth="2" />
+      <circle cx="474" cy="510" r="10" fill="rgba(140,145,164,0.13)" stroke="rgba(140,145,164,0.72)" strokeWidth="2" />
+      <circle cx="770" cy="510" r="10" fill="rgba(140,145,164,0.13)" stroke="rgba(140,145,164,0.72)" strokeWidth="2" />
+      <circle cx="170" cy="510" r="3.5" fill="rgba(140,145,164,0.78)" />
+      <circle cx="474" cy="510" r="3.5" fill="rgba(140,145,164,0.78)" />
+      <circle cx="770" cy="510" r="3.5" fill="rgba(140,145,164,0.78)" />
 
-      {/* S4 — Kitchen — offline */}
-      <circle cx="222" cy="160" r="7" fill="rgba(239,68,68,0.12)" stroke="#EF4444" strokeWidth="1.5" opacity="0.6" />
-      <text x="222" y="163" textAnchor="middle" fontSize="7" fill="#EF4444" fontWeight="700">S4</text>
-
-      {/* Resident marker */}
-      <circle cx="82" cy="88" r="11" fill={`${residentColor}44`} stroke={residentColor} strokeWidth="2">
-        <animate attributeName="opacity" values="1;0.5;1" dur="1.8s" repeatCount="indefinite" />
-      </circle>
-      <text x="82" y="92" textAnchor="middle" fontSize="9" fill={residentColor} fontWeight="800">A</text>
-
-      {/* Wifi signal from S1 */}
-      {[14, 22, 30].map((r, i) => (
-        <circle key={i} cx="82" cy="70" r={r} fill="none"
-          stroke={activeSensorColor} strokeWidth="0.7"
-          opacity={isNight ? (0.4 - i * 0.1) : 0.15}
-        />
-      ))}
+      <path d="M96 128 C164 112 228 112 300 128" fill="none" stroke="rgba(122,117,240,0.10)" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 9" />
+      <path d="M592 138 C656 122 720 122 800 140" fill="none" stroke="rgba(245,158,11,0.10)" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 9" />
     </svg>
   );
 }
@@ -290,6 +337,38 @@ export default function LiveSensingPage() {
           {/* ── LEFT COLUMN ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
+            {/* Live Room Occupancy */}
+            <div className="glass-card live-floor-card" style={{ padding: 18 }}>
+              <div className="live-floor-card__header">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span className="section-label" style={{ margin: 0 }}>Live Room Occupancy</span>
+                  <span style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>Realtime CSI zone tracking with resident attribution and shared-space occupancy</span>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 800, color: modeColor, background: `${modeColor}18`, padding: '4px 10px', borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  {modeLabel} • live
+                </span>
+              </div>
+
+              <div className="live-floor-card__stage">
+                <FloorPlan mode={mode} />
+              </div>
+
+              <div className="live-floor-card__legend">
+                {[
+                  { color: '#5b52cf', label: 'TX / RX node pair' },
+                  { color: '#6e6af1', label: 'CSI sensing link' },
+                  { color: '#7a75f0', label: 'Target resident' },
+                  { color: '#8d8a84', label: 'Unidentified occupant' },
+                  { color: '#f59e0b', label: 'Monitoring paused' },
+                ].map(({ color, label }) => (
+                  <div key={label} className="live-floor-card__legend-item">
+                    <span style={{ width: 11, height: 11, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* CSI Waveform */}
             <div className="glass-card" style={{ padding: 20 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
@@ -361,24 +440,33 @@ export default function LiveSensingPage() {
               </div>
             </div>
 
-            {/* Four-Pillar Bayesian Confidence */}
-            <div className="glass-card" style={{ padding: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18 }}>
-                <span className="material-icons" style={{ fontSize: 16, color: '#a78bfa' }}>psychology</span>
-                <span className="section-label" style={{ margin: 0 }}>Four-Pillar Bayesian Attribution Confidence</span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {PILLARS.map(p => <PillarMeter key={p.title} {...p} />)}
-              </div>
-              <div className="confidence-footer">
-                <span className="confidence-footer__label">Overall Attribution Confidence</span>
-                <span className="confidence-footer__value">93%</span>
-              </div>
-            </div>
           </div>
 
           {/* ── RIGHT COLUMN ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Four-Pillar Bayesian Attribution Confidence */}
+            <div className="glass-card live-pillar-card">
+              <div className="live-pillar-card__header">
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                    <span className="material-icons" style={{ fontSize: 16, color: '#a78bfa' }}>psychology</span>
+                    <span className="section-label" style={{ margin: 0 }}>Four-Pillar Bayesian Attribution Confidence</span>
+                  </div>
+                  <span style={{ fontSize: 11, color: 'var(--on-surface-variant)' }}>Compressed attribution view for right-rail monitoring</span>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 800, color: '#a78bfa', background: 'rgba(167,139,250,0.12)', padding: '4px 10px', borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0 }}>
+                  93% overall
+                </span>
+              </div>
+              <div className="live-pillar-card__grid">
+                {PILLARS.map(p => <PillarMeter key={p.title} {...p} />)}
+              </div>
+              <div className="confidence-footer confidence-footer--compact">
+                <span className="confidence-footer__label">Overall Attribution Confidence</span>
+                <span className="confidence-footer__value">93%</span>
+              </div>
+            </div>
 
             {/* SOS Alert Card */}
             {hasAlert && (
@@ -420,30 +508,6 @@ export default function LiveSensingPage() {
                 </div>
               </div>
             )}
-
-            {/* Floor Plan */}
-            <div className="glass-card" style={{ padding: 18 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                <span className="section-label" style={{ margin: 0 }}>Room Occupancy Map</span>
-                <span style={{ fontSize: 10, fontWeight: 700, color: modeColor, background: `${modeColor}18`, padding: '2px 8px', borderRadius: 999 }}>
-                  {modeLabel}
-                </span>
-              </div>
-              <FloorPlan mode={mode} />
-              <div style={{ display: 'flex', gap: 14, marginTop: 12, flexWrap: 'wrap' }}>
-                {[
-                  { color: modeColor,  label: 'Active Sensor' },
-                  { color: '#adc6ff',  label: 'Idle Sensor'   },
-                  { color: '#EF4444',  label: 'Offline'        },
-                  { color: '#4edea3',  label: 'Resident (A)'  },
-                ].map(({ color, label }) => (
-                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
-                    <span style={{ fontSize: 10, color: 'var(--outline)' }}>{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Live Vitals — Resident A */}
             <div className="glass-card" style={{ padding: 18, position: 'relative', overflow: 'hidden' }}>

@@ -9,7 +9,7 @@ export default function HomeDashboard() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', minHeight: 0 }}>
       {/* Top Controls for Demo / Testing */}
-      <div style={{ padding: '0 0 16px 0', display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+      <div style={{ padding: '0 0 8px 0', display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
         <button 
           onClick={() => setIsNightMode(false)}
           className={`btn btn-sm ${!isNightMode ? 'btn-primary' : 'btn-outline'}`}
