@@ -1,0 +1,298 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/alerts/OccupancyZoneMap.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react;
+import "/src/components/alerts/OccupancyZoneMap.css";
+const zones = [
+  { id: "bedroom", label: "Bedroom", x: 10, y: 10, w: 44, h: 36, current: true, time: "2h 14m" },
+  { id: "bathroom", label: "Bathroom", x: 58, y: 10, w: 32, h: 20, current: false, time: "12m" },
+  { id: "living", label: "Living Room", x: 10, y: 50, w: 44, h: 30, current: false, time: "45m" },
+  { id: "kitchen", label: "Kitchen", x: 58, y: 34, w: 32, h: 24, current: false, time: "18m" },
+  { id: "corridor", label: "Corridor", x: 56, y: 8, w: 4, h: 52, current: false, time: "5m" },
+  { id: "dining", label: "Dining", x: 58, y: 62, w: 32, h: 18, current: false, restricted: true, time: "0m" }
+];
+const heatPositions = [
+  { x: 32, y: 28, r: 18, opacity: 0.6 },
+  { x: 32, y: 65, r: 10, opacity: 0.3 },
+  { x: 74, y: 20, r: 8, opacity: 0.2 }
+];
+export default function OccupancyZoneMap() {
+  return /* @__PURE__ */ jsxDEV("div", { className: "zone-map", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "zone-map__header", children: [
+      /* @__PURE__ */ jsxDEV("span", { className: "zone-map__title", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "map" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 43,
+          columnNumber: 11
+        }, this),
+        "Occupancy Zone Map"
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+        lineNumber: 42,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "zone-map__legend", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__legend-item", children: [
+          /* @__PURE__ */ jsxDEV("span", { style: { background: "var(--primary)", borderRadius: "50%", width: 7, height: 7, display: "inline-block" } }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+            lineNumber: 48,
+            columnNumber: 13
+          }, this),
+          "Current"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 47,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__legend-item", children: [
+          /* @__PURE__ */ jsxDEV("span", { style: { background: "var(--emergency-red)", borderRadius: "50%", width: 7, height: 7, display: "inline-block" } }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+            lineNumber: 52,
+            columnNumber: 13
+          }, this),
+          "Restricted"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 51,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+        lineNumber: 46,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+      lineNumber: 41,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "zone-map__canvas", children: /* @__PURE__ */ jsxDEV("svg", { viewBox: "0 0 100 90", className: "zone-map__svg", children: [
+      heatPositions.map(
+        (h, i) => /* @__PURE__ */ jsxDEV(
+          "circle",
+          {
+            cx: h.x,
+            cy: h.y,
+            r: h.r,
+            fill: "rgba(245, 158, 11, 0.15)",
+            style: { filter: "blur(4px)", opacity: h.opacity }
+          },
+          i,
+          false,
+          {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+            lineNumber: 62,
+            columnNumber: 11
+          },
+          this
+        )
+      ),
+      zones.map(
+        (zone) => /* @__PURE__ */ jsxDEV("g", { children: [
+          /* @__PURE__ */ jsxDEV(
+            "rect",
+            {
+              x: zone.x,
+              y: zone.y,
+              width: zone.w,
+              height: zone.h,
+              rx: "2",
+              fill: zone.restricted ? "rgba(239,68,68,0.08)" : zone.current ? "rgba(77,142,255,0.1)" : "rgba(255,255,255,0.03)",
+              stroke: zone.restricted ? "#EF4444" : zone.current ? "#4d8eff" : "rgba(48,54,61,0.8)",
+              strokeWidth: "0.5",
+              strokeDasharray: zone.restricted ? "2 1" : "none"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+              lineNumber: 71,
+              columnNumber: 15
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV(
+            "text",
+            {
+              x: zone.x + zone.w / 2,
+              y: zone.y + 5,
+              textAnchor: "middle",
+              fontSize: "3.5",
+              fill: zone.current ? "#adc6ff" : zone.restricted ? "#EF4444" : "rgba(194,198,214,0.6)",
+              fontWeight: "600",
+              children: zone.label
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+              lineNumber: 79,
+              columnNumber: 15
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV(
+            "text",
+            {
+              x: zone.x + zone.w / 2,
+              y: zone.y + zone.h - 3,
+              textAnchor: "middle",
+              fontSize: "2.8",
+              fill: "rgba(140,144,159,0.8)",
+              children: zone.time
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+              lineNumber: 88,
+              columnNumber: 15
+            },
+            this
+          )
+        ] }, zone.id, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 70,
+          columnNumber: 11
+        }, this)
+      ),
+      /* @__PURE__ */ jsxDEV("circle", { cx: "32", cy: "28", r: "2.5", fill: "#adc6ff", opacity: "0.9", children: [
+        /* @__PURE__ */ jsxDEV("animate", { attributeName: "r", from: "2", to: "4", dur: "1.5s", repeatCount: "indefinite" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 101,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("animate", { attributeName: "opacity", from: "0.9", to: "0.2", dur: "1.5s", repeatCount: "indefinite" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 102,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+        lineNumber: 100,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("circle", { cx: "32", cy: "28", r: "1.5", fill: "#4d8eff" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+        lineNumber: 104,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV(
+        "polyline",
+        {
+          points: "74,20 60,20 56,35 32,65 32,28",
+          fill: "none",
+          stroke: "rgba(173,198,255,0.3)",
+          strokeWidth: "0.5",
+          strokeDasharray: "1 1"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 107,
+          columnNumber: 11
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+      lineNumber: 59,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+      lineNumber: 58,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "zone-map__stats", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "zone-map__stat", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__stat-label", children: "Current Zone" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 120,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__stat-value", style: { color: "var(--primary)" }, children: "Bedroom" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 121,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+        lineNumber: 119,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "zone-map__stat", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__stat-label", children: "Time In Zone" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 124,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__stat-value", children: "2h 14m" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 125,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+        lineNumber: 123,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "zone-map__stat", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__stat-label", children: "Wandering" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 128,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "zone-map__stat-value", style: { color: "var(--secondary)" }, children: "None" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+          lineNumber: 129,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+        lineNumber: 127,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+      lineNumber: 118,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx",
+    lineNumber: 40,
+    columnNumber: 5
+  }, this);
+}
+_c = OccupancyZoneMap;
+var _c;
+$RefreshReg$(_c, "OccupancyZoneMap");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/OccupancyZoneMap.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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LFNBQUksV0FBVSxrQkFDYjtBQUFBLCtCQUFDLFVBQUssV0FBVSx3QkFBdUIsNEJBQXZDO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBbUQ7QUFBQSxRQUNuRCx1QkFBQyxVQUFLLFdBQVUsd0JBQXVCLE9BQU8sRUFBRXNCLE9BQU8saUJBQWlCLEdBQUcsdUJBQTNFO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBa0Y7QUFBQSxXQUZwRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBR0E7QUFBQSxNQUNBLHVCQUFDLFNBQUksV0FBVSxrQkFDYjtBQUFBLCtCQUFDLFVBQUssV0FBVSx3QkFBdUIsNEJBQXZDO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBbUQ7QUFBQSxRQUNuRCx1QkFBQyxVQUFLLFdBQVUsd0JBQXVCLHNCQUF2QztBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQTZDO0FBQUEsV0FGL0M7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQUdBO0FBQUEsTUFDQSx1QkFBQyxTQUFJLFdBQVUsa0JBQ2I7QUFBQSwrQkFBQyxVQUFLLFdBQVUsd0JBQXVCLHlCQUF2QztBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQWdEO0FBQUEsUUFDaEQsdUJBQUMsVUFBSyxXQUFVLHdCQUF1QixPQUFPLEVBQUVBLE9BQU8sbUJBQW1CLEdBQUcsb0JBQTdFO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBaUY7QUFBQSxXQUZuRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBR0E7QUFBQSxTQVpGO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0FhQTtBQUFBLE9BM0ZGO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0E0RkE7QUFFSjtBQUFDQyxLQWhHdUJYO0FBQWdCLElBQUFXO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbIlJlYWN0Iiwiem9uZXMiLCJpZCIsImxhYmVsIiwieCIsInkiLCJ3IiwiaCIsImN1cnJlbnQiLCJ0aW1lIiwicmVzdHJpY3RlZCIsImhlYXRQb3NpdGlvbnMiLCJyIiwib3BhY2l0eSIsIk9jY3VwYW5jeVpvbmVNYXAiLCJiYWNrZ3JvdW5kIiwiYm9yZGVyUmFkaXVzIiwid2lkdGgiLCJoZWlnaHQiLCJkaXNwbGF5IiwibWFwIiwiaSIsImZpbHRlciIsInpvbmUiLCJjb2xvciIsIl9jIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIk9jY3VwYW5jeVpvbmVNYXAuanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5pbXBvcnQgJy4vT2NjdXBhbmN5Wm9uZU1hcC5jc3MnO1xuXG5jb25zdCB6b25lcyA9IFtcbiAgeyBpZDogJ2JlZHJvb20nLCBsYWJlbDogJ0JlZHJvb20nLCB4OiAxMCwgeTogMTAsIHc6IDQ0LCBoOiAzNiwgY3VycmVudDogdHJ1ZSwgdGltZTogJzJoIDE0bScgfSxcbiAgeyBpZDogJ2JhdGhyb29tJywgbGFiZWw6ICdCYXRocm9vbScsIHg6IDU4LCB5OiAxMCwgdzogMzIsIGg6IDIwLCBjdXJyZW50OiBmYWxzZSwgdGltZTogJzEybScgfSxcbiAgeyBpZDogJ2xpdmluZycsIGxhYmVsOiAnTGl2aW5nIFJvb20nLCB4OiAxMCwgeTogNTAsIHc6IDQ0LCBoOiAzMCwgY3VycmVudDogZmFsc2UsIHRpbWU6ICc0NW0nIH0sXG4gIHsgaWQ6ICdraXRjaGVuJywgbGFiZWw6ICdLaXRjaGVuJywgeDogNTgsIHk6IDM0LCB3OiAzMiwgaDogMjQsIGN1cnJlbnQ6IGZhbHNlLCB0aW1lOiAnMThtJyB9LFxuICB7IGlkOiAnY29ycmlkb3InLCBsYWJlbDogJ0NvcnJpZG9yJywgeDogNTYsIHk6IDgsIHc6IDQsIGg6IDUyLCBjdXJyZW50OiBmYWxzZSwgdGltZTogJzVtJyB9LFxuICB7IGlkOiAnZGluaW5nJywgbGFiZWw6ICdEaW5pbmcnLCB4OiA1OCwgeTogNjIsIHc6IDMyLCBoOiAxOCwgY3VycmVudDogZmFsc2UsIHJlc3RyaWN0ZWQ6IHRydWUsIHRpbWU6ICcwbScgfSxcbl07XG5cbmNvbnN0IGhlYXRQb3NpdGlvbnMgPSBbXG4gIHsgeDogMzIsIHk6IDI4LCByOiAxOCwgb3BhY2l0eTogMC42IH0sXG4gIHsgeDogMzIsIHk6IDY1LCByOiAxMCwgb3BhY2l0eTogMC4zIH0sXG4gIHsgeDogNzQsIHk6IDIwLCByOiA4LCBvcGFjaXR5OiAwLjIgfSxcbl07XG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIE9jY3VwYW5jeVpvbmVNYXAoKSB7XG4gIHJldHVybiAoXG4gICAgPGRpdiBjbGFzc05hbWU9XCJ6b25lLW1hcFwiPlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJ6b25lLW1hcF9faGVhZGVyXCI+XG4gICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInpvbmUtbWFwX190aXRsZVwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tc21cIj5tYXA8L3NwYW4+XG4gICAgICAgICAgT2NjdXBhbmN5IFpvbmUgTWFwXG4gICAgICAgIDwvc3Bhbj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fbGVnZW5kXCI+XG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiem9uZS1tYXBfX2xlZ2VuZC1pdGVtXCI+XG4gICAgICAgICAgICA8c3BhbiBzdHlsZT17eyBiYWNrZ3JvdW5kOiAndmFyKC0tcHJpbWFyeSknLCBib3JkZXJSYWRpdXM6ICc1MCUnLCB3aWR0aDogNywgaGVpZ2h0OiA3LCBkaXNwbGF5OiAnaW5saW5lLWJsb2NrJyB9fSAvPlxuICAgICAgICAgICAgQ3VycmVudFxuICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fbGVnZW5kLWl0ZW1cIj5cbiAgICAgICAgICAgIDxzcGFuIHN0eWxlPXt7IGJhY2tncm91bmQ6ICd2YXIoLS1lbWVyZ2VuY3ktcmVkKScsIGJvcmRlclJhZGl1czogJzUwJScsIHdpZHRoOiA3LCBoZWlnaHQ6IDcsIGRpc3BsYXk6ICdpbmxpbmUtYmxvY2snIH19IC8+XG4gICAgICAgICAgICBSZXN0cmljdGVkXG4gICAgICAgICAgPC9zcGFuPlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInpvbmUtbWFwX19jYW52YXNcIj5cbiAgICAgICAgPHN2ZyB2aWV3Qm94PVwiMCAwIDEwMCA5MFwiIGNsYXNzTmFtZT1cInpvbmUtbWFwX19zdmdcIj5cbiAgICAgICAgICB7LyogSGVhdG1hcCBibG9icyAqL31cbiAgICAgICAgICB7aGVhdFBvc2l0aW9ucy5tYXAoKGgsIGkpID0+IChcbiAgICAgICAgICAgIDxjaXJjbGUga2V5PXtpfSBjeD17aC54fSBjeT17aC55fSByPXtoLnJ9XG4gICAgICAgICAgICAgIGZpbGw9XCJyZ2JhKDI0NSwgMTU4LCAxMSwgMC4xNSlcIlxuICAgICAgICAgICAgICBzdHlsZT17eyBmaWx0ZXI6ICdibHVyKDRweCknLCBvcGFjaXR5OiBoLm9wYWNpdHkgfX1cbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgKSl9XG5cbiAgICAgICAgICB7LyogWm9uZXMgKi99XG4gICAgICAgICAge3pvbmVzLm1hcCh6b25lID0+IChcbiAgICAgICAgICAgIDxnIGtleT17em9uZS5pZH0+XG4gICAgICAgICAgICAgIDxyZWN0XG4gICAgICAgICAgICAgICAgeD17em9uZS54fSB5PXt6b25lLnl9IHdpZHRoPXt6b25lLnd9IGhlaWdodD17em9uZS5ofVxuICAgICAgICAgICAgICAgIHJ4PVwiMlwiXG4gICAgICAgICAgICAgICAgZmlsbD17em9uZS5yZXN0cmljdGVkID8gJ3JnYmEoMjM5LDY4LDY4LDAuMDgpJyA6IHpvbmUuY3VycmVudCA/ICdyZ2JhKDc3LDE0MiwyNTUsMC4xKScgOiAncmdiYSgyNTUsMjU1LDI1NSwwLjAzKSd9XG4gICAgICAgICAgICAgICAgc3Ryb2tlPXt6b25lLnJlc3RyaWN0ZWQgPyAnI0VGNDQ0NCcgOiB6b25lLmN1cnJlbnQgPyAnIzRkOGVmZicgOiAncmdiYSg0OCw1NCw2MSwwLjgpJ31cbiAgICAgICAgICAgICAgICBzdHJva2VXaWR0aD1cIjAuNVwiXG4gICAgICAgICAgICAgICAgc3Ryb2tlRGFzaGFycmF5PXt6b25lLnJlc3RyaWN0ZWQgPyAnMiAxJyA6ICdub25lJ31cbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgPHRleHRcbiAgICAgICAgICAgICAgICB4PXt6b25lLnggKyB6b25lLncgLyAyfSB5PXt6b25lLnkgKyA1fVxuICAgICAgICAgICAgICAgIHRleHRBbmNob3I9XCJtaWRkbGVcIlxuICAgICAgICAgICAgICAgIGZvbnRTaXplPVwiMy41XCJcbiAgICAgICAgICAgICAgICBmaWxsPXt6b25lLmN1cnJlbnQgPyAnI2FkYzZmZicgOiB6b25lLnJlc3RyaWN0ZWQgPyAnI0VGNDQ0NCcgOiAncmdiYSgxOTQsMTk4LDIxNCwwLjYpJ31cbiAgICAgICAgICAgICAgICBmb250V2VpZ2h0PVwiNjAwXCJcbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIHt6b25lLmxhYmVsfVxuICAgICAgICAgICAgICA8L3RleHQ+XG4gICAgICAgICAgICAgIDx0ZXh0XG4gICAgICAgICAgICAgICAgeD17em9uZS54ICsgem9uZS53IC8gMn0geT17em9uZS55ICsgem9uZS5oIC0gM31cbiAgICAgICAgICAgICAgICB0ZXh0QW5jaG9yPVwibWlkZGxlXCJcbiAgICAgICAgICAgICAgICBmb250U2l6ZT1cIjIuOFwiXG4gICAgICAgICAgICAgICAgZmlsbD1cInJnYmEoMTQwLDE0NCwxNTksMC44KVwiXG4gICAgICAgICAgICAgID5cbiAgICAgICAgICAgICAgICB7em9uZS50aW1lfVxuICAgICAgICAgICAgICA8L3RleHQ+XG4gICAgICAgICAgICA8L2c+XG4gICAgICAgICAgKSl9XG5cbiAgICAgICAgICB7LyogQ3VycmVudCBQb3NpdGlvbiBpbmRpY2F0b3IgKi99XG4gICAgICAgICAgPGNpcmNsZSBjeD1cIjMyXCIgY3k9XCIyOFwiIHI9XCIyLjVcIiBmaWxsPVwiI2FkYzZmZlwiIG9wYWNpdHk9XCIwLjlcIj5cbiAgICAgICAgICAgIDxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9XCJyXCIgZnJvbT1cIjJcIiB0bz1cIjRcIiBkdXI9XCIxLjVzXCIgcmVwZWF0Q291bnQ9XCJpbmRlZmluaXRlXCIgLz5cbiAgICAgICAgICAgIDxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9XCJvcGFjaXR5XCIgZnJvbT1cIjAuOVwiIHRvPVwiMC4yXCIgZHVyPVwiMS41c1wiIHJlcGVhdENvdW50PVwiaW5kZWZpbml0ZVwiIC8+XG4gICAgICAgICAgPC9jaXJjbGU+XG4gICAgICAgICAgPGNpcmNsZSBjeD1cIjMyXCIgY3k9XCIyOFwiIHI9XCIxLjVcIiBmaWxsPVwiIzRkOGVmZlwiIC8+XG5cbiAgICAgICAgICB7LyogUGF0aCBoaXN0b3J5IGRvdHRlZCAqL31cbiAgICAgICAgICA8cG9seWxpbmVcbiAgICAgICAgICAgIHBvaW50cz1cIjc0LDIwIDYwLDIwIDU2LDM1IDMyLDY1IDMyLDI4XCJcbiAgICAgICAgICAgIGZpbGw9XCJub25lXCJcbiAgICAgICAgICAgIHN0cm9rZT1cInJnYmEoMTczLDE5OCwyNTUsMC4zKVwiXG4gICAgICAgICAgICBzdHJva2VXaWR0aD1cIjAuNVwiXG4gICAgICAgICAgICBzdHJva2VEYXNoYXJyYXk9XCIxIDFcIlxuICAgICAgICAgIC8+XG4gICAgICAgIDwvc3ZnPlxuICAgICAgPC9kaXY+XG5cbiAgICAgIHsvKiBab25lIFN0YXRzICovfVxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fc3RhdHNcIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fc3RhdFwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInpvbmUtbWFwX19zdGF0LWxhYmVsXCI+Q3VycmVudCBab25lPC9zcGFuPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInpvbmUtbWFwX19zdGF0LXZhbHVlXCIgc3R5bGU9e3sgY29sb3I6ICd2YXIoLS1wcmltYXJ5KScgfX0+QmVkcm9vbTwvc3Bhbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiem9uZS1tYXBfX3N0YXRcIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fc3RhdC1sYWJlbFwiPlRpbWUgSW4gWm9uZTwvc3Bhbj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fc3RhdC12YWx1ZVwiPjJoIDE0bTwvc3Bhbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiem9uZS1tYXBfX3N0YXRcIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fc3RhdC1sYWJlbFwiPldhbmRlcmluZzwvc3Bhbj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ6b25lLW1hcF9fc3RhdC12YWx1ZVwiIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0tc2Vjb25kYXJ5KScgfX0+Tm9uZTwvc3Bhbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICA8L2Rpdj5cbiAgKTtcbn1cbiJdLCJmaWxlIjoiQzovVXNlcnMvQWF5dXNoIFdhbHNhbmdpa2FyL09uZURyaXZlL0Rlc2t0b3AvU2lsZW50IFNlbnNlL3NyYy9jb21wb25lbnRzL2FsZXJ0cy9PY2N1cGFuY3lab25lTWFwLmpzeCJ9

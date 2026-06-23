@@ -1,0 +1,212 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/alerts/EmergencyOverlay.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react; const useEffect = __vite__cjsImport3_react["useEffect"]; const useState = __vite__cjsImport3_react["useState"];
+import "/src/components/alerts/EmergencyOverlay.css";
+export default function EmergencyOverlay({ onDismiss, event = "Respiratory Distress", bed = "BED 04" }) {
+  _s();
+  const [elapsed, setElapsed] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setElapsed((e) => e + 1), 1e3);
+    return () => clearInterval(timer);
+  }, []);
+  const formatTime = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}m ${String(s % 60).padStart(2, "0")}s`;
+  return /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__ambient" }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+      lineNumber: 36,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__content", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__banner", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: { fontSize: 40, color: "#fff" }, children: "emergency" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 41,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("h1", { className: "emergency-overlay__title", children: "CRITICAL EVENT DETECTED" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 43,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "emergency-overlay__subtitle", children: event }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 44,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 42,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+        lineNumber: 40,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__details", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__detail-item", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "emergency-overlay__detail-label", children: "Location" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 51,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "emergency-overlay__detail-value", children: bed }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 52,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 50,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__detail-item", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "emergency-overlay__detail-label", children: "Unacknowledged" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 55,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "emergency-overlay__detail-value emergency-overlay__timer", children: formatTime(elapsed) }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 56,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 54,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__detail-item", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "emergency-overlay__detail-label", children: "Risk Level" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 61,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "emergency-overlay__detail-value", style: { color: "#EF4444" }, children: "CRITICAL — 92/100" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 62,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 60,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+        lineNumber: 49,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "emergency-overlay__actions", children: [
+        /* @__PURE__ */ jsxDEV("button", { className: "emergency-overlay__action emergency-overlay__action--red", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons", children: "call" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 69,
+            columnNumber: 13
+          }, this),
+          "Call Nurse"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 68,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("button", { className: "emergency-overlay__action emergency-overlay__action--blue", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons", children: "family_restroom" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 73,
+            columnNumber: 13
+          }, this),
+          "Call Family"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 72,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("button", { className: "emergency-overlay__action emergency-overlay__action--red", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons", children: "local_hospital" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 77,
+            columnNumber: 13
+          }, this),
+          "Escalate EMS"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 76,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("button", { className: "emergency-overlay__action emergency-overlay__action--outline", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons", children: "timeline" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+            lineNumber: 81,
+            columnNumber: 13
+          }, this),
+          "View Timeline"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 80,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+        lineNumber: 67,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("button", { className: "emergency-overlay__dismiss", onClick: onDismiss, children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "close" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+          lineNumber: 88,
+          columnNumber: 11
+        }, this),
+        "Acknowledge & Dismiss"
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+        lineNumber: 87,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+      lineNumber: 38,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx",
+    lineNumber: 34,
+    columnNumber: 5
+  }, this);
+}
+_s(EmergencyOverlay, "tfNyuhld8ejacehjDPQ7AFC2SMA=");
+_c = EmergencyOverlay;
+var _c;
+$RefreshReg$(_c, "EmergencyOverlay");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/EmergencyOverlay.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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ZUFHQTtBQUFBLFFBQ0EsdUJBQUMsWUFBTyxXQUFVLDZEQUNoQjtBQUFBLGlDQUFDLFVBQUssV0FBVSxrQkFBaUIsK0JBQWpDO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBQWdEO0FBQUEsVUFBTTtBQUFBLGFBRHhEO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFHQTtBQUFBLFFBQ0EsdUJBQUMsWUFBTyxXQUFVLDREQUNoQjtBQUFBLGlDQUFDLFVBQUssV0FBVSxrQkFBaUIsOEJBQWpDO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBQStDO0FBQUEsVUFBTTtBQUFBLGFBRHZEO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFHQTtBQUFBLFFBQ0EsdUJBQUMsWUFBTyxXQUFVLGdFQUNoQjtBQUFBLGlDQUFDLFVBQUssV0FBVSxrQkFBaUIsd0JBQWpDO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBQXlDO0FBQUEsVUFBTTtBQUFBLGFBRGpEO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFHQTtBQUFBLFdBaEJGO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFpQkE7QUFBQSxNQUdBLHVCQUFDLFlBQU8sV0FBVSw4QkFBNkIsU0FBU2pCLFdBQ3REO0FBQUEsK0JBQUMsVUFBSyxXQUFVLDBCQUF5QixxQkFBekM7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUE4QztBQUFBLFFBQU07QUFBQSxXQUR0RDtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBR0E7QUFBQSxTQXBERjtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBcURBO0FBQUEsT0F6REY7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQTBEQTtBQUVKO0FBQUNHLEdBdkV1Qkosa0JBQWdCO0FBQUEsS0FBaEJBO0FBQWdCLElBQUFtQjtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJSZWFjdCIsInVzZUVmZmVjdCIsInVzZVN0YXRlIiwiRW1lcmdlbmN5T3ZlcmxheSIsIm9uRGlzbWlzcyIsImV2ZW50IiwiYmVkIiwiX3MiLCJlbGFwc2VkIiwic2V0RWxhcHNlZCIsInRpbWVyIiwic2V0SW50ZXJ2YWwiLCJlIiwiY2xlYXJJbnRlcnZhbCIsImZvcm1hdFRpbWUiLCJzIiwiU3RyaW5nIiwiTWF0aCIsImZsb29yIiwicGFkU3RhcnQiLCJmb250U2l6ZSIsImNvbG9yIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiRW1lcmdlbmN5T3ZlcmxheS5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZUVmZmVjdCwgdXNlU3RhdGUgfSBmcm9tICdyZWFjdCc7XG5pbXBvcnQgJy4vRW1lcmdlbmN5T3ZlcmxheS5jc3MnO1xuXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBFbWVyZ2VuY3lPdmVybGF5KHsgb25EaXNtaXNzLCBldmVudCA9ICdSZXNwaXJhdG9yeSBEaXN0cmVzcycsIGJlZCA9ICdCRUQgMDQnIH0pIHtcbiAgY29uc3QgW2VsYXBzZWQsIHNldEVsYXBzZWRdID0gdXNlU3RhdGUoMCk7XG5cbiAgdXNlRWZmZWN0KCgpID0+IHtcbiAgICBjb25zdCB0aW1lciA9IHNldEludGVydmFsKCgpID0+IHNldEVsYXBzZWQoZSA9PiBlICsgMSksIDEwMDApO1xuICAgIHJldHVybiAoKSA9PiBjbGVhckludGVydmFsKHRpbWVyKTtcbiAgfSwgW10pO1xuXG4gIGNvbnN0IGZvcm1hdFRpbWUgPSAocykgPT4gYCR7U3RyaW5nKE1hdGguZmxvb3IocyAvIDYwKSkucGFkU3RhcnQoMiwgJzAnKX1tICR7U3RyaW5nKHMgJSA2MCkucGFkU3RhcnQoMiwgJzAnKX1zYDtcblxuICByZXR1cm4gKFxuICAgIDxkaXYgY2xhc3NOYW1lPVwiZW1lcmdlbmN5LW92ZXJsYXlcIj5cbiAgICAgIHsvKiBSZWQgYW1iaWVudCBlZmZlY3QgKi99XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImVtZXJnZW5jeS1vdmVybGF5X19hbWJpZW50XCIgLz5cblxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fY29udGVudFwiPlxuICAgICAgICB7LyogRmxhc2ggQmFubmVyICovfVxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImVtZXJnZW5jeS1vdmVybGF5X19iYW5uZXJcIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29uc1wiIHN0eWxlPXt7IGZvbnRTaXplOiA0MCwgY29sb3I6ICcjZmZmJyB9fT5lbWVyZ2VuY3k8L3NwYW4+XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxoMSBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fdGl0bGVcIj5DUklUSUNBTCBFVkVOVCBERVRFQ1RFRDwvaDE+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fc3VidGl0bGVcIj57ZXZlbnR9PC9wPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8L2Rpdj5cblxuICAgICAgICB7LyogRGV0YWlscyAqL31cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fZGV0YWlsc1wiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZW1lcmdlbmN5LW92ZXJsYXlfX2RldGFpbC1pdGVtXCI+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fZGV0YWlsLWxhYmVsXCI+TG9jYXRpb248L3NwYW4+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fZGV0YWlsLXZhbHVlXCI+e2JlZH08L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fZGV0YWlsLWl0ZW1cIj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImVtZXJnZW5jeS1vdmVybGF5X19kZXRhaWwtbGFiZWxcIj5VbmFja25vd2xlZGdlZDwvc3Bhbj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImVtZXJnZW5jeS1vdmVybGF5X19kZXRhaWwtdmFsdWUgZW1lcmdlbmN5LW92ZXJsYXlfX3RpbWVyXCI+XG4gICAgICAgICAgICAgIHtmb3JtYXRUaW1lKGVsYXBzZWQpfVxuICAgICAgICAgICAgPC9zcGFuPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZW1lcmdlbmN5LW92ZXJsYXlfX2RldGFpbC1pdGVtXCI+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fZGV0YWlsLWxhYmVsXCI+UmlzayBMZXZlbDwvc3Bhbj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImVtZXJnZW5jeS1vdmVybGF5X19kZXRhaWwtdmFsdWVcIiBzdHlsZT17eyBjb2xvcjogJyNFRjQ0NDQnIH19PkNSSVRJQ0FMIOKAlCA5Mi8xMDA8L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuXG4gICAgICAgIHsvKiBBY3Rpb24gQnV0dG9ucyAqL31cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJlbWVyZ2VuY3ktb3ZlcmxheV9fYWN0aW9uc1wiPlxuICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiZW1lcmdlbmN5LW92ZXJsYXlfX2FjdGlvbiBlbWVyZ2VuY3ktb3ZlcmxheV9fYWN0aW9uLS1yZWRcIj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zXCI+Y2FsbDwvc3Bhbj5cbiAgICAgICAgICAgIENhbGwgTnVyc2VcbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT1cImVtZXJnZW5jeS1vdmVybGF5X19hY3Rpb24gZW1lcmdlbmN5LW92ZXJsYXlfX2FjdGlvbi0tYmx1ZVwiPlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnNcIj5mYW1pbHlfcmVzdHJvb208L3NwYW4+XG4gICAgICAgICAgICBDYWxsIEZhbWlseVxuICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiZW1lcmdlbmN5LW92ZXJsYXlfX2FjdGlvbiBlbWVyZ2VuY3ktb3ZlcmxheV9fYWN0aW9uLS1yZWRcIj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zXCI+bG9jYWxfaG9zcGl0YWw8L3NwYW4+XG4gICAgICAgICAgICBFc2NhbGF0ZSBFTVNcbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT1cImVtZXJnZW5jeS1vdmVybGF5X19hY3Rpb24gZW1lcmdlbmN5LW92ZXJsYXlfX2FjdGlvbi0tb3V0bGluZVwiPlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnNcIj50aW1lbGluZTwvc3Bhbj5cbiAgICAgICAgICAgIFZpZXcgVGltZWxpbmVcbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgey8qIERpc21pc3MgKi99XG4gICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiZW1lcmdlbmN5LW92ZXJsYXlfX2Rpc21pc3NcIiBvbkNsaWNrPXtvbkRpc21pc3N9PlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tc21cIj5jbG9zZTwvc3Bhbj5cbiAgICAgICAgICBBY2tub3dsZWRnZSAmYW1wOyBEaXNtaXNzXG4gICAgICAgIDwvYnV0dG9uPlxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gICk7XG59XG4iXSwiZmlsZSI6IkM6L1VzZXJzL0FheXVzaCBXYWxzYW5naWthci9PbmVEcml2ZS9EZXNrdG9wL1NpbGVudCBTZW5zZS9zcmMvY29tcG9uZW50cy9hbGVydHMvRW1lcmdlbmN5T3ZlcmxheS5qc3gifQ==

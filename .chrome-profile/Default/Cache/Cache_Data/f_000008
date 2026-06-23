@@ -1,0 +1,707 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/SleepAnalyticsPage.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react; const useState = __vite__cjsImport3_react["useState"];
+import { useNavigate } from "/node_modules/.vite/deps/react-router-dom.js?v=6faa39c4";
+import "/src/pages/PageLayout.css";
+import "/src/pages/SleepAnalyticsPage.css";
+const sleepData = [
+  { day: "Mon", duration: 7.2, quality: 85, interruptions: 1 },
+  { day: "Tue", duration: 6.8, quality: 78, interruptions: 3 },
+  { day: "Wed", duration: 8.1, quality: 92, interruptions: 0 },
+  { day: "Thu", duration: 7.5, quality: 88, interruptions: 1 },
+  { day: "Fri", duration: 5.4, quality: 62, interruptions: 4 },
+  { day: "Sat", duration: 7.8, quality: 90, interruptions: 0 },
+  { day: "Sun", duration: 7, quality: 82, interruptions: 1 }
+];
+const nightSamples = [
+  { time: "10PM", breathing: 15.6, quality: 72, stage: "Light" },
+  { time: "11PM", breathing: 14.8, quality: 74, stage: "Light" },
+  { time: "12AM", breathing: 13.9, quality: 78, stage: "Deep" },
+  { time: "1AM", breathing: 13.4, quality: 82, stage: "Deep" },
+  { time: "2AM", breathing: 12.8, quality: 86, stage: "Deep" },
+  { time: "3AM", breathing: 7.2, quality: 58, stage: "Apnea" },
+  { time: "4AM", breathing: 13.1, quality: 81, stage: "REM" },
+  { time: "5AM", breathing: 12.6, quality: 84, stage: "Deep" },
+  { time: "6AM", breathing: 10.9, quality: 68, stage: "Light" },
+  { time: "7AM", breathing: 14.2, quality: 88, stage: "Awake" }
+];
+function buildLinePath(points) {
+  return points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
+}
+function buildChartPoints(data, width, height, padding, min, max) {
+  const plotWidth = width - padding * 2;
+  const plotHeight = height - padding * 2;
+  return data.map((item, index) => {
+    const x = padding + plotWidth * index / (data.length - 1);
+    const ratio = (item.breathing - min) / (max - min);
+    const y = padding + (1 - ratio) * plotHeight;
+    return { ...item, x, y };
+  });
+}
+function areaPath(points, height, padding) {
+  if (!points.length) return "";
+  const first = points[0];
+  const last = points[points.length - 1];
+  return `${buildLinePath(points)} L ${last.x} ${height - padding} L ${first.x} ${height - padding} Z`;
+}
+function NightBreathingChart() {
+  const width = 860;
+  const height = 320;
+  const padding = 30;
+  const points = buildChartPoints(nightSamples, width, height, padding, 6, 16);
+  return /* @__PURE__ */ jsxDEV("div", { className: "sleep-chart glass-card", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "sleep-chart__header", children: [
+      /* @__PURE__ */ jsxDEV("div", { children: [
+        /* @__PURE__ */ jsxDEV("h3", { className: "sleep-chart__title", children: "Overnight Breathing Trace" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 81,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "sleep-chart__subtitle", children: "Sampled every hour from 10 PM to 7 AM" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 82,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 80,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "sleep-chart__chips", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "sleep-chip sleep-chip--stable", children: "Avg 14 RPM" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 85,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "sleep-chip sleep-chip--warning", children: "1 apnea dip" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 86,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "sleep-chip sleep-chip--muted", children: "SpO2 nadir 91%" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 87,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 84,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+      lineNumber: 79,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "sleep-chart__svg-wrap", children: /* @__PURE__ */ jsxDEV("svg", { viewBox: `0 0 ${width} ${height}`, className: "sleep-chart__svg", role: "img", "aria-label": "Overnight breathing rate chart", children: [
+      /* @__PURE__ */ jsxDEV("defs", { children: /* @__PURE__ */ jsxDEV("linearGradient", { id: "breathingFill", x1: "0", x2: "0", y1: "0", y2: "1", children: [
+        /* @__PURE__ */ jsxDEV("stop", { offset: "0%", stopColor: "#F59E0B", stopOpacity: "0.28" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 95,
+          columnNumber: 15
+        }, this),
+        /* @__PURE__ */ jsxDEV("stop", { offset: "100%", stopColor: "#F59E0B", stopOpacity: "0.02" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 96,
+          columnNumber: 15
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 94,
+        columnNumber: 13
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 93,
+        columnNumber: 11
+      }, this),
+      [0, 1, 2, 3, 4].map((i) => {
+        const y = padding + (height - padding * 2) / 4 * i;
+        return /* @__PURE__ */ jsxDEV("line", { x1: padding, x2: width - padding, y1: y, y2: y, className: "sleep-chart__grid-line" }, i, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 102,
+          columnNumber: 20
+        }, this);
+      }),
+      [0, 1, 2, 3, 4].map((i) => {
+        const x = padding + (width - padding * 2) / 4 * i;
+        return /* @__PURE__ */ jsxDEV("line", { y1: padding, y2: height - padding, x1: x, x2: x, className: "sleep-chart__grid-line sleep-chart__grid-line--vertical" }, `v-${i}`, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 107,
+          columnNumber: 20
+        }, this);
+      }),
+      points.map(
+        (point) => point.stage === "Apnea" ? /* @__PURE__ */ jsxDEV(
+          "rect",
+          {
+            x: point.x - 20,
+            y: padding,
+            width: 40,
+            height: height - padding * 2,
+            rx: "18",
+            className: "sleep-chart__dip"
+          },
+          `apnea-${point.time}`,
+          false,
+          {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 112,
+            columnNumber: 11
+          },
+          this
+        ) : null
+      ),
+      /* @__PURE__ */ jsxDEV("path", { d: areaPath(points, height, padding), fill: "url(#breathingFill)" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 124,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("path", { d: buildLinePath(points), className: "sleep-chart__line sleep-chart__line--breathing" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 125,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV(
+        "path",
+        {
+          d: buildLinePath(points.map((point) => ({
+            x: point.x,
+            y: height - padding - point.quality / 100 * (height - padding * 2) * 0.45
+          }))),
+          className: "sleep-chart__line sleep-chart__line--quality"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 127,
+          columnNumber: 11
+        },
+        this
+      ),
+      points.map(
+        (point) => /* @__PURE__ */ jsxDEV("g", { children: [
+          /* @__PURE__ */ jsxDEV("circle", { cx: point.x, cy: point.y, r: "4.5", className: `sleep-chart__point ${point.stage === "Apnea" ? "sleep-chart__point--critical" : ""}` }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 137,
+            columnNumber: 15
+          }, this),
+          point.stage === "Apnea" && /* @__PURE__ */ jsxDEV("text", { x: point.x, y: point.y - 14, textAnchor: "middle", className: "sleep-chart__annotation", children: "apnea" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 139,
+            columnNumber: 13
+          }, this)
+        ] }, point.time, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 136,
+          columnNumber: 11
+        }, this)
+      ),
+      points.map(
+        (point) => /* @__PURE__ */ jsxDEV("text", { x: point.x, y: height - 8, textAnchor: "middle", className: "sleep-chart__axis-label", children: point.time }, `${point.time}-label`, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 145,
+          columnNumber: 11
+        }, this)
+      ),
+      /* @__PURE__ */ jsxDEV("text", { x: padding, y: 18, className: "sleep-chart__axis-title", children: "Breathing rate (RPM)" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 150,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("text", { x: width - padding, y: 18, textAnchor: "end", className: "sleep-chart__axis-title sleep-chart__axis-title--muted", children: "Sleep quality overlay" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 151,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+      lineNumber: 92,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+      lineNumber: 91,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "sleep-chart__footer", children: nightSamples.map(
+      (sample) => /* @__PURE__ */ jsxDEV("div", { className: "sleep-chart__stat", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "sleep-chart__stat-time", children: sample.time }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 158,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "sleep-chart__stat-value", children: [
+          sample.breathing.toFixed(1),
+          " RPM"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 159,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("span", { className: "sleep-chart__stat-stage", children: sample.stage }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 160,
+          columnNumber: 13
+        }, this)
+      ] }, sample.time, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 157,
+        columnNumber: 9
+      }, this)
+    ) }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+      lineNumber: 155,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+    lineNumber: 78,
+    columnNumber: 5
+  }, this);
+}
+_c = NightBreathingChart;
+export default function SleepAnalyticsPage() {
+  _s();
+  const navigate = useNavigate();
+  const [activeFilter, setActiveFilter] = useState("This Week");
+  return /* @__PURE__ */ jsxDEV("div", { className: "page-layout", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__header", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "page-layout__title-group", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-lg", style: { color: "var(--primary)" }, children: "bedtime" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 176,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("h1", { className: "page-layout__title", children: "Sleep & Vitals Analysis" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 178,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "page-layout__subtitle", children: "Overnight ambient sensing and breathing metrics for Mr. Raghav Iyer" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 179,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 177,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 175,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "page-layout__filters", children: ["This Week", "Last Week"].map(
+        (label) => /* @__PURE__ */ jsxDEV(
+          "button",
+          {
+            className: `page-layout__filter-btn ${activeFilter === label ? "page-layout__filter-btn--active" : ""}`,
+            onClick: () => setActiveFilter(label),
+            children: label
+          },
+          label,
+          false,
+          {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 184,
+            columnNumber: 11
+          },
+          this
+        )
+      ) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 182,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+      lineNumber: 174,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__content", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "sleep-page__top-row", children: [
+        { label: "Sleep Apnea Dashboard", icon: "bedtime", path: "/sleep-apnea", color: "#adc6ff", desc: "Nightly apnea events and breathing timeline" },
+        { label: "Eating Monitor", icon: "restaurant", path: "/eating", color: "#4edea3", desc: "Meal frequency and nutritional patterns" }
+      ].map(
+        (m) => /* @__PURE__ */ jsxDEV(
+          "button",
+          {
+            onClick: () => navigate(m.path),
+            className: "sleep-page__submodule",
+            style: { "--submodule-color": m.color },
+            children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: { color: m.color, fontSize: 20 }, children: m.icon }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 207,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "sleep-page__submodule-copy", children: [
+                /* @__PURE__ */ jsxDEV("div", { className: "sleep-page__submodule-title", children: m.label }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 209,
+                  columnNumber: 17
+                }, this),
+                /* @__PURE__ */ jsxDEV("div", { className: "sleep-page__submodule-desc", children: m.desc }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 210,
+                  columnNumber: 17
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 208,
+                columnNumber: 15
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons sleep-page__submodule-arrow", children: "chevron_right" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 212,
+                columnNumber: 15
+              }, this)
+            ]
+          },
+          m.path,
+          true,
+          {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 201,
+            columnNumber: 11
+          },
+          this
+        )
+      ) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 196,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "sleep-kpi-grid", children: [
+        { label: "Avg Sleep Duration", value: "7.1", unit: "hrs", color: "var(--primary)" },
+        { label: "Sleep Quality Score", value: "82", unit: "/100", color: "var(--secondary)" },
+        { label: "Bed Exits (Avg)", value: "1.4", unit: "/night", color: "var(--warning-amber)" },
+        { label: "Avg Breathing Rate", value: "14", unit: "RPM", color: "var(--primary)" }
+      ].map(
+        (m) => /* @__PURE__ */ jsxDEV("div", { className: "glass-card sleep-kpi-card", style: { borderTop: `4px solid ${m.color}` }, children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "sleep-kpi-card__label", children: m.label }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 225,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "sleep-kpi-card__value-row", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "sleep-kpi-card__value", children: m.value }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 227,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { className: "sleep-kpi-card__unit", children: m.unit }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 228,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 226,
+            columnNumber: 15
+          }, this)
+        ] }, m.label, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 224,
+          columnNumber: 11
+        }, this)
+      ) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 217,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "sleep-page__layout", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "sleep-page__main", children: [
+          /* @__PURE__ */ jsxDEV(NightBreathingChart, {}, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 236,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card sleep-card", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "sleep-card__header", children: [
+              /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("h3", { className: "sleep-card__title", children: "Weekly Sleep Duration and Quality" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 241,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "sleep-card__subtitle", children: "Seven-night trend with interruptions and recovery nights" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 242,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 240,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { className: "badge badge-stable", children: "Stable pattern" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 244,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 239,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "sleep-week-chart", children: sleepData.map((d) => {
+              const barHeight = Math.max(42, d.duration / 9 * 180);
+              return /* @__PURE__ */ jsxDEV("div", { className: "sleep-week-chart__col", children: [
+                /* @__PURE__ */ jsxDEV("div", { className: "sleep-week-chart__track", children: [
+                  /* @__PURE__ */ jsxDEV(
+                    "div",
+                    {
+                      className: "sleep-week-chart__fill",
+                      style: {
+                        height: `${barHeight}px`,
+                        background: d.quality > 85 ? "linear-gradient(180deg, #22C55E 0%, #1a56db 100%)" : d.quality > 75 ? "linear-gradient(180deg, #3B82F6 0%, #1a56db 100%)" : "linear-gradient(180deg, #F59E0B 0%, #EF4444 100%)"
+                      }
+                    },
+                    void 0,
+                    false,
+                    {
+                      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                      lineNumber: 253,
+                      columnNumber: 25
+                    },
+                    this
+                  ),
+                  /* @__PURE__ */ jsxDEV("div", { className: "sleep-week-chart__quality", style: { bottom: `${Math.min(180, barHeight + 10)}px` }, children: d.quality }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                    lineNumber: 260,
+                    columnNumber: 25
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 252,
+                  columnNumber: 23
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { className: "sleep-week-chart__day", children: d.day }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 264,
+                  columnNumber: 23
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { className: "sleep-week-chart__meta", children: [
+                  d.duration,
+                  " hrs"
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 265,
+                  columnNumber: 23
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { className: "sleep-week-chart__meta sleep-week-chart__meta--muted", children: [
+                  d.interruptions,
+                  " exits"
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 266,
+                  columnNumber: 23
+                }, this)
+              ] }, d.day, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 251,
+                columnNumber: 21
+              }, this);
+            }) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 247,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "sleep-stage-strip", children: [
+              { label: "Awake", width: 8, color: "#EF4444" },
+              { label: "Light", width: 24, color: "#adc6ff" },
+              { label: "Deep", width: 38, color: "#3B82F6" },
+              { label: "REM", width: 18, color: "#4edea3" },
+              { label: "Deep", width: 12, color: "#3B82F6" }
+            ].map(
+              (stage) => /* @__PURE__ */ jsxDEV("div", { className: "sleep-stage-strip__item", style: { width: `${stage.width}%`, background: stage.color }, children: /* @__PURE__ */ jsxDEV("span", { children: stage.label }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 281,
+                columnNumber: 21
+              }, this) }, `${stage.label}-${stage.width}`, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 280,
+                columnNumber: 17
+              }, this)
+            ) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 272,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 238,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 235,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "sleep-page__side", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card sleep-card sleep-card--tight", children: [
+            /* @__PURE__ */ jsxDEV("h3", { className: "sleep-card__title", children: "AI Sleep Insights" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 290,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "sleep-insight", children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: { color: "var(--primary)" }, children: "psychology" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 292,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("p", { className: "sleep-insight__title", children: "Consistent breathing baseline" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 294,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "sleep-insight__body", children: "Breathing stays in the 13-15 RPM range for most of the night, with one short apnea dip around 3 AM." }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 295,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 293,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 291,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "sleep-insight sleep-insight--warning", children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons", children: "warning_amber" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 300,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("p", { className: "sleep-insight__title", children: "Single interruption cluster" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 302,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "sleep-insight__body", children: "Interrupted sleep on Friday aligns with elevated bed exits and a lower quality score." }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 303,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 301,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 299,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 289,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card sleep-card sleep-card--tight", children: [
+            /* @__PURE__ */ jsxDEV("h3", { className: "sleep-card__title", children: "Night Summary" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 309,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "sleep-summary", children: [
+              { key: "Resident", value: "Mr. Raghav Iyer" },
+              { key: "Sleep window", value: "10:12 PM - 6:58 AM" },
+              { key: "Lowest BPM", value: "7.2 at 3:00 AM" },
+              { key: "Wakeups", value: "2 brief awakenings" },
+              { key: "Nurse note", value: "Rested, no agitation observed" }
+            ].map(
+              (item) => /* @__PURE__ */ jsxDEV("div", { className: "sleep-summary__row", children: [
+                /* @__PURE__ */ jsxDEV("span", { children: item.key }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 319,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("strong", { children: item.value }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                  lineNumber: 320,
+                  columnNumber: 21
+                }, this)
+              ] }, item.key, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+                lineNumber: 318,
+                columnNumber: 17
+              }, this)
+            ) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+              lineNumber: 310,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+            lineNumber: 308,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+          lineNumber: 288,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+        lineNumber: 234,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+      lineNumber: 195,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx",
+    lineNumber: 173,
+    columnNumber: 5
+  }, this);
+}
+_s(SleepAnalyticsPage, "pOoqxdinLhUDJkTv/Kd4j/XfR4k=", false, function() {
+  return [useNavigate];
+});
+_c2 = SleepAnalyticsPage;
+var _c, _c2;
+$RefreshReg$(_c, "NightBreathingChart");
+$RefreshReg$(_c2, "SleepAnalyticsPage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/SleepAnalyticsPage.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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SjtBQUFDbkIsR0FsS3VCRCxvQkFBa0I7QUFBQSxVQUN2QnRDLFdBQVc7QUFBQTtBQUFBLE1BRE5zQztBQUFrQixJQUFBRCxJQUFBc0I7QUFBQSxhQUFBdEIsSUFBQTtBQUFBLGFBQUFzQixLQUFBIiwibmFtZXMiOlsiUmVhY3QiLCJ1c2VTdGF0ZSIsInVzZU5hdmlnYXRlIiwic2xlZXBEYXRhIiwiZGF5IiwiZHVyYXRpb24iLCJxdWFsaXR5IiwiaW50ZXJydXB0aW9ucyIsIm5pZ2h0U2FtcGxlcyIsInRpbWUiLCJicmVhdGhpbmciLCJzdGFnZSIsImJ1aWxkTGluZVBhdGgiLCJwb2ludHMiLCJtYXAiLCJwb2ludCIsImluZGV4IiwieCIsInkiLCJqb2luIiwiYnVpbGRDaGFydFBvaW50cyIsImRhdGEiLCJ3aWR0aCIsImhlaWdodCIsInBhZGRpbmciLCJtaW4iLCJtYXgiLCJwbG90V2lkdGgiLCJwbG90SGVpZ2h0IiwiaXRlbSIsImxlbmd0aCIsInJhdGlvIiwiYXJlYVBhdGgiLCJmaXJzdCIsImxhc3QiLCJOaWdodEJyZWF0aGluZ0NoYXJ0IiwiaSIsInNhbXBsZSIsInRvRml4ZWQiLCJfYyIsIlNsZWVwQW5hbHl0aWNzUGFnZSIsIl9zIiwibmF2aWdhdGUiLCJhY3RpdmVGaWx0ZXIiLCJzZXRBY3RpdmVGaWx0ZXIiLCJjb2xvciIsImxhYmVsIiwiaWNvbiIsInBhdGgiLCJkZXNjIiwibSIsImZvbnRTaXplIiwidmFsdWUiLCJ1bml0IiwiYm9yZGVyVG9wIiwiZCIsImJhckhlaWdodCIsIk1hdGgiLCJiYWNrZ3JvdW5kIiwiYm90dG9tIiwia2V5IiwiX2MyIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIlNsZWVwQW5hbHl0aWNzUGFnZS5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlIH0gZnJvbSAncmVhY3QnO1xyXG5pbXBvcnQgeyB1c2VOYXZpZ2F0ZSB9IGZyb20gJ3JlYWN0LXJvdXRlci1kb20nO1xyXG5pbXBvcnQgJy4vUGFnZUxheW91dC5jc3MnO1xyXG5pbXBvcnQgJy4vU2xlZXBBbmFseXRpY3NQYWdlLmNzcyc7XHJcblxyXG5jb25zdCBzbGVlcERhdGEgPSBbXHJcbiAgeyBkYXk6ICdNb24nLCBkdXJhdGlvbjogNy4yLCBxdWFsaXR5OiA4NSwgaW50ZXJydXB0aW9uczogMSB9LFxyXG4gIHsgZGF5OiAnVHVlJywgZHVyYXRpb246IDYuOCwgcXVhbGl0eTogNzgsIGludGVycnVwdGlvbnM6IDMgfSxcclxuICB7IGRheTogJ1dlZCcsIGR1cmF0aW9uOiA4LjEsIHF1YWxpdHk6IDkyLCBpbnRlcnJ1cHRpb25zOiAwIH0sXHJcbiAgeyBkYXk6ICdUaHUnLCBkdXJhdGlvbjogNy41LCBxdWFsaXR5OiA4OCwgaW50ZXJydXB0aW9uczogMSB9LFxyXG4gIHsgZGF5OiAnRnJpJywgZHVyYXRpb246IDUuNCwgcXVhbGl0eTogNjIsIGludGVycnVwdGlvbnM6IDQgfSxcclxuICB7IGRheTogJ1NhdCcsIGR1cmF0aW9uOiA3LjgsIHF1YWxpdHk6IDkwLCBpbnRlcnJ1cHRpb25zOiAwIH0sXHJcbiAgeyBkYXk6ICdTdW4nLCBkdXJhdGlvbjogNy4wLCBxdWFsaXR5OiA4MiwgaW50ZXJydXB0aW9uczogMSB9LFxyXG5dO1xyXG5cclxuY29uc3QgbmlnaHRTYW1wbGVzID0gW1xyXG4gIHsgdGltZTogJzEwUE0nLCBicmVhdGhpbmc6IDE1LjYsIHF1YWxpdHk6IDcyLCBzdGFnZTogJ0xpZ2h0JyB9LFxyXG4gIHsgdGltZTogJzExUE0nLCBicmVhdGhpbmc6IDE0LjgsIHF1YWxpdHk6IDc0LCBzdGFnZTogJ0xpZ2h0JyB9LFxyXG4gIHsgdGltZTogJzEyQU0nLCBicmVhdGhpbmc6IDEzLjksIHF1YWxpdHk6IDc4LCBzdGFnZTogJ0RlZXAnIH0sXHJcbiAgeyB0aW1lOiAnMUFNJywgYnJlYXRoaW5nOiAxMy40LCBxdWFsaXR5OiA4Miwgc3RhZ2U6ICdEZWVwJyB9LFxyXG4gIHsgdGltZTogJzJBTScsIGJyZWF0aGluZzogMTIuOCwgcXVhbGl0eTogODYsIHN0YWdlOiAnRGVlcCcgfSxcclxuICB7IHRpbWU6ICczQU0nLCBicmVhdGhpbmc6IDcuMiwgcXVhbGl0eTogNTgsIHN0YWdlOiAnQXBuZWEnIH0sXHJcbiAgeyB0aW1lOiAnNEFNJywgYnJlYXRoaW5nOiAxMy4xLCBxdWFsaXR5OiA4MSwgc3RhZ2U6ICdSRU0nIH0sXHJcbiAgeyB0aW1lOiAnNUFNJywgYnJlYXRoaW5nOiAxMi42LCBxdWFsaXR5OiA4NCwgc3RhZ2U6ICdEZWVwJyB9LFxyXG4gIHsgdGltZTogJzZBTScsIGJyZWF0aGluZzogMTAuOSwgcXVhbGl0eTogNjgsIHN0YWdlOiAnTGlnaHQnIH0sXHJcbiAgeyB0aW1lOiAnN0FNJywgYnJlYXRoaW5nOiAxNC4yLCBxdWFsaXR5OiA4OCwgc3RhZ2U6ICdBd2FrZScgfSxcclxuXTtcclxuXHJcbmZ1bmN0aW9uIGJ1aWxkTGluZVBhdGgocG9pbnRzKSB7XHJcbiAgcmV0dXJuIHBvaW50cy5tYXAoKHBvaW50LCBpbmRleCkgPT4gYCR7aW5kZXggPT09IDAgPyAnTScgOiAnTCd9ICR7cG9pbnQueH0gJHtwb2ludC55fWApLmpvaW4oJyAnKTtcclxufVxyXG5cclxuZnVuY3Rpb24gYnVpbGRDaGFydFBvaW50cyhkYXRhLCB3aWR0aCwgaGVpZ2h0LCBwYWRkaW5nLCBtaW4sIG1heCkge1xyXG4gIGNvbnN0IHBsb3RXaWR0aCA9IHdpZHRoIC0gcGFkZGluZyAqIDI7XHJcbiAgY29uc3QgcGxvdEhlaWdodCA9IGhlaWdodCAtIHBhZGRpbmcgKiAyO1xyXG5cclxuICByZXR1cm4gZGF0YS5tYXAoKGl0ZW0sIGluZGV4KSA9PiB7XHJcbiAgICBjb25zdCB4ID0gcGFkZGluZyArIChwbG90V2lkdGggKiBpbmRleCkgLyAoZGF0YS5sZW5ndGggLSAxKTtcclxuICAgIGNvbnN0IHJhdGlvID0gKGl0ZW0uYnJlYXRoaW5nIC0gbWluKSAvIChtYXggLSBtaW4pO1xyXG4gICAgY29uc3QgeSA9IHBhZGRpbmcgKyAoMSAtIHJhdGlvKSAqIHBsb3RIZWlnaHQ7XHJcbiAgICByZXR1cm4geyAuLi5pdGVtLCB4LCB5IH07XHJcbiAgfSk7XHJcbn1cclxuXHJcbmZ1bmN0aW9uIGFyZWFQYXRoKHBvaW50cywgaGVpZ2h0LCBwYWRkaW5nKSB7XHJcbiAgaWYgKCFwb2ludHMubGVuZ3RoKSByZXR1cm4gJyc7XHJcbiAgY29uc3QgZmlyc3QgPSBwb2ludHNbMF07XHJcbiAgY29uc3QgbGFzdCA9IHBvaW50c1twb2ludHMubGVuZ3RoIC0gMV07XHJcbiAgcmV0dXJuIGAke2J1aWxkTGluZVBhdGgocG9pbnRzKX0gTCAke2xhc3QueH0gJHtoZWlnaHQgLSBwYWRkaW5nfSBMICR7Zmlyc3QueH0gJHtoZWlnaHQgLSBwYWRkaW5nfSBaYDtcclxufVxyXG5cclxuZnVuY3Rpb24gTmlnaHRCcmVhdGhpbmdDaGFydCgpIHtcclxuICBjb25zdCB3aWR0aCA9IDg2MDtcclxuICBjb25zdCBoZWlnaHQgPSAzMjA7XHJcbiAgY29uc3QgcGFkZGluZyA9IDMwO1xyXG4gIGNvbnN0IHBvaW50cyA9IGJ1aWxkQ2hhcnRQb2ludHMobmlnaHRTYW1wbGVzLCB3aWR0aCwgaGVpZ2h0LCBwYWRkaW5nLCA2LCAxNik7XHJcblxyXG4gIHJldHVybiAoXHJcbiAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLWNoYXJ0IGdsYXNzLWNhcmRcIj5cclxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC1jaGFydF9faGVhZGVyXCI+XHJcbiAgICAgICAgPGRpdj5cclxuICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJzbGVlcC1jaGFydF9fdGl0bGVcIj5PdmVybmlnaHQgQnJlYXRoaW5nIFRyYWNlPC9oMz5cclxuICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInNsZWVwLWNoYXJ0X19zdWJ0aXRsZVwiPlNhbXBsZWQgZXZlcnkgaG91ciBmcm9tIDEwIFBNIHRvIDcgQU08L3A+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC1jaGFydF9fY2hpcHNcIj5cclxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInNsZWVwLWNoaXAgc2xlZXAtY2hpcC0tc3RhYmxlXCI+QXZnIDE0IFJQTTwvc3Bhbj5cclxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInNsZWVwLWNoaXAgc2xlZXAtY2hpcC0td2FybmluZ1wiPjEgYXBuZWEgZGlwPC9zcGFuPlxyXG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwic2xlZXAtY2hpcCBzbGVlcC1jaGlwLS1tdXRlZFwiPlNwTzIgbmFkaXIgOTElPC9zcGFuPlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgICA8L2Rpdj5cclxuXHJcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2xlZXAtY2hhcnRfX3N2Zy13cmFwXCI+XHJcbiAgICAgICAgPHN2ZyB2aWV3Qm94PXtgMCAwICR7d2lkdGh9ICR7aGVpZ2h0fWB9IGNsYXNzTmFtZT1cInNsZWVwLWNoYXJ0X19zdmdcIiByb2xlPVwiaW1nXCIgYXJpYS1sYWJlbD1cIk92ZXJuaWdodCBicmVhdGhpbmcgcmF0ZSBjaGFydFwiPlxyXG4gICAgICAgICAgPGRlZnM+XHJcbiAgICAgICAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD1cImJyZWF0aGluZ0ZpbGxcIiB4MT1cIjBcIiB4Mj1cIjBcIiB5MT1cIjBcIiB5Mj1cIjFcIj5cclxuICAgICAgICAgICAgICA8c3RvcCBvZmZzZXQ9XCIwJVwiIHN0b3BDb2xvcj1cIiNGNTlFMEJcIiBzdG9wT3BhY2l0eT1cIjAuMjhcIiAvPlxyXG4gICAgICAgICAgICAgIDxzdG9wIG9mZnNldD1cIjEwMCVcIiBzdG9wQ29sb3I9XCIjRjU5RTBCXCIgc3RvcE9wYWNpdHk9XCIwLjAyXCIgLz5cclxuICAgICAgICAgICAgPC9saW5lYXJHcmFkaWVudD5cclxuICAgICAgICAgIDwvZGVmcz5cclxuXHJcbiAgICAgICAgICB7WzAsIDEsIDIsIDMsIDRdLm1hcChpID0+IHtcclxuICAgICAgICAgICAgY29uc3QgeSA9IHBhZGRpbmcgKyAoKGhlaWdodCAtIHBhZGRpbmcgKiAyKSAvIDQpICogaTtcclxuICAgICAgICAgICAgcmV0dXJuIDxsaW5lIGtleT17aX0geDE9e3BhZGRpbmd9IHgyPXt3aWR0aCAtIHBhZGRpbmd9IHkxPXt5fSB5Mj17eX0gY2xhc3NOYW1lPVwic2xlZXAtY2hhcnRfX2dyaWQtbGluZVwiIC8+O1xyXG4gICAgICAgICAgfSl9XHJcblxyXG4gICAgICAgICAge1swLCAxLCAyLCAzLCA0XS5tYXAoaSA9PiB7XHJcbiAgICAgICAgICAgIGNvbnN0IHggPSBwYWRkaW5nICsgKCh3aWR0aCAtIHBhZGRpbmcgKiAyKSAvIDQpICogaTtcclxuICAgICAgICAgICAgcmV0dXJuIDxsaW5lIGtleT17YHYtJHtpfWB9IHkxPXtwYWRkaW5nfSB5Mj17aGVpZ2h0IC0gcGFkZGluZ30geDE9e3h9IHgyPXt4fSBjbGFzc05hbWU9XCJzbGVlcC1jaGFydF9fZ3JpZC1saW5lIHNsZWVwLWNoYXJ0X19ncmlkLWxpbmUtLXZlcnRpY2FsXCIgLz47XHJcbiAgICAgICAgICB9KX1cclxuXHJcbiAgICAgICAgICB7cG9pbnRzLm1hcChwb2ludCA9PiAoXHJcbiAgICAgICAgICAgIHBvaW50LnN0YWdlID09PSAnQXBuZWEnID8gKFxyXG4gICAgICAgICAgICAgIDxyZWN0XHJcbiAgICAgICAgICAgICAgICBrZXk9e2BhcG5lYS0ke3BvaW50LnRpbWV9YH1cclxuICAgICAgICAgICAgICAgIHg9e3BvaW50LnggLSAyMH1cclxuICAgICAgICAgICAgICAgIHk9e3BhZGRpbmd9XHJcbiAgICAgICAgICAgICAgICB3aWR0aD17NDB9XHJcbiAgICAgICAgICAgICAgICBoZWlnaHQ9e2hlaWdodCAtIHBhZGRpbmcgKiAyfVxyXG4gICAgICAgICAgICAgICAgcng9XCIxOFwiXHJcbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJzbGVlcC1jaGFydF9fZGlwXCJcclxuICAgICAgICAgICAgICAvPlxyXG4gICAgICAgICAgICApIDogbnVsbFxyXG4gICAgICAgICAgKSl9XHJcblxyXG4gICAgICAgICAgPHBhdGggZD17YXJlYVBhdGgocG9pbnRzLCBoZWlnaHQsIHBhZGRpbmcpfSBmaWxsPVwidXJsKCNicmVhdGhpbmdGaWxsKVwiIC8+XHJcbiAgICAgICAgICA8cGF0aCBkPXtidWlsZExpbmVQYXRoKHBvaW50cyl9IGNsYXNzTmFtZT1cInNsZWVwLWNoYXJ0X19saW5lIHNsZWVwLWNoYXJ0X19saW5lLS1icmVhdGhpbmdcIiAvPlxyXG5cclxuICAgICAgICAgIDxwYXRoXHJcbiAgICAgICAgICAgIGQ9e2J1aWxkTGluZVBhdGgocG9pbnRzLm1hcChwb2ludCA9PiAoe1xyXG4gICAgICAgICAgICAgIHg6IHBvaW50LngsXHJcbiAgICAgICAgICAgICAgeTogaGVpZ2h0IC0gcGFkZGluZyAtIChwb2ludC5xdWFsaXR5IC8gMTAwKSAqIChoZWlnaHQgLSBwYWRkaW5nICogMikgKiAwLjQ1LFxyXG4gICAgICAgICAgICB9KSkpfVxyXG4gICAgICAgICAgICBjbGFzc05hbWU9XCJzbGVlcC1jaGFydF9fbGluZSBzbGVlcC1jaGFydF9fbGluZS0tcXVhbGl0eVwiXHJcbiAgICAgICAgICAvPlxyXG5cclxuICAgICAgICAgIHtwb2ludHMubWFwKHBvaW50ID0+IChcclxuICAgICAgICAgICAgPGcga2V5PXtwb2ludC50aW1lfT5cclxuICAgICAgICAgICAgICA8Y2lyY2xlIGN4PXtwb2ludC54fSBjeT17cG9pbnQueX0gcj1cIjQuNVwiIGNsYXNzTmFtZT17YHNsZWVwLWNoYXJ0X19wb2ludCAke3BvaW50LnN0YWdlID09PSAnQXBuZWEnID8gJ3NsZWVwLWNoYXJ0X19wb2ludC0tY3JpdGljYWwnIDogJyd9YH0gLz5cclxuICAgICAgICAgICAgICB7cG9pbnQuc3RhZ2UgPT09ICdBcG5lYScgJiYgKFxyXG4gICAgICAgICAgICAgICAgPHRleHQgeD17cG9pbnQueH0geT17cG9pbnQueSAtIDE0fSB0ZXh0QW5jaG9yPVwibWlkZGxlXCIgY2xhc3NOYW1lPVwic2xlZXAtY2hhcnRfX2Fubm90YXRpb25cIj5hcG5lYTwvdGV4dD5cclxuICAgICAgICAgICAgICApfVxyXG4gICAgICAgICAgICA8L2c+XHJcbiAgICAgICAgICApKX1cclxuXHJcbiAgICAgICAgICB7cG9pbnRzLm1hcChwb2ludCA9PiAoXHJcbiAgICAgICAgICAgIDx0ZXh0IGtleT17YCR7cG9pbnQudGltZX0tbGFiZWxgfSB4PXtwb2ludC54fSB5PXtoZWlnaHQgLSA4fSB0ZXh0QW5jaG9yPVwibWlkZGxlXCIgY2xhc3NOYW1lPVwic2xlZXAtY2hhcnRfX2F4aXMtbGFiZWxcIj5cclxuICAgICAgICAgICAgICB7cG9pbnQudGltZX1cclxuICAgICAgICAgICAgPC90ZXh0PlxyXG4gICAgICAgICAgKSl9XHJcblxyXG4gICAgICAgICAgPHRleHQgeD17cGFkZGluZ30geT17MTh9IGNsYXNzTmFtZT1cInNsZWVwLWNoYXJ0X19heGlzLXRpdGxlXCI+QnJlYXRoaW5nIHJhdGUgKFJQTSk8L3RleHQ+XHJcbiAgICAgICAgICA8dGV4dCB4PXt3aWR0aCAtIHBhZGRpbmd9IHk9ezE4fSB0ZXh0QW5jaG9yPVwiZW5kXCIgY2xhc3NOYW1lPVwic2xlZXAtY2hhcnRfX2F4aXMtdGl0bGUgc2xlZXAtY2hhcnRfX2F4aXMtdGl0bGUtLW11dGVkXCI+U2xlZXAgcXVhbGl0eSBvdmVybGF5PC90ZXh0PlxyXG4gICAgICAgIDwvc3ZnPlxyXG4gICAgICA8L2Rpdj5cclxuXHJcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2xlZXAtY2hhcnRfX2Zvb3RlclwiPlxyXG4gICAgICAgIHtuaWdodFNhbXBsZXMubWFwKHNhbXBsZSA9PiAoXHJcbiAgICAgICAgICA8ZGl2IGtleT17c2FtcGxlLnRpbWV9IGNsYXNzTmFtZT1cInNsZWVwLWNoYXJ0X19zdGF0XCI+XHJcbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInNsZWVwLWNoYXJ0X19zdGF0LXRpbWVcIj57c2FtcGxlLnRpbWV9PC9zcGFuPlxyXG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJzbGVlcC1jaGFydF9fc3RhdC12YWx1ZVwiPntzYW1wbGUuYnJlYXRoaW5nLnRvRml4ZWQoMSl9IFJQTTwvc3Bhbj5cclxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwic2xlZXAtY2hhcnRfX3N0YXQtc3RhZ2VcIj57c2FtcGxlLnN0YWdlfTwvc3Bhbj5cclxuICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICkpfVxyXG4gICAgICA8L2Rpdj5cclxuICAgIDwvZGl2PlxyXG4gICk7XHJcbn1cclxuXHJcbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFNsZWVwQW5hbHl0aWNzUGFnZSgpIHtcclxuICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKCk7XHJcbiAgY29uc3QgW2FjdGl2ZUZpbHRlciwgc2V0QWN0aXZlRmlsdGVyXSA9IHVzZVN0YXRlKCdUaGlzIFdlZWsnKTtcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRcIj5cclxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9faGVhZGVyXCI+XHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9fdGl0bGUtZ3JvdXBcIj5cclxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tbGdcIiBzdHlsZT17eyBjb2xvcjogJ3ZhcigtLXByaW1hcnkpJyB9fT5iZWR0aW1lPC9zcGFuPlxyXG4gICAgICAgICAgPGRpdj5cclxuICAgICAgICAgICAgPGgxIGNsYXNzTmFtZT1cInBhZ2UtbGF5b3V0X190aXRsZVwiPlNsZWVwICYgVml0YWxzIEFuYWx5c2lzPC9oMT5cclxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX3N1YnRpdGxlXCI+T3Zlcm5pZ2h0IGFtYmllbnQgc2Vuc2luZyBhbmQgYnJlYXRoaW5nIG1ldHJpY3MgZm9yIE1yLiBSYWdoYXYgSXllcjwvcD5cclxuICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX2ZpbHRlcnNcIj5cclxuICAgICAgICAgIHtbJ1RoaXMgV2VlaycsICdMYXN0IFdlZWsnXS5tYXAobGFiZWwgPT4gKFxyXG4gICAgICAgICAgICA8YnV0dG9uXHJcbiAgICAgICAgICAgICAga2V5PXtsYWJlbH1cclxuICAgICAgICAgICAgICBjbGFzc05hbWU9e2BwYWdlLWxheW91dF9fZmlsdGVyLWJ0biAke2FjdGl2ZUZpbHRlciA9PT0gbGFiZWwgPyAncGFnZS1sYXlvdXRfX2ZpbHRlci1idG4tLWFjdGl2ZScgOiAnJ31gfVxyXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldEFjdGl2ZUZpbHRlcihsYWJlbCl9XHJcbiAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICB7bGFiZWx9XHJcbiAgICAgICAgICAgIDwvYnV0dG9uPlxyXG4gICAgICAgICAgKSl9XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9fY29udGVudFwiPlxyXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2xlZXAtcGFnZV9fdG9wLXJvd1wiPlxyXG4gICAgICAgICAge1tcclxuICAgICAgICAgICAgeyBsYWJlbDogJ1NsZWVwIEFwbmVhIERhc2hib2FyZCcsIGljb246ICdiZWR0aW1lJywgcGF0aDogJy9zbGVlcC1hcG5lYScsIGNvbG9yOiAnI2FkYzZmZicsIGRlc2M6ICdOaWdodGx5IGFwbmVhIGV2ZW50cyBhbmQgYnJlYXRoaW5nIHRpbWVsaW5lJyB9LFxyXG4gICAgICAgICAgICB7IGxhYmVsOiAnRWF0aW5nIE1vbml0b3InLCBpY29uOiAncmVzdGF1cmFudCcsIHBhdGg6ICcvZWF0aW5nJywgY29sb3I6ICcjNGVkZWEzJywgZGVzYzogJ01lYWwgZnJlcXVlbmN5IGFuZCBudXRyaXRpb25hbCBwYXR0ZXJucycgfSxcclxuICAgICAgICAgIF0ubWFwKG0gPT4gKFxyXG4gICAgICAgICAgICA8YnV0dG9uXHJcbiAgICAgICAgICAgICAga2V5PXttLnBhdGh9XHJcbiAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gbmF2aWdhdGUobS5wYXRoKX1cclxuICAgICAgICAgICAgICBjbGFzc05hbWU9XCJzbGVlcC1wYWdlX19zdWJtb2R1bGVcIlxyXG4gICAgICAgICAgICAgIHN0eWxlPXt7ICctLXN1Ym1vZHVsZS1jb2xvcic6IG0uY29sb3IgfX1cclxuICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zXCIgc3R5bGU9e3sgY29sb3I6IG0uY29sb3IsIGZvbnRTaXplOiAyMCB9fT57bS5pY29ufTwvc3Bhbj5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLXBhZ2VfX3N1Ym1vZHVsZS1jb3B5XCI+XHJcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLXBhZ2VfX3N1Ym1vZHVsZS10aXRsZVwiPnttLmxhYmVsfTwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC1wYWdlX19zdWJtb2R1bGUtZGVzY1wiPnttLmRlc2N9PC9kaXY+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnMgc2xlZXAtcGFnZV9fc3VibW9kdWxlLWFycm93XCI+Y2hldnJvbl9yaWdodDwvc3Bhbj5cclxuICAgICAgICAgICAgPC9idXR0b24+XHJcbiAgICAgICAgICApKX1cclxuICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC1rcGktZ3JpZFwiPlxyXG4gICAgICAgICAge1tcclxuICAgICAgICAgICAgeyBsYWJlbDogJ0F2ZyBTbGVlcCBEdXJhdGlvbicsIHZhbHVlOiAnNy4xJywgdW5pdDogJ2hycycsIGNvbG9yOiAndmFyKC0tcHJpbWFyeSknIH0sXHJcbiAgICAgICAgICAgIHsgbGFiZWw6ICdTbGVlcCBRdWFsaXR5IFNjb3JlJywgdmFsdWU6ICc4MicsIHVuaXQ6ICcvMTAwJywgY29sb3I6ICd2YXIoLS1zZWNvbmRhcnkpJyB9LFxyXG4gICAgICAgICAgICB7IGxhYmVsOiAnQmVkIEV4aXRzIChBdmcpJywgdmFsdWU6ICcxLjQnLCB1bml0OiAnL25pZ2h0JywgY29sb3I6ICd2YXIoLS13YXJuaW5nLWFtYmVyKScgfSxcclxuICAgICAgICAgICAgeyBsYWJlbDogJ0F2ZyBCcmVhdGhpbmcgUmF0ZScsIHZhbHVlOiAnMTQnLCB1bml0OiAnUlBNJywgY29sb3I6ICd2YXIoLS1wcmltYXJ5KScgfSxcclxuICAgICAgICAgIF0ubWFwKG0gPT4gKFxyXG4gICAgICAgICAgICA8ZGl2IGtleT17bS5sYWJlbH0gY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZCBzbGVlcC1rcGktY2FyZFwiIHN0eWxlPXt7IGJvcmRlclRvcDogYDRweCBzb2xpZCAke20uY29sb3J9YCB9fT5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLWtwaS1jYXJkX19sYWJlbFwiPnttLmxhYmVsfTwvZGl2PlxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2xlZXAta3BpLWNhcmRfX3ZhbHVlLXJvd1wiPlxyXG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwic2xlZXAta3BpLWNhcmRfX3ZhbHVlXCI+e20udmFsdWV9PC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwic2xlZXAta3BpLWNhcmRfX3VuaXRcIj57bS51bml0fTwvc3Bhbj5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICApKX1cclxuICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC1wYWdlX19sYXlvdXRcIj5cclxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2xlZXAtcGFnZV9fbWFpblwiPlxyXG4gICAgICAgICAgICA8TmlnaHRCcmVhdGhpbmdDaGFydCAvPlxyXG5cclxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkIHNsZWVwLWNhcmRcIj5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLWNhcmRfX2hlYWRlclwiPlxyXG4gICAgICAgICAgICAgICAgPGRpdj5cclxuICAgICAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT1cInNsZWVwLWNhcmRfX3RpdGxlXCI+V2Vla2x5IFNsZWVwIER1cmF0aW9uIGFuZCBRdWFsaXR5PC9oMz5cclxuICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwic2xlZXAtY2FyZF9fc3VidGl0bGVcIj5TZXZlbi1uaWdodCB0cmVuZCB3aXRoIGludGVycnVwdGlvbnMgYW5kIHJlY292ZXJ5IG5pZ2h0czwvcD5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYmFkZ2UgYmFkZ2Utc3RhYmxlXCI+U3RhYmxlIHBhdHRlcm48L3NwYW4+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2xlZXAtd2Vlay1jaGFydFwiPlxyXG4gICAgICAgICAgICAgICAge3NsZWVwRGF0YS5tYXAoZCA9PiB7XHJcbiAgICAgICAgICAgICAgICAgIGNvbnN0IGJhckhlaWdodCA9IE1hdGgubWF4KDQyLCAoZC5kdXJhdGlvbiAvIDkpICogMTgwKTtcclxuICAgICAgICAgICAgICAgICAgcmV0dXJuIChcclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGtleT17ZC5kYXl9IGNsYXNzTmFtZT1cInNsZWVwLXdlZWstY2hhcnRfX2NvbFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC13ZWVrLWNoYXJ0X190cmFja1wiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwic2xlZXAtd2Vlay1jaGFydF9fZmlsbFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgc3R5bGU9e3tcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGhlaWdodDogYCR7YmFySGVpZ2h0fXB4YCxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJhY2tncm91bmQ6IGQucXVhbGl0eSA+IDg1ID8gJ2xpbmVhci1ncmFkaWVudCgxODBkZWcsICMyMkM1NUUgMCUsICMxYTU2ZGIgMTAwJSknIDogZC5xdWFsaXR5ID4gNzUgPyAnbGluZWFyLWdyYWRpZW50KDE4MGRlZywgIzNCODJGNiAwJSwgIzFhNTZkYiAxMDAlKScgOiAnbGluZWFyLWdyYWRpZW50KDE4MGRlZywgI0Y1OUUwQiAwJSwgI0VGNDQ0NCAxMDAlKScsXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgfX1cclxuICAgICAgICAgICAgICAgICAgICAgICAgLz5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC13ZWVrLWNoYXJ0X19xdWFsaXR5XCIgc3R5bGU9e3sgYm90dG9tOiBgJHtNYXRoLm1pbigxODAsIGJhckhlaWdodCArIDEwKX1weGAgfX0+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAge2QucXVhbGl0eX1cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInNsZWVwLXdlZWstY2hhcnRfX2RheVwiPntkLmRheX08L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJzbGVlcC13ZWVrLWNoYXJ0X19tZXRhXCI+e2QuZHVyYXRpb259IGhyczwvc3Bhbj5cclxuICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInNsZWVwLXdlZWstY2hhcnRfX21ldGEgc2xlZXAtd2Vlay1jaGFydF9fbWV0YS0tbXV0ZWRcIj57ZC5pbnRlcnJ1cHRpb25zfSBleGl0czwvc3Bhbj5cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgIH0pfVxyXG4gICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLXN0YWdlLXN0cmlwXCI+XHJcbiAgICAgICAgICAgICAgICB7W1xyXG4gICAgICAgICAgICAgICAgICB7IGxhYmVsOiAnQXdha2UnLCB3aWR0aDogOCwgY29sb3I6ICcjRUY0NDQ0JyB9LFxyXG4gICAgICAgICAgICAgICAgICB7IGxhYmVsOiAnTGlnaHQnLCB3aWR0aDogMjQsIGNvbG9yOiAnI2FkYzZmZicgfSxcclxuICAgICAgICAgICAgICAgICAgeyBsYWJlbDogJ0RlZXAnLCB3aWR0aDogMzgsIGNvbG9yOiAnIzNCODJGNicgfSxcclxuICAgICAgICAgICAgICAgICAgeyBsYWJlbDogJ1JFTScsIHdpZHRoOiAxOCwgY29sb3I6ICcjNGVkZWEzJyB9LFxyXG4gICAgICAgICAgICAgICAgICB7IGxhYmVsOiAnRGVlcCcsIHdpZHRoOiAxMiwgY29sb3I6ICcjM0I4MkY2JyB9LFxyXG4gICAgICAgICAgICAgICAgXS5tYXAoc3RhZ2UgPT4gKFxyXG4gICAgICAgICAgICAgICAgICA8ZGl2IGtleT17YCR7c3RhZ2UubGFiZWx9LSR7c3RhZ2Uud2lkdGh9YH0gY2xhc3NOYW1lPVwic2xlZXAtc3RhZ2Utc3RyaXBfX2l0ZW1cIiBzdHlsZT17eyB3aWR0aDogYCR7c3RhZ2Uud2lkdGh9JWAsIGJhY2tncm91bmQ6IHN0YWdlLmNvbG9yIH19PlxyXG4gICAgICAgICAgICAgICAgICAgIDxzcGFuPntzdGFnZS5sYWJlbH08L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgKSl9XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJzbGVlcC1wYWdlX19zaWRlXCI+XHJcbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZCBzbGVlcC1jYXJkIHNsZWVwLWNhcmQtLXRpZ2h0XCI+XHJcbiAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT1cInNsZWVwLWNhcmRfX3RpdGxlXCI+QUkgU2xlZXAgSW5zaWdodHM8L2gzPlxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwic2xlZXAtaW5zaWdodFwiPlxyXG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnNcIiBzdHlsZT17eyBjb2xvcjogJ3ZhcigtLXByaW1hcnkpJyB9fT5wc3ljaG9sb2d5PC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgPGRpdj5cclxuICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwic2xlZXAtaW5zaWdodF9fdGl0bGVcIj5Db25zaXN0ZW50IGJyZWF0aGluZyBiYXNlbGluZTwvcD5cclxuICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwic2xlZXAtaW5zaWdodF9fYm9keVwiPkJyZWF0aGluZyBzdGF5cyBpbiB0aGUgMTMtMTUgUlBNIHJhbmdlIGZvciBtb3N0IG9mIHRoZSBuaWdodCwgd2l0aCBvbmUgc2hvcnQgYXBuZWEgZGlwIGFyb3VuZCAzIEFNLjwvcD5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLWluc2lnaHQgc2xlZXAtaW5zaWdodC0td2FybmluZ1wiPlxyXG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnNcIj53YXJuaW5nX2FtYmVyPC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgPGRpdj5cclxuICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwic2xlZXAtaW5zaWdodF9fdGl0bGVcIj5TaW5nbGUgaW50ZXJydXB0aW9uIGNsdXN0ZXI8L3A+XHJcbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInNsZWVwLWluc2lnaHRfX2JvZHlcIj5JbnRlcnJ1cHRlZCBzbGVlcCBvbiBGcmlkYXkgYWxpZ25zIHdpdGggZWxldmF0ZWQgYmVkIGV4aXRzIGFuZCBhIGxvd2VyIHF1YWxpdHkgc2NvcmUuPC9wPlxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkIHNsZWVwLWNhcmQgc2xlZXAtY2FyZC0tdGlnaHRcIj5cclxuICAgICAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwic2xlZXAtY2FyZF9fdGl0bGVcIj5OaWdodCBTdW1tYXJ5PC9oMz5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInNsZWVwLXN1bW1hcnlcIj5cclxuICAgICAgICAgICAgICAgIHtbXHJcbiAgICAgICAgICAgICAgICAgIHsga2V5OiAnUmVzaWRlbnQnLCB2YWx1ZTogJ01yLiBSYWdoYXYgSXllcicgfSxcclxuICAgICAgICAgICAgICAgICAgeyBrZXk6ICdTbGVlcCB3aW5kb3cnLCB2YWx1ZTogJzEwOjEyIFBNIC0gNjo1OCBBTScgfSxcclxuICAgICAgICAgICAgICAgICAgeyBrZXk6ICdMb3dlc3QgQlBNJywgdmFsdWU6ICc3LjIgYXQgMzowMCBBTScgfSxcclxuICAgICAgICAgICAgICAgICAgeyBrZXk6ICdXYWtldXBzJywgdmFsdWU6ICcyIGJyaWVmIGF3YWtlbmluZ3MnIH0sXHJcbiAgICAgICAgICAgICAgICAgIHsga2V5OiAnTnVyc2Ugbm90ZScsIHZhbHVlOiAnUmVzdGVkLCBubyBhZ2l0YXRpb24gb2JzZXJ2ZWQnIH0sXHJcbiAgICAgICAgICAgICAgICBdLm1hcChpdGVtID0+IChcclxuICAgICAgICAgICAgICAgICAgPGRpdiBrZXk9e2l0ZW0ua2V5fSBjbGFzc05hbWU9XCJzbGVlcC1zdW1tYXJ5X19yb3dcIj5cclxuICAgICAgICAgICAgICAgICAgICA8c3Bhbj57aXRlbS5rZXl9PC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgICAgIDxzdHJvbmc+e2l0ZW0udmFsdWV9PC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgKSl9XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgIDwvZGl2PlxyXG4gICAgPC9kaXY+XHJcbiAgKTtcclxufVxyXG4iXSwiZmlsZSI6IkM6L1VzZXJzL0FheXVzaCBXYWxzYW5naWthci9PbmVEcml2ZS9EZXNrdG9wL1NpbGVudCBTZW5zZS9zcmMvcGFnZXMvU2xlZXBBbmFseXRpY3NQYWdlLmpzeCJ9

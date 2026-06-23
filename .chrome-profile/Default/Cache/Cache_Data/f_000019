@@ -1,0 +1,208 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/LoginPage.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react;
+import { useNavigate } from "/node_modules/.vite/deps/react-router-dom.js?v=6faa39c4";
+import CustomCursor from "/src/components/landing/CustomCursor.jsx";
+import ParticleCanvas from "/src/components/landing/ParticleCanvas.jsx";
+import "/src/styles/landing.css";
+export default function LoginPage() {
+  _s();
+  const navigate = useNavigate();
+  const handleLogin = (e) => {
+    e.preventDefault();
+    navigate("/dashboard");
+  };
+  return /* @__PURE__ */ jsxDEV("div", { className: "landing-page", style: { display: "flex", alignItems: "center", justifyContent: "center" }, children: [
+    /* @__PURE__ */ jsxDEV(CustomCursor, {}, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+      lineNumber: 37,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(ParticleCanvas, {}, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+      lineNumber: 38,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { zIndex: 10, padding: "40px", width: "100%", maxWidth: "400px", pointerEvents: "auto" }, children: [
+      /* @__PURE__ */ jsxDEV("div", { style: { textAlign: "center", marginBottom: "32px" }, children: [
+        /* @__PURE__ */ jsxDEV("div", { style: {
+          width: "48px",
+          height: "48px",
+          background: "var(--primary)",
+          borderRadius: "50%",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontWeight: "bold",
+          fontSize: "20px",
+          margin: "0 auto 16px"
+        }, children: "SS" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+          lineNumber: 42,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("h1", { style: { fontSize: "24px", fontWeight: "bold" }, children: "Welcome Back" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+          lineNumber: 57,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { style: { color: "var(--on-surface-variant)", marginTop: "8px" }, children: "Sign in to Silent Sense" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+          lineNumber: 58,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+        lineNumber: 41,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("form", { onSubmit: handleLogin, style: { display: "flex", flexDirection: "column", gap: "20px" }, children: [
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("label", { style: { display: "block", fontSize: "14px", fontWeight: 500, marginBottom: "8px" }, children: "Email Address" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+            lineNumber: 63,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            "input",
+            {
+              type: "email",
+              placeholder: "caregiver@family.com",
+              required: true,
+              style: {
+                width: "100%",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                border: "1px solid var(--outline-variant)",
+                background: "rgba(255,255,255,0.8)",
+                outline: "none",
+                fontFamily: "var(--font-family)",
+                cursor: "none"
+                // Custom cursor over inputs
+              },
+              "data-cursor": "expand"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+              lineNumber: 64,
+              columnNumber: 13
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+          lineNumber: 62,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("label", { style: { display: "block", fontSize: "14px", fontWeight: 500, marginBottom: "8px" }, children: "Password" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+            lineNumber: 83,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            "input",
+            {
+              type: "password",
+              placeholder: "••••••••",
+              required: true,
+              style: {
+                width: "100%",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                border: "1px solid var(--outline-variant)",
+                background: "rgba(255,255,255,0.8)",
+                outline: "none",
+                fontFamily: "var(--font-family)",
+                cursor: "none"
+              },
+              "data-cursor": "expand"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+              lineNumber: 84,
+              columnNumber: 13
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+          lineNumber: 82,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          "button",
+          {
+            type: "submit",
+            className: "landing-cta",
+            style: { width: "100%", marginTop: "12px", border: "none" },
+            "data-cursor": "expand",
+            children: "Authenticate"
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+            lineNumber: 102,
+            columnNumber: 11
+          },
+          this
+        )
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+        lineNumber: 61,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+      lineNumber: 40,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx",
+    lineNumber: 36,
+    columnNumber: 5
+  }, this);
+}
+_s(LoginPage, "CzcTeTziyjMsSrAVmHuCCb6+Bfg=", false, function() {
+  return [useNavigate];
+});
+_c = LoginPage;
+var _c;
+$RefreshReg$(_c, "LoginPage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/LoginPage.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUEsY0FDWjtBQUFBLGNBQ0EsT0FBTztBQUFBLGdCQUNMSixPQUFPO0FBQUEsZ0JBQ1BELFNBQVM7QUFBQSxnQkFDVFEsY0FBYztBQUFBLGdCQUNkUSxRQUFRO0FBQUEsZ0JBQ1JULFlBQVk7QUFBQSxnQkFDWlUsU0FBUztBQUFBLGdCQUNUQyxZQUFZO0FBQUEsZ0JBQ1pDLFFBQVE7QUFBQSxjQUNWO0FBQUEsY0FDQSxlQUFZO0FBQUE7QUFBQSxZQWRkO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxVQWNzQjtBQUFBLGFBaEJ4QjtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBa0JBO0FBQUEsUUFFQTtBQUFBLFVBQUM7QUFBQTtBQUFBLFlBQ0MsTUFBSztBQUFBLFlBQ0wsV0FBVTtBQUFBLFlBQ1YsT0FBTyxFQUFFbEIsT0FBTyxRQUFRWSxXQUFXLFFBQVFHLFFBQVEsT0FBTztBQUFBLFlBQzFELGVBQVk7QUFBQSxZQUFRO0FBQUE7QUFBQSxVQUp0QjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsUUFPQTtBQUFBLFdBaERGO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFpREE7QUFBQSxTQXRFRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBdUVBO0FBQUEsT0EzRUY7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQTRFQTtBQUVKO0FBQUN6QixHQXhGdUJELFdBQVM7QUFBQSxVQUNkSCxXQUFXO0FBQUE7QUFBQSxLQURORztBQUFTLElBQUE4QjtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJSZWFjdCIsInVzZU5hdmlnYXRlIiwiQ3VzdG9tQ3Vyc29yIiwiUGFydGljbGVDYW52YXMiLCJMb2dpblBhZ2UiLCJfcyIsIm5hdmlnYXRlIiwiaGFuZGxlTG9naW4iLCJlIiwicHJldmVudERlZmF1bHQiLCJkaXNwbGF5IiwiYWxpZ25JdGVtcyIsImp1c3RpZnlDb250ZW50IiwiekluZGV4IiwicGFkZGluZyIsIndpZHRoIiwibWF4V2lkdGgiLCJwb2ludGVyRXZlbnRzIiwidGV4dEFsaWduIiwibWFyZ2luQm90dG9tIiwiaGVpZ2h0IiwiYmFja2dyb3VuZCIsImJvcmRlclJhZGl1cyIsImNvbG9yIiwiZm9udFdlaWdodCIsImZvbnRTaXplIiwibWFyZ2luIiwibWFyZ2luVG9wIiwiZmxleERpcmVjdGlvbiIsImdhcCIsImJvcmRlciIsIm91dGxpbmUiLCJmb250RmFtaWx5IiwiY3Vyc29yIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiTG9naW5QYWdlLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgdXNlTmF2aWdhdGUgfSBmcm9tICdyZWFjdC1yb3V0ZXItZG9tJztcbmltcG9ydCBDdXN0b21DdXJzb3IgZnJvbSAnLi4vY29tcG9uZW50cy9sYW5kaW5nL0N1c3RvbUN1cnNvcic7XG5pbXBvcnQgUGFydGljbGVDYW52YXMgZnJvbSAnLi4vY29tcG9uZW50cy9sYW5kaW5nL1BhcnRpY2xlQ2FudmFzJztcbmltcG9ydCAnLi4vc3R5bGVzL2xhbmRpbmcuY3NzJztcblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gTG9naW5QYWdlKCkge1xuICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKCk7XG5cbiAgY29uc3QgaGFuZGxlTG9naW4gPSAoZSkgPT4ge1xuICAgIGUucHJldmVudERlZmF1bHQoKTtcbiAgICAvLyBTaW11bGF0ZSBhdXRoIHRoZW4gcmVkaXJlY3RcbiAgICBuYXZpZ2F0ZSgnL2Rhc2hib2FyZCcpO1xuICB9O1xuXG4gIHJldHVybiAoXG4gICAgPGRpdiBjbGFzc05hbWU9XCJsYW5kaW5nLXBhZ2VcIiBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBqdXN0aWZ5Q29udGVudDogJ2NlbnRlcicgfX0+XG4gICAgICA8Q3VzdG9tQ3Vyc29yIC8+XG4gICAgICA8UGFydGljbGVDYW52YXMgLz5cbiAgICAgIFxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkXCIgc3R5bGU9e3sgekluZGV4OiAxMCwgcGFkZGluZzogJzQwcHgnLCB3aWR0aDogJzEwMCUnLCBtYXhXaWR0aDogJzQwMHB4JywgcG9pbnRlckV2ZW50czogJ2F1dG8nIH19PlxuICAgICAgICA8ZGl2IHN0eWxlPXt7IHRleHRBbGlnbjogJ2NlbnRlcicsIG1hcmdpbkJvdHRvbTogJzMycHgnIH19PlxuICAgICAgICAgIDxkaXYgc3R5bGU9e3sgXG4gICAgICAgICAgICB3aWR0aDogJzQ4cHgnLCBcbiAgICAgICAgICAgIGhlaWdodDogJzQ4cHgnLCBcbiAgICAgICAgICAgIGJhY2tncm91bmQ6ICd2YXIoLS1wcmltYXJ5KScsIFxuICAgICAgICAgICAgYm9yZGVyUmFkaXVzOiAnNTAlJyxcbiAgICAgICAgICAgIGRpc3BsYXk6ICdpbmxpbmUtZmxleCcsXG4gICAgICAgICAgICBhbGlnbkl0ZW1zOiAnY2VudGVyJyxcbiAgICAgICAgICAgIGp1c3RpZnlDb250ZW50OiAnY2VudGVyJyxcbiAgICAgICAgICAgIGNvbG9yOiAnd2hpdGUnLFxuICAgICAgICAgICAgZm9udFdlaWdodDogJ2JvbGQnLFxuICAgICAgICAgICAgZm9udFNpemU6ICcyMHB4JyxcbiAgICAgICAgICAgIG1hcmdpbjogJzAgYXV0byAxNnB4J1xuICAgICAgICAgIH19PlxuICAgICAgICAgICAgU1NcbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8aDEgc3R5bGU9e3sgZm9udFNpemU6ICcyNHB4JywgZm9udFdlaWdodDogJ2JvbGQnIH19PldlbGNvbWUgQmFjazwvaDE+XG4gICAgICAgICAgPHAgc3R5bGU9e3sgY29sb3I6ICd2YXIoLS1vbi1zdXJmYWNlLXZhcmlhbnQpJywgbWFyZ2luVG9wOiAnOHB4JyB9fT5TaWduIGluIHRvIFNpbGVudCBTZW5zZTwvcD5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGZvcm0gb25TdWJtaXQ9e2hhbmRsZUxvZ2lufSBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGZsZXhEaXJlY3Rpb246ICdjb2x1bW4nLCBnYXA6ICcyMHB4JyB9fT5cbiAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgPGxhYmVsIHN0eWxlPXt7IGRpc3BsYXk6ICdibG9jaycsIGZvbnRTaXplOiAnMTRweCcsIGZvbnRXZWlnaHQ6IDUwMCwgbWFyZ2luQm90dG9tOiAnOHB4JyB9fT5FbWFpbCBBZGRyZXNzPC9sYWJlbD5cbiAgICAgICAgICAgIDxpbnB1dCBcbiAgICAgICAgICAgICAgdHlwZT1cImVtYWlsXCIgXG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiY2FyZWdpdmVyQGZhbWlseS5jb21cIiBcbiAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgICAgc3R5bGU9e3tcbiAgICAgICAgICAgICAgICB3aWR0aDogJzEwMCUnLFxuICAgICAgICAgICAgICAgIHBhZGRpbmc6ICcxMnB4IDE2cHgnLFxuICAgICAgICAgICAgICAgIGJvcmRlclJhZGl1czogJzhweCcsXG4gICAgICAgICAgICAgICAgYm9yZGVyOiAnMXB4IHNvbGlkIHZhcigtLW91dGxpbmUtdmFyaWFudCknLFxuICAgICAgICAgICAgICAgIGJhY2tncm91bmQ6ICdyZ2JhKDI1NSwyNTUsMjU1LDAuOCknLFxuICAgICAgICAgICAgICAgIG91dGxpbmU6ICdub25lJyxcbiAgICAgICAgICAgICAgICBmb250RmFtaWx5OiAndmFyKC0tZm9udC1mYW1pbHkpJyxcbiAgICAgICAgICAgICAgICBjdXJzb3I6ICdub25lJyAvLyBDdXN0b20gY3Vyc29yIG92ZXIgaW5wdXRzXG4gICAgICAgICAgICAgIH19XG4gICAgICAgICAgICAgIGRhdGEtY3Vyc29yPVwiZXhwYW5kXCJcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgXG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxsYWJlbCBzdHlsZT17eyBkaXNwbGF5OiAnYmxvY2snLCBmb250U2l6ZTogJzE0cHgnLCBmb250V2VpZ2h0OiA1MDAsIG1hcmdpbkJvdHRvbTogJzhweCcgfX0+UGFzc3dvcmQ8L2xhYmVsPlxuICAgICAgICAgICAgPGlucHV0IFxuICAgICAgICAgICAgICB0eXBlPVwicGFzc3dvcmRcIiBcbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCLigKLigKLigKLigKLigKLigKLigKLigKJcIiBcbiAgICAgICAgICAgICAgcmVxdWlyZWRcbiAgICAgICAgICAgICAgc3R5bGU9e3tcbiAgICAgICAgICAgICAgICB3aWR0aDogJzEwMCUnLFxuICAgICAgICAgICAgICAgIHBhZGRpbmc6ICcxMnB4IDE2cHgnLFxuICAgICAgICAgICAgICAgIGJvcmRlclJhZGl1czogJzhweCcsXG4gICAgICAgICAgICAgICAgYm9yZGVyOiAnMXB4IHNvbGlkIHZhcigtLW91dGxpbmUtdmFyaWFudCknLFxuICAgICAgICAgICAgICAgIGJhY2tncm91bmQ6ICdyZ2JhKDI1NSwyNTUsMjU1LDAuOCknLFxuICAgICAgICAgICAgICAgIG91dGxpbmU6ICdub25lJyxcbiAgICAgICAgICAgICAgICBmb250RmFtaWx5OiAndmFyKC0tZm9udC1mYW1pbHkpJyxcbiAgICAgICAgICAgICAgICBjdXJzb3I6ICdub25lJ1xuICAgICAgICAgICAgICB9fVxuICAgICAgICAgICAgICBkYXRhLWN1cnNvcj1cImV4cGFuZFwiXG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGJ1dHRvbiBcbiAgICAgICAgICAgIHR5cGU9XCJzdWJtaXRcIiBcbiAgICAgICAgICAgIGNsYXNzTmFtZT1cImxhbmRpbmctY3RhXCIgXG4gICAgICAgICAgICBzdHlsZT17eyB3aWR0aDogJzEwMCUnLCBtYXJnaW5Ub3A6ICcxMnB4JywgYm9yZGVyOiAnbm9uZScgfX1cbiAgICAgICAgICAgIGRhdGEtY3Vyc29yPVwiZXhwYW5kXCJcbiAgICAgICAgICA+XG4gICAgICAgICAgICBBdXRoZW50aWNhdGVcbiAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgPC9mb3JtPlxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gICk7XG59XG4iXSwiZmlsZSI6IkM6L1VzZXJzL0FheXVzaCBXYWxzYW5naWthci9PbmVEcml2ZS9EZXNrdG9wL1NpbGVudCBTZW5zZS9zcmMvcGFnZXMvTG9naW5QYWdlLmpzeCJ9

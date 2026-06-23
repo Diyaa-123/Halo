@@ -1,0 +1,253 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/alerts/AlertCard.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react; const useState = __vite__cjsImport3_react["useState"];
+import "/src/components/alerts/AlertCard.css";
+const priorityConfig = {
+  1: { color: "#EF4444", label: "P1", icon: "emergency" },
+  2: { color: "#F59E0B", label: "P2", icon: "warning_amber" },
+  3: { color: "#adc6ff", label: "P3", icon: "info" }
+};
+const statusConfig = {
+  critical: { color: "#EF4444" },
+  warning: { color: "#F59E0B" },
+  info: { color: "#adc6ff" }
+};
+export default function AlertCard({ alert, onAcknowledge }) {
+  _s();
+  const [expanded, setExpanded] = useState(alert.priority === 1);
+  const pc = priorityConfig[alert.priority] || priorityConfig[3];
+  const sc = statusConfig[alert.status] || statusConfig.info;
+  return /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      className: `alert-card alert-card--${alert.status}`,
+      style: { "--alert-color": sc.color },
+      children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "alert-card__header", onClick: () => setExpanded(!expanded), children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "alert-card__bed-info", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "alert-card__priority-badge", style: { background: pc.color }, children: pc.label }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 48,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { className: "alert-card__bed", children: alert.bed }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 51,
+              columnNumber: 11
+            }, this),
+            alert.priority === 1 && /* @__PURE__ */ jsxDEV("span", { className: "alert-card__pulse-dot" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 52,
+              columnNumber: 36
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 47,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "alert-card__time-info", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "alert-card__ago", children: alert.ago }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 55,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", style: { color: "var(--outline)" }, children: expanded ? "expand_less" : "expand_more" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 56,
+              columnNumber: 11
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 54,
+            columnNumber: 9
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+          lineNumber: 46,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "alert-card__type", style: { color: sc.color }, children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: pc.icon }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 64,
+            columnNumber: 9
+          }, this),
+          alert.type
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+          lineNumber: 63,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "alert-card__risk-row", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "alert-card__risk-bar", children: /* @__PURE__ */ jsxDEV(
+            "div",
+            {
+              className: "alert-card__risk-fill",
+              style: { width: `${alert.risk}%`, background: sc.color }
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 71,
+              columnNumber: 11
+            },
+            this
+          ) }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 70,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "alert-card__risk-val", style: { color: sc.color }, children: [
+            "Risk: ",
+            alert.risk
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 76,
+            columnNumber: 9
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+          lineNumber: 69,
+          columnNumber: 7
+        }, this),
+        expanded && /* @__PURE__ */ jsxDEV("div", { className: "alert-card__details", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "alert-card__rec", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", style: { color: "var(--primary)" }, children: "psychology" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 83,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: alert.recommendation }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 84,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 82,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "alert-card__timer", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", style: { color: "var(--warning-amber)" }, children: "timer" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 87,
+              columnNumber: 13
+            }, this),
+            "Unacknowledged: ",
+            /* @__PURE__ */ jsxDEV("strong", { style: { color: "var(--warning-amber)" }, children: alert.unacknowledged }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 88,
+              columnNumber: 29
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 86,
+            columnNumber: 11
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "alert-card__actions", children: [
+            /* @__PURE__ */ jsxDEV("button", { className: "btn btn-primary btn-sm", onClick: onAcknowledge, children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "check" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+                lineNumber: 92,
+                columnNumber: 15
+              }, this),
+              "Acknowledge"
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 91,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("button", { className: "btn btn-ghost btn-sm", children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "person_add" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+                lineNumber: 96,
+                columnNumber: 15
+              }, this),
+              "Assign"
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 95,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("button", { className: "btn btn-danger btn-sm", children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "priority_high" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+                lineNumber: 100,
+                columnNumber: 15
+              }, this),
+              "Escalate"
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 99,
+              columnNumber: 13
+            }, this),
+            /* @__PURE__ */ jsxDEV("button", { className: "btn btn-ghost btn-sm", children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "view_in_ar" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+                lineNumber: 104,
+                columnNumber: 15
+              }, this),
+              "Twin"
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+              lineNumber: 103,
+              columnNumber: 13
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+            lineNumber: 90,
+            columnNumber: 11
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+          lineNumber: 81,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx",
+      lineNumber: 41,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_s(AlertCard, "4Aizcqb3k7Tjw2fr+ATIZZ6PlBA=");
+_c = AlertCard;
+var _c;
+$RefreshReg$(_c, "AlertCard");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/alerts/AlertCard.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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aEI7QUFBQSxxQ0FBQyxVQUFLLFdBQVUsMEJBQXlCLDBCQUF6QztBQUFBO0FBQUE7QUFBQTtBQUFBLHFCQUFtRDtBQUFBLGNBQU07QUFBQSxpQkFEM0Q7QUFBQTtBQUFBO0FBQUE7QUFBQSxtQkFHQTtBQUFBLFlBQ0EsdUJBQUMsWUFBTyxXQUFVLHlCQUNoQjtBQUFBLHFDQUFDLFVBQUssV0FBVSwwQkFBeUIsNkJBQXpDO0FBQUE7QUFBQTtBQUFBO0FBQUEscUJBQXNEO0FBQUEsY0FBTTtBQUFBLGlCQUQ5RDtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUdBO0FBQUEsWUFDQSx1QkFBQyxZQUFPLFdBQVUsd0JBQ2hCO0FBQUEscUNBQUMsVUFBSyxXQUFVLDBCQUF5QiwwQkFBekM7QUFBQTtBQUFBO0FBQUE7QUFBQSxxQkFBbUQ7QUFBQSxjQUFNO0FBQUEsaUJBRDNEO0FBQUE7QUFBQTtBQUFBO0FBQUEsbUJBR0E7QUFBQSxlQWhCRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQWlCQTtBQUFBLGFBMUJGO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUEyQkE7QUFBQTtBQUFBO0FBQUEsSUFuRUo7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLEVBcUVBO0FBRUo7QUFBQ0MsR0E3RXVCSCxXQUFTO0FBQUEsS0FBVEE7QUFBUyxJQUFBa0I7QUFBQSxhQUFBQSxJQUFBIiwibmFtZXMiOlsiUmVhY3QiLCJ1c2VTdGF0ZSIsInByaW9yaXR5Q29uZmlnIiwiY29sb3IiLCJsYWJlbCIsImljb24iLCJzdGF0dXNDb25maWciLCJjcml0aWNhbCIsIndhcm5pbmciLCJpbmZvIiwiQWxlcnRDYXJkIiwiYWxlcnQiLCJvbkFja25vd2xlZGdlIiwiX3MiLCJleHBhbmRlZCIsInNldEV4cGFuZGVkIiwicHJpb3JpdHkiLCJwYyIsInNjIiwic3RhdHVzIiwiYmFja2dyb3VuZCIsImJlZCIsImFnbyIsInR5cGUiLCJ3aWR0aCIsInJpc2siLCJyZWNvbW1lbmRhdGlvbiIsInVuYWNrbm93bGVkZ2VkIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQWxlcnRDYXJkLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QsIHsgdXNlU3RhdGUgfSBmcm9tICdyZWFjdCc7XG5pbXBvcnQgJy4vQWxlcnRDYXJkLmNzcyc7XG5cbmNvbnN0IHByaW9yaXR5Q29uZmlnID0ge1xuICAxOiB7IGNvbG9yOiAnI0VGNDQ0NCcsIGxhYmVsOiAnUDEnLCBpY29uOiAnZW1lcmdlbmN5JyB9LFxuICAyOiB7IGNvbG9yOiAnI0Y1OUUwQicsIGxhYmVsOiAnUDInLCBpY29uOiAnd2FybmluZ19hbWJlcicgfSxcbiAgMzogeyBjb2xvcjogJyNhZGM2ZmYnLCBsYWJlbDogJ1AzJywgaWNvbjogJ2luZm8nIH0sXG59O1xuXG5jb25zdCBzdGF0dXNDb25maWcgPSB7XG4gIGNyaXRpY2FsOiB7IGNvbG9yOiAnI0VGNDQ0NCcgfSxcbiAgd2FybmluZzogeyBjb2xvcjogJyNGNTlFMEInIH0sXG4gIGluZm86IHsgY29sb3I6ICcjYWRjNmZmJyB9LFxufTtcblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gQWxlcnRDYXJkKHsgYWxlcnQsIG9uQWNrbm93bGVkZ2UgfSkge1xuICBjb25zdCBbZXhwYW5kZWQsIHNldEV4cGFuZGVkXSA9IHVzZVN0YXRlKGFsZXJ0LnByaW9yaXR5ID09PSAxKTtcbiAgY29uc3QgcGMgPSBwcmlvcml0eUNvbmZpZ1thbGVydC5wcmlvcml0eV0gfHwgcHJpb3JpdHlDb25maWdbM107XG4gIGNvbnN0IHNjID0gc3RhdHVzQ29uZmlnW2FsZXJ0LnN0YXR1c10gfHwgc3RhdHVzQ29uZmlnLmluZm87XG5cbiAgcmV0dXJuIChcbiAgICA8ZGl2XG4gICAgICBjbGFzc05hbWU9e2BhbGVydC1jYXJkIGFsZXJ0LWNhcmQtLSR7YWxlcnQuc3RhdHVzfWB9XG4gICAgICBzdHlsZT17eyAnLS1hbGVydC1jb2xvcic6IHNjLmNvbG9yIH19XG4gICAgPlxuICAgICAgey8qIEhlYWRlciAqL31cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWxlcnQtY2FyZF9faGVhZGVyXCIgb25DbGljaz17KCkgPT4gc2V0RXhwYW5kZWQoIWV4cGFuZGVkKX0+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWxlcnQtY2FyZF9fYmVkLWluZm9cIj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJhbGVydC1jYXJkX19wcmlvcml0eS1iYWRnZVwiIHN0eWxlPXt7IGJhY2tncm91bmQ6IHBjLmNvbG9yIH19PlxuICAgICAgICAgICAge3BjLmxhYmVsfVxuICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJhbGVydC1jYXJkX19iZWRcIj57YWxlcnQuYmVkfTwvc3Bhbj5cbiAgICAgICAgICB7YWxlcnQucHJpb3JpdHkgPT09IDEgJiYgPHNwYW4gY2xhc3NOYW1lPVwiYWxlcnQtY2FyZF9fcHVsc2UtZG90XCIgLz59XG4gICAgICAgIDwvZGl2PlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFsZXJ0LWNhcmRfX3RpbWUtaW5mb1wiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImFsZXJ0LWNhcmRfX2Fnb1wiPnthbGVydC5hZ299PC9zcGFuPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tc21cIiBzdHlsZT17eyBjb2xvcjogJ3ZhcigtLW91dGxpbmUpJyB9fT5cbiAgICAgICAgICAgIHtleHBhbmRlZCA/ICdleHBhbmRfbGVzcycgOiAnZXhwYW5kX21vcmUnfVxuICAgICAgICAgIDwvc3Bhbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cblxuICAgICAgey8qIFR5cGUgKi99XG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImFsZXJ0LWNhcmRfX3R5cGVcIiBzdHlsZT17eyBjb2xvcjogc2MuY29sb3IgfX0+XG4gICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tc21cIj57cGMuaWNvbn08L3NwYW4+XG4gICAgICAgIHthbGVydC50eXBlfVxuICAgICAgPC9kaXY+XG5cbiAgICAgIHsvKiBSaXNrIFNjb3JlICovfVxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJhbGVydC1jYXJkX19yaXNrLXJvd1wiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFsZXJ0LWNhcmRfX3Jpc2stYmFyXCI+XG4gICAgICAgICAgPGRpdlxuICAgICAgICAgICAgY2xhc3NOYW1lPVwiYWxlcnQtY2FyZF9fcmlzay1maWxsXCJcbiAgICAgICAgICAgIHN0eWxlPXt7IHdpZHRoOiBgJHthbGVydC5yaXNrfSVgLCBiYWNrZ3JvdW5kOiBzYy5jb2xvciB9fVxuICAgICAgICAgIC8+XG4gICAgICAgIDwvZGl2PlxuICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJhbGVydC1jYXJkX19yaXNrLXZhbFwiIHN0eWxlPXt7IGNvbG9yOiBzYy5jb2xvciB9fT5SaXNrOiB7YWxlcnQucmlza308L3NwYW4+XG4gICAgICA8L2Rpdj5cblxuICAgICAgey8qIEV4cGFuZGVkIERldGFpbHMgKi99XG4gICAgICB7ZXhwYW5kZWQgJiYgKFxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFsZXJ0LWNhcmRfX2RldGFpbHNcIj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFsZXJ0LWNhcmRfX3JlY1wiPlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnMgaWNvbi1zbVwiIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0tcHJpbWFyeSknIH19PnBzeWNob2xvZ3k8L3NwYW4+XG4gICAgICAgICAgICA8c3Bhbj57YWxlcnQucmVjb21tZW5kYXRpb259PC9zcGFuPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiYWxlcnQtY2FyZF9fdGltZXJcIj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tc21cIiBzdHlsZT17eyBjb2xvcjogJ3ZhcigtLXdhcm5pbmctYW1iZXIpJyB9fT50aW1lcjwvc3Bhbj5cbiAgICAgICAgICAgIFVuYWNrbm93bGVkZ2VkOiA8c3Ryb25nIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0td2FybmluZy1hbWJlciknIH19PnthbGVydC51bmFja25vd2xlZGdlZH08L3N0cm9uZz5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImFsZXJ0LWNhcmRfX2FjdGlvbnNcIj5cbiAgICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiYnRuIGJ0bi1wcmltYXJ5IGJ0bi1zbVwiIG9uQ2xpY2s9e29uQWNrbm93bGVkZ2V9PlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29ucyBpY29uLXNtXCI+Y2hlY2s8L3NwYW4+XG4gICAgICAgICAgICAgIEFja25vd2xlZGdlXG4gICAgICAgICAgICA8L2J1dHRvbj5cbiAgICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiYnRuIGJ0bi1naG9zdCBidG4tc21cIj5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnMgaWNvbi1zbVwiPnBlcnNvbl9hZGQ8L3NwYW4+XG4gICAgICAgICAgICAgIEFzc2lnblxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICA8YnV0dG9uIGNsYXNzTmFtZT1cImJ0biBidG4tZGFuZ2VyIGJ0bi1zbVwiPlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29ucyBpY29uLXNtXCI+cHJpb3JpdHlfaGlnaDwvc3Bhbj5cbiAgICAgICAgICAgICAgRXNjYWxhdGVcbiAgICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJidG4gYnRuLWdob3N0IGJ0bi1zbVwiPlxuICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29ucyBpY29uLXNtXCI+dmlld19pbl9hcjwvc3Bhbj5cbiAgICAgICAgICAgICAgVHdpblxuICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgKX1cbiAgICA8L2Rpdj5cbiAgKTtcbn1cbiJdLCJmaWxlIjoiQzovVXNlcnMvQWF5dXNoIFdhbHNhbmdpa2FyL09uZURyaXZlL0Rlc2t0b3AvU2lsZW50IFNlbnNlL3NyYy9jb21wb25lbnRzL2FsZXJ0cy9BbGVydENhcmQuanN4In0=

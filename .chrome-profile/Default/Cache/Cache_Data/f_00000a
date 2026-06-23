@@ -1,0 +1,265 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/BiometricProfilePage.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react;
+import "/src/pages/PageLayout.css";
+export default function BiometricProfilePage() {
+  return /* @__PURE__ */ jsxDEV("div", { className: "page-layout", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__header", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "page-layout__title-group", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-lg", style: { color: "var(--primary)" }, children: "health_metrics" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 28,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("h1", { className: "page-layout__title", children: "Biometric Profile" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 30,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "page-layout__subtitle", children: "Learned baseline distributions for Dad (Arun) — Enrolled 14 days ago" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 31,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 29,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+        lineNumber: 27,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("span", { className: "badge badge-stable", children: "CALIBRATED" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+        lineNumber: 34,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+      lineNumber: 26,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__content", children: [
+      /* @__PURE__ */ jsxDEV("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginBottom: 24 }, children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 24 }, children: [
+          /* @__PURE__ */ jsxDEV("h3", { className: "section-label", children: "Breathing Rate Distribution" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 41,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { height: 120, display: "flex", alignItems: "flex-end", gap: 4, marginTop: 16 }, children: [2, 5, 12, 30, 60, 85, 100, 80, 55, 25, 10, 4, 1].map(
+            (val, i) => /* @__PURE__ */ jsxDEV("div", { style: { flex: 1, background: "var(--primary)", opacity: val > 60 ? 1 : 0.4, height: `${val}%`, borderRadius: 2 } }, i, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 45,
+              columnNumber: 15
+            }, this)
+          ) }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 42,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 11, color: "var(--outline)" }, children: [
+            /* @__PURE__ */ jsxDEV("span", { children: "10 RPM" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 49,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { style: { color: "var(--primary)", fontWeight: 600 }, children: "14 RPM Peak" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 50,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: "18 RPM" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 51,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 48,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 40,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 24 }, children: [
+          /* @__PURE__ */ jsxDEV("h3", { className: "section-label", children: "Signal Regularity Index" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 57,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { height: 120, display: "flex", alignItems: "flex-end", gap: 4, marginTop: 16 }, children: [1, 2, 4, 15, 40, 70, 95, 85, 45, 15, 5, 2, 1].map(
+            (val, i) => /* @__PURE__ */ jsxDEV("div", { style: { flex: 1, background: "var(--secondary)", opacity: val > 60 ? 1 : 0.4, height: `${val}%`, borderRadius: 2 } }, i, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 60,
+              columnNumber: 15
+            }, this)
+          ) }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 58,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 11, color: "var(--outline)" }, children: [
+            /* @__PURE__ */ jsxDEV("span", { children: "Low" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 64,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { style: { color: "var(--secondary)", fontWeight: 600 }, children: "High Regularity" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 65,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: "Perfect" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 66,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 63,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 56,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 24 }, children: [
+          /* @__PURE__ */ jsxDEV("h3", { className: "section-label", children: "CSI Amplitude Distribution" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 72,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { height: 120, display: "flex", alignItems: "flex-end", gap: 4, marginTop: 16 }, children: [10, 20, 35, 50, 75, 90, 80, 60, 40, 25, 15, 8, 3].map(
+            (val, i) => /* @__PURE__ */ jsxDEV("div", { style: { flex: 1, background: "var(--warning-amber)", opacity: val > 60 ? 1 : 0.4, height: `${val}%`, borderRadius: 2 } }, i, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 75,
+              columnNumber: 15
+            }, this)
+          ) }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 73,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 11, color: "var(--outline)" }, children: [
+            /* @__PURE__ */ jsxDEV("span", { children: "Weak" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 79,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { style: { color: "var(--warning-amber)", fontWeight: 600 }, children: "Normal Range" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 80,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { children: "Strong" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+              lineNumber: 81,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 78,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 71,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+        lineNumber: 38,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 24 }, children: [
+        /* @__PURE__ */ jsxDEV("h3", { className: "section-label", children: "Baseline Drift Monitoring" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 87,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { style: { fontSize: 13, color: "var(--on-surface-variant)", marginBottom: 16 }, children: "The system continuously compares nightly live readings against this enrolled biometric signature. Current drift is <2%, indicating excellent data quality and no need for recalibration." }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 88,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { style: { width: "100%", height: 8, background: "var(--surface-container-high)", borderRadius: 4, overflow: "hidden" }, children: /* @__PURE__ */ jsxDEV("div", { style: { width: "2%", height: "100%", background: "var(--primary)" } }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 92,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 91,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 11, color: "var(--outline)" }, children: [
+          /* @__PURE__ */ jsxDEV("span", { children: "0% Drift" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 95,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { children: "Re-enrollment threshold (15%)" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+            lineNumber: 96,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+          lineNumber: 94,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+        lineNumber: 86,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+      lineNumber: 37,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx",
+    lineNumber: 25,
+    columnNumber: 5
+  }, this);
+}
+_c = BiometricProfilePage;
+var _c;
+$RefreshReg$(_c, "BiometricProfilePage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/BiometricProfilePage.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFFZSxPQUFPLFFBQVFiLFFBQVEsR0FBR08sWUFBWSxpQ0FBaUNFLGNBQWMsR0FBR0ssVUFBVSxTQUFTLEdBQ3ZILGlDQUFDLFNBQUksT0FBTyxFQUFFRCxPQUFPLE1BQU1iLFFBQVEsUUFBUU8sWUFBWSxpQkFBaUIsS0FBeEU7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUEwRSxLQUQ1RTtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBRUE7QUFBQSxRQUNBLHVCQUFDLFNBQUksT0FBTyxFQUFFWixTQUFTLFFBQVFlLGdCQUFnQixpQkFBaUJSLFdBQVcsR0FBR1MsVUFBVSxJQUFJakIsT0FBTyxpQkFBaUIsR0FDbEg7QUFBQSxpQ0FBQyxVQUFLLHdCQUFOO0FBQUE7QUFBQTtBQUFBO0FBQUEsaUJBQWM7QUFBQSxVQUNkLHVCQUFDLFVBQUssNkNBQU47QUFBQTtBQUFBO0FBQUE7QUFBQSxpQkFBbUM7QUFBQSxhQUZyQztBQUFBO0FBQUE7QUFBQTtBQUFBLGVBR0E7QUFBQSxXQVhGO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFZQTtBQUFBLFNBN0RGO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0E4REE7QUFBQSxPQTFFRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBMkVBO0FBRUo7QUFBQ3FCLEtBL0V1QnRCO0FBQW9CLElBQUFzQjtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJSZWFjdCIsIkJpb21ldHJpY1Byb2ZpbGVQYWdlIiwiY29sb3IiLCJkaXNwbGF5IiwiZ3JpZFRlbXBsYXRlQ29sdW1ucyIsImdhcCIsIm1hcmdpbkJvdHRvbSIsInBhZGRpbmciLCJoZWlnaHQiLCJhbGlnbkl0ZW1zIiwibWFyZ2luVG9wIiwibWFwIiwidmFsIiwiaSIsImZsZXgiLCJiYWNrZ3JvdW5kIiwib3BhY2l0eSIsImJvcmRlclJhZGl1cyIsImp1c3RpZnlDb250ZW50IiwiZm9udFNpemUiLCJmb250V2VpZ2h0Iiwid2lkdGgiLCJvdmVyZmxvdyIsIl9jIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkJpb21ldHJpY1Byb2ZpbGVQYWdlLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0ICcuL1BhZ2VMYXlvdXQuY3NzJztcblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gQmlvbWV0cmljUHJvZmlsZVBhZ2UoKSB7XG4gIHJldHVybiAoXG4gICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dFwiPlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9faGVhZGVyXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX3RpdGxlLWdyb3VwXCI+XG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnMgaWNvbi1sZ1wiIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0tcHJpbWFyeSknIH19PmhlYWx0aF9tZXRyaWNzPC9zcGFuPlxuICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICA8aDEgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX3RpdGxlXCI+QmlvbWV0cmljIFByb2ZpbGU8L2gxPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX3N1YnRpdGxlXCI+TGVhcm5lZCBiYXNlbGluZSBkaXN0cmlidXRpb25zIGZvciBEYWQgKEFydW4pIOKAlCBFbnJvbGxlZCAxNCBkYXlzIGFnbzwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImJhZGdlIGJhZGdlLXN0YWJsZVwiPkNBTElCUkFURUQ8L3NwYW4+XG4gICAgICA8L2Rpdj5cblxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9fY29udGVudFwiPlxuICAgICAgICA8ZGl2IHN0eWxlPXt7IGRpc3BsYXk6ICdncmlkJywgZ3JpZFRlbXBsYXRlQ29sdW1uczogJ3JlcGVhdCgzLCAxZnIpJywgZ2FwOiAyNCwgbWFyZ2luQm90dG9tOiAyNCB9fT5cbiAgICAgICAgICB7LyogQnJlYXRoaW5nIFJhdGUgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkXCIgc3R5bGU9e3sgcGFkZGluZzogMjQgfX0+XG4gICAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwic2VjdGlvbi1sYWJlbFwiPkJyZWF0aGluZyBSYXRlIERpc3RyaWJ1dGlvbjwvaDM+XG4gICAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGhlaWdodDogMTIwLCBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdmbGV4LWVuZCcsIGdhcDogNCwgbWFyZ2luVG9wOiAxNiB9fT5cbiAgICAgICAgICAgICAgey8qIEZha2Ugbm9ybWFsIGRpc3RyaWJ1dGlvbiBjdXJ2ZSB1c2luZyBiYXJzICovfVxuICAgICAgICAgICAgICB7WzIsIDUsIDEyLCAzMCwgNjAsIDg1LCAxMDAsIDgwLCA1NSwgMjUsIDEwLCA0LCAxXS5tYXAoKHZhbCwgaSkgPT4gKFxuICAgICAgICAgICAgICAgIDxkaXYga2V5PXtpfSBzdHlsZT17eyBmbGV4OiAxLCBiYWNrZ3JvdW5kOiAndmFyKC0tcHJpbWFyeSknLCBvcGFjaXR5OiB2YWwgPiA2MCA/IDEgOiAwLjQsIGhlaWdodDogYCR7dmFsfSVgLCBib3JkZXJSYWRpdXM6IDIgfX0gLz5cbiAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgc3R5bGU9e3sgZGlzcGxheTogJ2ZsZXgnLCBqdXN0aWZ5Q29udGVudDogJ3NwYWNlLWJldHdlZW4nLCBtYXJnaW5Ub3A6IDgsIGZvbnRTaXplOiAxMSwgY29sb3I6ICd2YXIoLS1vdXRsaW5lKScgfX0+XG4gICAgICAgICAgICAgIDxzcGFuPjEwIFJQTTwvc3Bhbj5cbiAgICAgICAgICAgICAgPHNwYW4gc3R5bGU9e3sgY29sb3I6ICd2YXIoLS1wcmltYXJ5KScsIGZvbnRXZWlnaHQ6IDYwMCB9fT4xNCBSUE0gUGVhazwvc3Bhbj5cbiAgICAgICAgICAgICAgPHNwYW4+MTggUlBNPC9zcGFuPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogQnJlYXRoaW5nIFJlZ3VsYXJpdHkgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkXCIgc3R5bGU9e3sgcGFkZGluZzogMjQgfX0+XG4gICAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwic2VjdGlvbi1sYWJlbFwiPlNpZ25hbCBSZWd1bGFyaXR5IEluZGV4PC9oMz5cbiAgICAgICAgICAgIDxkaXYgc3R5bGU9e3sgaGVpZ2h0OiAxMjAsIGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2ZsZXgtZW5kJywgZ2FwOiA0LCBtYXJnaW5Ub3A6IDE2IH19PlxuICAgICAgICAgICAgICB7WzEsIDIsIDQsIDE1LCA0MCwgNzAsIDk1LCA4NSwgNDUsIDE1LCA1LCAyLCAxXS5tYXAoKHZhbCwgaSkgPT4gKFxuICAgICAgICAgICAgICAgIDxkaXYga2V5PXtpfSBzdHlsZT17eyBmbGV4OiAxLCBiYWNrZ3JvdW5kOiAndmFyKC0tc2Vjb25kYXJ5KScsIG9wYWNpdHk6IHZhbCA+IDYwID8gMSA6IDAuNCwgaGVpZ2h0OiBgJHt2YWx9JWAsIGJvcmRlclJhZGl1czogMiB9fSAvPlxuICAgICAgICAgICAgICApKX1cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGp1c3RpZnlDb250ZW50OiAnc3BhY2UtYmV0d2VlbicsIG1hcmdpblRvcDogOCwgZm9udFNpemU6IDExLCBjb2xvcjogJ3ZhcigtLW91dGxpbmUpJyB9fT5cbiAgICAgICAgICAgICAgPHNwYW4+TG93PC9zcGFuPlxuICAgICAgICAgICAgICA8c3BhbiBzdHlsZT17eyBjb2xvcjogJ3ZhcigtLXNlY29uZGFyeSknLCBmb250V2VpZ2h0OiA2MDAgfX0+SGlnaCBSZWd1bGFyaXR5PC9zcGFuPlxuICAgICAgICAgICAgICA8c3Bhbj5QZXJmZWN0PC9zcGFuPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogQ1NJIEFtcGxpdHVkZSAqL31cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdsYXNzLWNhcmRcIiBzdHlsZT17eyBwYWRkaW5nOiAyNCB9fT5cbiAgICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJzZWN0aW9uLWxhYmVsXCI+Q1NJIEFtcGxpdHVkZSBEaXN0cmlidXRpb248L2gzPlxuICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBoZWlnaHQ6IDEyMCwgZGlzcGxheTogJ2ZsZXgnLCBhbGlnbkl0ZW1zOiAnZmxleC1lbmQnLCBnYXA6IDQsIG1hcmdpblRvcDogMTYgfX0+XG4gICAgICAgICAgICAgIHtbMTAsIDIwLCAzNSwgNTAsIDc1LCA5MCwgODAsIDYwLCA0MCwgMjUsIDE1LCA4LCAzXS5tYXAoKHZhbCwgaSkgPT4gKFxuICAgICAgICAgICAgICAgIDxkaXYga2V5PXtpfSBzdHlsZT17eyBmbGV4OiAxLCBiYWNrZ3JvdW5kOiAndmFyKC0td2FybmluZy1hbWJlciknLCBvcGFjaXR5OiB2YWwgPiA2MCA/IDEgOiAwLjQsIGhlaWdodDogYCR7dmFsfSVgLCBib3JkZXJSYWRpdXM6IDIgfX0gLz5cbiAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDxkaXYgc3R5bGU9e3sgZGlzcGxheTogJ2ZsZXgnLCBqdXN0aWZ5Q29udGVudDogJ3NwYWNlLWJldHdlZW4nLCBtYXJnaW5Ub3A6IDgsIGZvbnRTaXplOiAxMSwgY29sb3I6ICd2YXIoLS1vdXRsaW5lKScgfX0+XG4gICAgICAgICAgICAgIDxzcGFuPldlYWs8L3NwYW4+XG4gICAgICAgICAgICAgIDxzcGFuIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0td2FybmluZy1hbWJlciknLCBmb250V2VpZ2h0OiA2MDAgfX0+Tm9ybWFsIFJhbmdlPC9zcGFuPlxuICAgICAgICAgICAgICA8c3Bhbj5TdHJvbmc8L3NwYW4+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkXCIgc3R5bGU9e3sgcGFkZGluZzogMjQgfX0+XG4gICAgICAgICAgPGgzIGNsYXNzTmFtZT1cInNlY3Rpb24tbGFiZWxcIj5CYXNlbGluZSBEcmlmdCBNb25pdG9yaW5nPC9oMz5cbiAgICAgICAgICA8cCBzdHlsZT17eyBmb250U2l6ZTogMTMsIGNvbG9yOiAndmFyKC0tb24tc3VyZmFjZS12YXJpYW50KScsIG1hcmdpbkJvdHRvbTogMTYgfX0+XG4gICAgICAgICAgICBUaGUgc3lzdGVtIGNvbnRpbnVvdXNseSBjb21wYXJlcyBuaWdodGx5IGxpdmUgcmVhZGluZ3MgYWdhaW5zdCB0aGlzIGVucm9sbGVkIGJpb21ldHJpYyBzaWduYXR1cmUuIEN1cnJlbnQgZHJpZnQgaXMgJmx0OzIlLCBpbmRpY2F0aW5nIGV4Y2VsbGVudCBkYXRhIHF1YWxpdHkgYW5kIG5vIG5lZWQgZm9yIHJlY2FsaWJyYXRpb24uXG4gICAgICAgICAgPC9wPlxuICAgICAgICAgIDxkaXYgc3R5bGU9e3sgd2lkdGg6ICcxMDAlJywgaGVpZ2h0OiA4LCBiYWNrZ3JvdW5kOiAndmFyKC0tc3VyZmFjZS1jb250YWluZXItaGlnaCknLCBib3JkZXJSYWRpdXM6IDQsIG92ZXJmbG93OiAnaGlkZGVuJyB9fT5cbiAgICAgICAgICAgIDxkaXYgc3R5bGU9e3sgd2lkdGg6ICcyJScsIGhlaWdodDogJzEwMCUnLCBiYWNrZ3JvdW5kOiAndmFyKC0tcHJpbWFyeSknIH19IC8+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPGRpdiBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGp1c3RpZnlDb250ZW50OiAnc3BhY2UtYmV0d2VlbicsIG1hcmdpblRvcDogOCwgZm9udFNpemU6IDExLCBjb2xvcjogJ3ZhcigtLW91dGxpbmUpJyB9fT5cbiAgICAgICAgICAgIDxzcGFuPjAlIERyaWZ0PC9zcGFuPlxuICAgICAgICAgICAgPHNwYW4+UmUtZW5yb2xsbWVudCB0aHJlc2hvbGQgKDE1JSk8L3NwYW4+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG4gICk7XG59XG4iXSwiZmlsZSI6IkM6L1VzZXJzL0FheXVzaCBXYWxzYW5naWthci9PbmVEcml2ZS9EZXNrdG9wL1NpbGVudCBTZW5zZS9zcmMvcGFnZXMvQmlvbWV0cmljUHJvZmlsZVBhZ2UuanN4In0=

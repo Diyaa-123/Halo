@@ -1,0 +1,716 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/WeeklyReportPage.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react;
+import "/src/pages/PageLayout.css";
+import "/src/pages/WeeklyReportPage.css";
+const sleepScores = [81, 79, 74, 73, 80, 84, 82];
+const sleepNights = [
+  { day: "Mon", duration: "7.2h", score: 81, note: "steady" },
+  { day: "Tue", duration: "6.5h", score: 79, note: "mild restlessness" },
+  { day: "Wed", duration: "6.4h", score: 74, note: "visitor disturbance" },
+  { day: "Thu", duration: "7.0h", score: 73, note: "light wake-ups" },
+  { day: "Fri", duration: "7.4h", score: 80, note: "improved" },
+  { day: "Sat", duration: "7.8h", score: 84, note: "best night" },
+  { day: "Sun", duration: "7.5h", score: 82, note: "stable" }
+];
+const safetyEvents = [
+  { time: "Tue 09:14 PM", type: "Apnea event", detail: "Short breathing pause near sleep onset", alert: "Sent", ack: "Acknowledged" },
+  { time: "Wed 02:18 PM", type: "Prolonged inactivity", detail: "Lower movement detected during afternoon rest", alert: "Sent", ack: "Acknowledged" },
+  { time: "Fri 06:41 AM", type: "No fall event", detail: "No safety event recorded this week", alert: "N/A", ack: "N/A" }
+];
+const routineHeatmap = [
+  [0.78, 0.72, 0.66, 0.58, 0.76, 0.82, 0.79],
+  [0.64, 0.62, 0.5, 0.48, 0.63, 0.68, 0.65],
+  [0.71, 0.69, 0.58, 0.54, 0.68, 0.74, 0.72],
+  [0.88, 0.84, 0.7, 0.68, 0.85, 0.9, 0.87]
+];
+const rowLabels = ["Morning", "Afternoon", "Evening", "Night"];
+const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+function Sparkline({ data }) {
+  const w = 520;
+  const h = 130;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const padding = 16;
+  const points = data.map((value, index) => {
+    const x = padding + (w - padding * 2) * index / (data.length - 1);
+    const y = padding + (1 - (value - min) / range) * (h - padding * 2);
+    return { x, y };
+  });
+  const line = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
+  const area = `${line} L ${points[points.length - 1].x} ${h - padding} L ${points[0].x} ${h - padding} Z`;
+  return /* @__PURE__ */ jsxDEV("svg", { viewBox: `0 0 ${w} ${h}`, className: "weekly-report__spark", role: "img", "aria-label": "Weekly sleep scores sparkline", children: [
+    /* @__PURE__ */ jsxDEV("defs", { children: /* @__PURE__ */ jsxDEV("linearGradient", { id: "weeklySleepFill", x1: "0", x2: "0", y1: "0", y2: "1", children: [
+      /* @__PURE__ */ jsxDEV("stop", { offset: "0%", stopColor: "#1a56db", stopOpacity: "0.26" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 70,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("stop", { offset: "100%", stopColor: "#1a56db", stopOpacity: "0.04" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 71,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+      lineNumber: 69,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+      lineNumber: 68,
+      columnNumber: 7
+    }, this),
+    [0, 1, 2, 3].map((i) => {
+      const y = padding + (h - padding * 2) / 3 * i;
+      return /* @__PURE__ */ jsxDEV("line", { x1: padding, x2: w - padding, y1: y, y2: y, className: "weekly-report__spark-grid" }, i, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 76,
+        columnNumber: 16
+      }, this);
+    }),
+    /* @__PURE__ */ jsxDEV("path", { d: area, fill: "url(#weeklySleepFill)" }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+      lineNumber: 78,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("path", { d: line, className: "weekly-report__spark-line" }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+      lineNumber: 79,
+      columnNumber: 7
+    }, this),
+    points.map(
+      (point, index) => /* @__PURE__ */ jsxDEV("circle", { cx: point.x, cy: point.y, r: index === points.length - 1 ? 5 : 3.5, className: "weekly-report__spark-point" }, index, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 81,
+        columnNumber: 7
+      }, this)
+    )
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+    lineNumber: 67,
+    columnNumber: 5
+  }, this);
+}
+_c = Sparkline;
+export default function WeeklyReportPage() {
+  const avgSleep = (sleepScores.reduce((sum, value) => sum + value, 0) / sleepScores.length).toFixed(0);
+  const belowBaseline = sleepScores.filter((score) => score < 78).length;
+  const attributionHighConfidence = 73;
+  const attributionPaused = 27;
+  const comparedToLastWeek = [
+    { label: "Sleep quality", value: "↑ 4%", tone: "good" },
+    { label: "Routine regularity", value: "↓ 8%", tone: "slight" },
+    { label: "Safety events", value: "0", tone: "good" }
+  ];
+  return /* @__PURE__ */ jsxDEV("div", { className: "page-layout weekly-report", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__header", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "page-layout__title-group", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-lg", style: { color: "var(--primary)" }, children: "summarize" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 102,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("h1", { className: "page-layout__title", children: "Weekly AI Summary" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 104,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "page-layout__subtitle", children: "Family-friendly overview for Mr. Raghav Iyer · Week of June 15" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 105,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 103,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 101,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("button", { className: "btn btn-primary", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "download" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 109,
+          columnNumber: 11
+        }, this),
+        "Download PDF"
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 108,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+      lineNumber: 100,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__content weekly-report__content", children: [
+      /* @__PURE__ */ jsxDEV("section", { className: "weekly-report__hero glass-card", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "weekly-report__eyebrow", children: "This week at a glance" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 116,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("h2", { className: "weekly-report__headline", children: "Dad had a stable week - sleep was consistent and there were no safety events." }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 117,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "weekly-report__lede", children: "Open this report if you want a fast answer: the week looks steady overall, with a small midweek sleep dip that recovered by the weekend." }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 118,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 115,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__grid", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__main", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card weekly-report__card", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__card-head", children: [
+              /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("h3", { className: "weekly-report__section-title", children: "Sleep this week" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 128,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "weekly-report__section-subtitle", children: "Average sleep duration, average quality score, and nights below baseline" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 129,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 127,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { className: "badge badge-stable", children: "STABLE" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 131,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 126,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__sleep-metrics", children: [
+              /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__sleep-metric", children: [
+                /* @__PURE__ */ jsxDEV("span", { children: "Average duration" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 136,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("strong", { children: "7.1 hours" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 137,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 135,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__sleep-metric", children: [
+                /* @__PURE__ */ jsxDEV("span", { children: "Average quality" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 140,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("strong", { children: [
+                  avgSleep,
+                  "/100"
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 141,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 139,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__sleep-metric", children: [
+                /* @__PURE__ */ jsxDEV("span", { children: "Nights below baseline" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 144,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("strong", { children: belowBaseline }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 145,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 143,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 134,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__spark-shell", children: /* @__PURE__ */ jsxDEV(Sparkline, { data: sleepScores }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 150,
+              columnNumber: 17
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 149,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__sleep-days", children: sleepNights.map(
+              (night) => /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__sleep-day", children: [
+                /* @__PURE__ */ jsxDEV("span", { className: "weekly-report__sleep-day-label", children: night.day }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 156,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("strong", { children: night.duration }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 157,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("span", { children: [
+                  night.score,
+                  "/100"
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 158,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("em", { children: night.note }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 159,
+                  columnNumber: 21
+                }, this)
+              ] }, night.day, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 155,
+                columnNumber: 17
+              }, this)
+            ) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 153,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "weekly-report__interpretation", children: "Slept well on 5 of 7 nights. Tuesday and Wednesday showed mild restlessness, possibly related to the visitor detected that afternoon." }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 164,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 125,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card weekly-report__card", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__card-head", children: [
+              /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("h3", { className: "weekly-report__section-title", children: "Safety events" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 172,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "weekly-report__section-subtitle", children: "Falls, prolonged inactivity, and apnea events" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 173,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 171,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { className: "badge badge-stable", children: "NO FALLS" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 175,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 170,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__safety-summary", children: [
+              /* @__PURE__ */ jsxDEV("strong", { children: "There were no falls this week." }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 179,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("p", { children: "One short apnea event and one prolonged inactivity alert were logged, both acknowledged quickly by care staff." }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 180,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 178,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__event-list", children: safetyEvents.map(
+              (event) => /* @__PURE__ */ jsxDEV("article", { className: "weekly-report__event", children: [
+                /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__event-top", children: [
+                  /* @__PURE__ */ jsxDEV("strong", { children: event.time }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                    lineNumber: 187,
+                    columnNumber: 23
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("span", { className: "badge badge-warning", children: event.type }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                    lineNumber: 188,
+                    columnNumber: 23
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 186,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__event-detail", children: event.detail }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 190,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__event-meta", children: [
+                  /* @__PURE__ */ jsxDEV("span", { children: "Alert sent" }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                    lineNumber: 192,
+                    columnNumber: 23
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("strong", { children: event.alert }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                    lineNumber: 193,
+                    columnNumber: 23
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 191,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__event-meta", children: [
+                  /* @__PURE__ */ jsxDEV("span", { children: "Acknowledged" }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                    lineNumber: 196,
+                    columnNumber: 23
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("strong", { children: event.ack }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                    lineNumber: 197,
+                    columnNumber: 23
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 195,
+                  columnNumber: 21
+                }, this)
+              ] }, event.time, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 185,
+                columnNumber: 17
+              }, this)
+            ) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 183,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 169,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card weekly-report__card", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__card-head", children: /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV("h3", { className: "weekly-report__section-title", children: "Routine regularity" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 207,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV("p", { className: "weekly-report__section-subtitle", children: "Morning, afternoon, evening, and night pattern consistency" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 208,
+                columnNumber: 19
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 206,
+              columnNumber: 17
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 205,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__routine-grid", children: [
+              /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__routine-corner" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 213,
+                columnNumber: 17
+              }, this),
+              dayLabels.map(
+                (day) => /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__routine-day", children: day }, day, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 215,
+                  columnNumber: 17
+                }, this)
+              ),
+              rowLabels.map(
+                (row, rowIndex) => /* @__PURE__ */ jsxDEV(React.Fragment, { children: [
+                  /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__routine-row-label", children: row }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                    lineNumber: 219,
+                    columnNumber: 21
+                  }, this),
+                  routineHeatmap[rowIndex].map((value, colIndex) => {
+                    const isGood = value >= 0.75;
+                    const isMixed = value >= 0.6 && value < 0.75;
+                    return /* @__PURE__ */ jsxDEV(
+                      "div",
+                      {
+                        className: "weekly-report__routine-cell",
+                        style: {
+                          background: isGood ? "rgba(34, 197, 94, 0.72)" : isMixed ? "rgba(245, 158, 11, 0.62)" : "rgba(239, 68, 68, 0.56)"
+                        },
+                        title: `${row} ${dayLabels[colIndex]}: ${Math.round(value * 100)}%`
+                      },
+                      `${row}-${colIndex}`,
+                      false,
+                      {
+                        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                        lineNumber: 224,
+                        columnNumber: 23
+                      },
+                      this
+                    );
+                  })
+                ] }, row, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 218,
+                  columnNumber: 17
+                }, this)
+              )
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 212,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__routine-legend", children: [
+              /* @__PURE__ */ jsxDEV("span", { children: [
+                /* @__PURE__ */ jsxDEV("i", { className: "weekly-report__legend-dot weekly-report__legend-dot--green" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 243,
+                  columnNumber: 23
+                }, this),
+                "Regular"
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 243,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: [
+                /* @__PURE__ */ jsxDEV("i", { className: "weekly-report__legend-dot weekly-report__legend-dot--amber" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 244,
+                  columnNumber: 23
+                }, this),
+                "Mixed"
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 244,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: [
+                /* @__PURE__ */ jsxDEV("i", { className: "weekly-report__legend-dot weekly-report__legend-dot--red" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 245,
+                  columnNumber: 23
+                }, this),
+                "Irregular"
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 245,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 242,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "weekly-report__interpretation", children: "Morning activity was the most consistent, afternoons were slightly lighter midweek, and evenings stayed calm overall." }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 248,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 204,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 124,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("aside", { className: "weekly-report__side", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card weekly-report__card weekly-report__card--compact", children: [
+            /* @__PURE__ */ jsxDEV("h3", { className: "weekly-report__section-title", children: "Attribution quality" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 256,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "weekly-report__section-subtitle", children: "How much of the data was confidently tied to Dad specifically" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 257,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__attribution-meter", children: /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__attribution-meter-fill", style: { width: `${attributionHighConfidence}%` } }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 260,
+              columnNumber: 17
+            }, this) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 259,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__attribution-values", children: [
+              /* @__PURE__ */ jsxDEV("strong", { children: [
+                attributionHighConfidence,
+                "%"
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 263,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { children: "high-confidence attribution" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 264,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 262,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__attribution-muted", children: [
+              attributionPaused,
+              "% of the week was household activity time where monitoring was paused."
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 266,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 255,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card weekly-report__card weekly-report__card--compact", children: [
+            /* @__PURE__ */ jsxDEV("h3", { className: "weekly-report__section-title", children: "Compared to last week" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 272,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__delta-list", children: comparedToLastWeek.map(
+              (item) => /* @__PURE__ */ jsxDEV("div", { className: "weekly-report__delta-row", children: [
+                /* @__PURE__ */ jsxDEV("span", { children: item.label }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 276,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("strong", { className: `weekly-report__delta-value weekly-report__delta-value--${item.tone}`, children: item.value }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                  lineNumber: 277,
+                  columnNumber: 21
+                }, this)
+              ] }, item.label, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+                lineNumber: 275,
+                columnNumber: 17
+              }, this)
+            ) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 273,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 271,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card weekly-report__action-card", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "weekly-report__action-eyebrow", children: "One recommended action" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 284,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { children: "Sleep quality has declined slightly over 3 weeks, so consider mentioning this at Dad's next check-up." }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+              lineNumber: 285,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+            lineNumber: 283,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+          lineNumber: 254,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+        lineNumber: 123,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+      lineNumber: 114,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx",
+    lineNumber: 99,
+    columnNumber: 5
+  }, this);
+}
+_c2 = WeeklyReportPage;
+var _c, _c2;
+$RefreshReg$(_c, "Sparkline");
+$RefreshReg$(_c2, "WeeklyReportPage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/WeeklyReportPage.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFzRztBQUFBLG1CQUY5RmtDLEtBQUtiLE9BQWY7QUFBQTtBQUFBO0FBQUE7QUFBQSxxQkFHQTtBQUFBLFlBQ0QsS0FOSDtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQU9BO0FBQUEsZUFURjtBQUFBO0FBQUE7QUFBQTtBQUFBLGlCQVVBO0FBQUEsVUFFQSx1QkFBQyxTQUFJLFdBQVUseUNBQ2I7QUFBQSxtQ0FBQyxVQUFLLFdBQVUsaUNBQWdDLHNDQUFoRDtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUFzRTtBQUFBLFlBQ3RFLHVCQUFDLE9BQUUscUhBQUg7QUFBQTtBQUFBO0FBQUE7QUFBQSxtQkFFQTtBQUFBLGVBSkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxpQkFLQTtBQUFBLGFBbENGO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFtQ0E7QUFBQSxXQXRLRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBdUtBO0FBQUEsU0FoTEY7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQWlMQTtBQUFBLE9BaE1GO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0FpTUE7QUFFSjtBQUFDYyxNQS9NdUJ4QjtBQUFnQixJQUFBRCxJQUFBeUI7QUFBQSxhQUFBekIsSUFBQTtBQUFBLGFBQUF5QixLQUFBIiwibmFtZXMiOlsiUmVhY3QiLCJzbGVlcFNjb3JlcyIsInNsZWVwTmlnaHRzIiwiZGF5IiwiZHVyYXRpb24iLCJzY29yZSIsIm5vdGUiLCJzYWZldHlFdmVudHMiLCJ0aW1lIiwidHlwZSIsImRldGFpbCIsImFsZXJ0IiwiYWNrIiwicm91dGluZUhlYXRtYXAiLCJyb3dMYWJlbHMiLCJkYXlMYWJlbHMiLCJTcGFya2xpbmUiLCJkYXRhIiwidyIsImgiLCJtaW4iLCJNYXRoIiwibWF4IiwicmFuZ2UiLCJwYWRkaW5nIiwicG9pbnRzIiwibWFwIiwidmFsdWUiLCJpbmRleCIsIngiLCJsZW5ndGgiLCJ5IiwibGluZSIsInBvaW50Iiwiam9pbiIsImFyZWEiLCJpIiwiX2MiLCJXZWVrbHlSZXBvcnRQYWdlIiwiYXZnU2xlZXAiLCJyZWR1Y2UiLCJzdW0iLCJ0b0ZpeGVkIiwiYmVsb3dCYXNlbGluZSIsImZpbHRlciIsImF0dHJpYnV0aW9uSGlnaENvbmZpZGVuY2UiLCJhdHRyaWJ1dGlvblBhdXNlZCIsImNvbXBhcmVkVG9MYXN0V2VlayIsImxhYmVsIiwidG9uZSIsImNvbG9yIiwibmlnaHQiLCJldmVudCIsInJvdyIsInJvd0luZGV4IiwiY29sSW5kZXgiLCJpc0dvb2QiLCJpc01peGVkIiwiYmFja2dyb3VuZCIsInJvdW5kIiwid2lkdGgiLCJpdGVtIiwiX2MyIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIldlZWtseVJlcG9ydFBhZ2UuanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XHJcbmltcG9ydCAnLi9QYWdlTGF5b3V0LmNzcyc7XHJcbmltcG9ydCAnLi9XZWVrbHlSZXBvcnRQYWdlLmNzcyc7XHJcblxyXG5jb25zdCBzbGVlcFNjb3JlcyA9IFs4MSwgNzksIDc0LCA3MywgODAsIDg0LCA4Ml07XHJcbmNvbnN0IHNsZWVwTmlnaHRzID0gW1xyXG4gIHsgZGF5OiAnTW9uJywgZHVyYXRpb246ICc3LjJoJywgc2NvcmU6IDgxLCBub3RlOiAnc3RlYWR5JyB9LFxyXG4gIHsgZGF5OiAnVHVlJywgZHVyYXRpb246ICc2LjVoJywgc2NvcmU6IDc5LCBub3RlOiAnbWlsZCByZXN0bGVzc25lc3MnIH0sXHJcbiAgeyBkYXk6ICdXZWQnLCBkdXJhdGlvbjogJzYuNGgnLCBzY29yZTogNzQsIG5vdGU6ICd2aXNpdG9yIGRpc3R1cmJhbmNlJyB9LFxyXG4gIHsgZGF5OiAnVGh1JywgZHVyYXRpb246ICc3LjBoJywgc2NvcmU6IDczLCBub3RlOiAnbGlnaHQgd2FrZS11cHMnIH0sXHJcbiAgeyBkYXk6ICdGcmknLCBkdXJhdGlvbjogJzcuNGgnLCBzY29yZTogODAsIG5vdGU6ICdpbXByb3ZlZCcgfSxcclxuICB7IGRheTogJ1NhdCcsIGR1cmF0aW9uOiAnNy44aCcsIHNjb3JlOiA4NCwgbm90ZTogJ2Jlc3QgbmlnaHQnIH0sXHJcbiAgeyBkYXk6ICdTdW4nLCBkdXJhdGlvbjogJzcuNWgnLCBzY29yZTogODIsIG5vdGU6ICdzdGFibGUnIH0sXHJcbl07XHJcblxyXG5jb25zdCBzYWZldHlFdmVudHMgPSBbXHJcbiAgeyB0aW1lOiAnVHVlIDA5OjE0IFBNJywgdHlwZTogJ0FwbmVhIGV2ZW50JywgZGV0YWlsOiAnU2hvcnQgYnJlYXRoaW5nIHBhdXNlIG5lYXIgc2xlZXAgb25zZXQnLCBhbGVydDogJ1NlbnQnLCBhY2s6ICdBY2tub3dsZWRnZWQnIH0sXHJcbiAgeyB0aW1lOiAnV2VkIDAyOjE4IFBNJywgdHlwZTogJ1Byb2xvbmdlZCBpbmFjdGl2aXR5JywgZGV0YWlsOiAnTG93ZXIgbW92ZW1lbnQgZGV0ZWN0ZWQgZHVyaW5nIGFmdGVybm9vbiByZXN0JywgYWxlcnQ6ICdTZW50JywgYWNrOiAnQWNrbm93bGVkZ2VkJyB9LFxyXG4gIHsgdGltZTogJ0ZyaSAwNjo0MSBBTScsIHR5cGU6ICdObyBmYWxsIGV2ZW50JywgZGV0YWlsOiAnTm8gc2FmZXR5IGV2ZW50IHJlY29yZGVkIHRoaXMgd2VlaycsIGFsZXJ0OiAnTi9BJywgYWNrOiAnTi9BJyB9LFxyXG5dO1xyXG5cclxuY29uc3Qgcm91dGluZUhlYXRtYXAgPSBbXHJcbiAgWzAuNzgsIDAuNzIsIDAuNjYsIDAuNTgsIDAuNzYsIDAuODIsIDAuNzldLFxyXG4gIFswLjY0LCAwLjYyLCAwLjUsIDAuNDgsIDAuNjMsIDAuNjgsIDAuNjVdLFxyXG4gIFswLjcxLCAwLjY5LCAwLjU4LCAwLjU0LCAwLjY4LCAwLjc0LCAwLjcyXSxcclxuICBbMC44OCwgMC44NCwgMC43LCAwLjY4LCAwLjg1LCAwLjksIDAuODddLFxyXG5dO1xyXG5cclxuY29uc3Qgcm93TGFiZWxzID0gWydNb3JuaW5nJywgJ0FmdGVybm9vbicsICdFdmVuaW5nJywgJ05pZ2h0J107XHJcbmNvbnN0IGRheUxhYmVscyA9IFsnTW9uJywgJ1R1ZScsICdXZWQnLCAnVGh1JywgJ0ZyaScsICdTYXQnLCAnU3VuJ107XHJcblxyXG5mdW5jdGlvbiBTcGFya2xpbmUoeyBkYXRhIH0pIHtcclxuICBjb25zdCB3ID0gNTIwO1xyXG4gIGNvbnN0IGggPSAxMzA7XHJcbiAgY29uc3QgbWluID0gTWF0aC5taW4oLi4uZGF0YSk7XHJcbiAgY29uc3QgbWF4ID0gTWF0aC5tYXgoLi4uZGF0YSk7XHJcbiAgY29uc3QgcmFuZ2UgPSBtYXggLSBtaW4gfHwgMTtcclxuICBjb25zdCBwYWRkaW5nID0gMTY7XHJcbiAgY29uc3QgcG9pbnRzID0gZGF0YS5tYXAoKHZhbHVlLCBpbmRleCkgPT4ge1xyXG4gICAgY29uc3QgeCA9IHBhZGRpbmcgKyAoKHcgLSBwYWRkaW5nICogMikgKiBpbmRleCkgLyAoZGF0YS5sZW5ndGggLSAxKTtcclxuICAgIGNvbnN0IHkgPSBwYWRkaW5nICsgKDEgLSAodmFsdWUgLSBtaW4pIC8gcmFuZ2UpICogKGggLSBwYWRkaW5nICogMik7XHJcbiAgICByZXR1cm4geyB4LCB5IH07XHJcbiAgfSk7XHJcbiAgY29uc3QgbGluZSA9IHBvaW50cy5tYXAoKHBvaW50LCBpbmRleCkgPT4gYCR7aW5kZXggPT09IDAgPyAnTScgOiAnTCd9ICR7cG9pbnQueH0gJHtwb2ludC55fWApLmpvaW4oJyAnKTtcclxuICBjb25zdCBhcmVhID0gYCR7bGluZX0gTCAke3BvaW50c1twb2ludHMubGVuZ3RoIC0gMV0ueH0gJHtoIC0gcGFkZGluZ30gTCAke3BvaW50c1swXS54fSAke2ggLSBwYWRkaW5nfSBaYDtcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxzdmcgdmlld0JveD17YDAgMCAke3d9ICR7aH1gfSBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zcGFya1wiIHJvbGU9XCJpbWdcIiBhcmlhLWxhYmVsPVwiV2Vla2x5IHNsZWVwIHNjb3JlcyBzcGFya2xpbmVcIj5cclxuICAgICAgPGRlZnM+XHJcbiAgICAgICAgPGxpbmVhckdyYWRpZW50IGlkPVwid2Vla2x5U2xlZXBGaWxsXCIgeDE9XCIwXCIgeDI9XCIwXCIgeTE9XCIwXCIgeTI9XCIxXCI+XHJcbiAgICAgICAgICA8c3RvcCBvZmZzZXQ9XCIwJVwiIHN0b3BDb2xvcj1cIiMxYTU2ZGJcIiBzdG9wT3BhY2l0eT1cIjAuMjZcIiAvPlxyXG4gICAgICAgICAgPHN0b3Agb2Zmc2V0PVwiMTAwJVwiIHN0b3BDb2xvcj1cIiMxYTU2ZGJcIiBzdG9wT3BhY2l0eT1cIjAuMDRcIiAvPlxyXG4gICAgICAgIDwvbGluZWFyR3JhZGllbnQ+XHJcbiAgICAgIDwvZGVmcz5cclxuICAgICAge1swLCAxLCAyLCAzXS5tYXAoaSA9PiB7XHJcbiAgICAgICAgY29uc3QgeSA9IHBhZGRpbmcgKyAoKGggLSBwYWRkaW5nICogMikgLyAzKSAqIGk7XHJcbiAgICAgICAgcmV0dXJuIDxsaW5lIGtleT17aX0geDE9e3BhZGRpbmd9IHgyPXt3IC0gcGFkZGluZ30geTE9e3l9IHkyPXt5fSBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zcGFyay1ncmlkXCIgLz47XHJcbiAgICAgIH0pfVxyXG4gICAgICA8cGF0aCBkPXthcmVhfSBmaWxsPVwidXJsKCN3ZWVrbHlTbGVlcEZpbGwpXCIgLz5cclxuICAgICAgPHBhdGggZD17bGluZX0gY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc3BhcmstbGluZVwiIC8+XHJcbiAgICAgIHtwb2ludHMubWFwKChwb2ludCwgaW5kZXgpID0+IChcclxuICAgICAgICA8Y2lyY2xlIGtleT17aW5kZXh9IGN4PXtwb2ludC54fSBjeT17cG9pbnQueX0gcj17aW5kZXggPT09IHBvaW50cy5sZW5ndGggLSAxID8gNSA6IDMuNX0gY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc3BhcmstcG9pbnRcIiAvPlxyXG4gICAgICApKX1cclxuICAgIDwvc3ZnPlxyXG4gICk7XHJcbn1cclxuXHJcbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFdlZWtseVJlcG9ydFBhZ2UoKSB7XHJcbiAgY29uc3QgYXZnU2xlZXAgPSAoc2xlZXBTY29yZXMucmVkdWNlKChzdW0sIHZhbHVlKSA9PiBzdW0gKyB2YWx1ZSwgMCkgLyBzbGVlcFNjb3Jlcy5sZW5ndGgpLnRvRml4ZWQoMCk7XHJcbiAgY29uc3QgYmVsb3dCYXNlbGluZSA9IHNsZWVwU2NvcmVzLmZpbHRlcihzY29yZSA9PiBzY29yZSA8IDc4KS5sZW5ndGg7XHJcbiAgY29uc3QgYXR0cmlidXRpb25IaWdoQ29uZmlkZW5jZSA9IDczO1xyXG4gIGNvbnN0IGF0dHJpYnV0aW9uUGF1c2VkID0gMjc7XHJcbiAgY29uc3QgY29tcGFyZWRUb0xhc3RXZWVrID0gW1xyXG4gICAgeyBsYWJlbDogJ1NsZWVwIHF1YWxpdHknLCB2YWx1ZTogJ+KGkSA0JScsIHRvbmU6ICdnb29kJyB9LFxyXG4gICAgeyBsYWJlbDogJ1JvdXRpbmUgcmVndWxhcml0eScsIHZhbHVlOiAn4oaTIDglJywgdG9uZTogJ3NsaWdodCcgfSxcclxuICAgIHsgbGFiZWw6ICdTYWZldHkgZXZlbnRzJywgdmFsdWU6ICcwJywgdG9uZTogJ2dvb2QnIH0sXHJcbiAgXTtcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXQgd2Vla2x5LXJlcG9ydFwiPlxyXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInBhZ2UtbGF5b3V0X19oZWFkZXJcIj5cclxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInBhZ2UtbGF5b3V0X190aXRsZS1ncm91cFwiPlxyXG4gICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnMgaWNvbi1sZ1wiIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0tcHJpbWFyeSknIH19PnN1bW1hcml6ZTwvc3Bhbj5cclxuICAgICAgICAgIDxkaXY+XHJcbiAgICAgICAgICAgIDxoMSBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9fdGl0bGVcIj5XZWVrbHkgQUkgU3VtbWFyeTwvaDE+XHJcbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInBhZ2UtbGF5b3V0X19zdWJ0aXRsZVwiPkZhbWlseS1mcmllbmRseSBvdmVydmlldyBmb3IgTXIuIFJhZ2hhdiBJeWVyIMK3IFdlZWsgb2YgSnVuZSAxNTwvcD5cclxuICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiYnRuIGJ0bi1wcmltYXJ5XCI+XHJcbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29ucyBpY29uLXNtXCI+ZG93bmxvYWQ8L3NwYW4+XHJcbiAgICAgICAgICBEb3dubG9hZCBQREZcclxuICAgICAgICA8L2J1dHRvbj5cclxuICAgICAgPC9kaXY+XHJcblxyXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInBhZ2UtbGF5b3V0X19jb250ZW50IHdlZWtseS1yZXBvcnRfX2NvbnRlbnRcIj5cclxuICAgICAgICA8c2VjdGlvbiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19oZXJvIGdsYXNzLWNhcmRcIj5cclxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2V5ZWJyb3dcIj5UaGlzIHdlZWsgYXQgYSBnbGFuY2U8L3NwYW4+XHJcbiAgICAgICAgICA8aDIgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9faGVhZGxpbmVcIj5EYWQgaGFkIGEgc3RhYmxlIHdlZWsgLSBzbGVlcCB3YXMgY29uc2lzdGVudCBhbmQgdGhlcmUgd2VyZSBubyBzYWZldHkgZXZlbnRzLjwvaDI+XHJcbiAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19sZWRlXCI+XHJcbiAgICAgICAgICAgIE9wZW4gdGhpcyByZXBvcnQgaWYgeW91IHdhbnQgYSBmYXN0IGFuc3dlcjogdGhlIHdlZWsgbG9va3Mgc3RlYWR5IG92ZXJhbGwsIHdpdGggYSBzbWFsbCBtaWR3ZWVrIHNsZWVwIGRpcCB0aGF0IHJlY292ZXJlZCBieSB0aGUgd2Vla2VuZC5cclxuICAgICAgICAgIDwvcD5cclxuICAgICAgICA8L3NlY3Rpb24+XHJcblxyXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fZ3JpZFwiPlxyXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19tYWluXCI+XHJcbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZCB3ZWVrbHktcmVwb3J0X19jYXJkXCI+XHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19jYXJkLWhlYWRcIj5cclxuICAgICAgICAgICAgICAgIDxkaXY+XHJcbiAgICAgICAgICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zZWN0aW9uLXRpdGxlXCI+U2xlZXAgdGhpcyB3ZWVrPC9oMz5cclxuICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc2VjdGlvbi1zdWJ0aXRsZVwiPkF2ZXJhZ2Ugc2xlZXAgZHVyYXRpb24sIGF2ZXJhZ2UgcXVhbGl0eSBzY29yZSwgYW5kIG5pZ2h0cyBiZWxvdyBiYXNlbGluZTwvcD5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwiYmFkZ2UgYmFkZ2Utc3RhYmxlXCI+U1RBQkxFPC9zcGFuPlxyXG4gICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3NsZWVwLW1ldHJpY3NcIj5cclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc2xlZXAtbWV0cmljXCI+XHJcbiAgICAgICAgICAgICAgICAgIDxzcGFuPkF2ZXJhZ2UgZHVyYXRpb248L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgIDxzdHJvbmc+Ny4xIGhvdXJzPC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc2xlZXAtbWV0cmljXCI+XHJcbiAgICAgICAgICAgICAgICAgIDxzcGFuPkF2ZXJhZ2UgcXVhbGl0eTwvc3Bhbj5cclxuICAgICAgICAgICAgICAgICAgPHN0cm9uZz57YXZnU2xlZXB9LzEwMDwvc3Ryb25nPlxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3NsZWVwLW1ldHJpY1wiPlxyXG4gICAgICAgICAgICAgICAgICA8c3Bhbj5OaWdodHMgYmVsb3cgYmFzZWxpbmU8L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgIDxzdHJvbmc+e2JlbG93QmFzZWxpbmV9PC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zcGFyay1zaGVsbFwiPlxyXG4gICAgICAgICAgICAgICAgPFNwYXJrbGluZSBkYXRhPXtzbGVlcFNjb3Jlc30gLz5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zbGVlcC1kYXlzXCI+XHJcbiAgICAgICAgICAgICAgICB7c2xlZXBOaWdodHMubWFwKG5pZ2h0ID0+IChcclxuICAgICAgICAgICAgICAgICAgPGRpdiBrZXk9e25pZ2h0LmRheX0gY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc2xlZXAtZGF5XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc2xlZXAtZGF5LWxhYmVsXCI+e25pZ2h0LmRheX08L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgICAgPHN0cm9uZz57bmlnaHQuZHVyYXRpb259PC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICAgICAgPHNwYW4+e25pZ2h0LnNjb3JlfS8xMDA8L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgICAgPGVtPntuaWdodC5ub3RlfTwvZW0+XHJcbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgKSl9XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2ludGVycHJldGF0aW9uXCI+XHJcbiAgICAgICAgICAgICAgICBTbGVwdCB3ZWxsIG9uIDUgb2YgNyBuaWdodHMuIFR1ZXNkYXkgYW5kIFdlZG5lc2RheSBzaG93ZWQgbWlsZCByZXN0bGVzc25lc3MsIHBvc3NpYmx5IHJlbGF0ZWQgdG8gdGhlIHZpc2l0b3IgZGV0ZWN0ZWQgdGhhdCBhZnRlcm5vb24uXHJcbiAgICAgICAgICAgICAgPC9wPlxyXG4gICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZCB3ZWVrbHktcmVwb3J0X19jYXJkXCI+XHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19jYXJkLWhlYWRcIj5cclxuICAgICAgICAgICAgICAgIDxkaXY+XHJcbiAgICAgICAgICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zZWN0aW9uLXRpdGxlXCI+U2FmZXR5IGV2ZW50czwvaDM+XHJcbiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3NlY3Rpb24tc3VidGl0bGVcIj5GYWxscywgcHJvbG9uZ2VkIGluYWN0aXZpdHksIGFuZCBhcG5lYSBldmVudHM8L3A+XHJcbiAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImJhZGdlIGJhZGdlLXN0YWJsZVwiPk5PIEZBTExTPC9zcGFuPlxyXG4gICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3NhZmV0eS1zdW1tYXJ5XCI+XHJcbiAgICAgICAgICAgICAgICA8c3Ryb25nPlRoZXJlIHdlcmUgbm8gZmFsbHMgdGhpcyB3ZWVrLjwvc3Ryb25nPlxyXG4gICAgICAgICAgICAgICAgPHA+T25lIHNob3J0IGFwbmVhIGV2ZW50IGFuZCBvbmUgcHJvbG9uZ2VkIGluYWN0aXZpdHkgYWxlcnQgd2VyZSBsb2dnZWQsIGJvdGggYWNrbm93bGVkZ2VkIHF1aWNrbHkgYnkgY2FyZSBzdGFmZi48L3A+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fZXZlbnQtbGlzdFwiPlxyXG4gICAgICAgICAgICAgICAge3NhZmV0eUV2ZW50cy5tYXAoZXZlbnQgPT4gKFxyXG4gICAgICAgICAgICAgICAgICA8YXJ0aWNsZSBrZXk9e2V2ZW50LnRpbWV9IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2V2ZW50XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19ldmVudC10b3BcIj5cclxuICAgICAgICAgICAgICAgICAgICAgIDxzdHJvbmc+e2V2ZW50LnRpbWV9PC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJiYWRnZSBiYWRnZS13YXJuaW5nXCI+e2V2ZW50LnR5cGV9PC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fZXZlbnQtZGV0YWlsXCI+e2V2ZW50LmRldGFpbH08L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2V2ZW50LW1ldGFcIj5cclxuICAgICAgICAgICAgICAgICAgICAgIDxzcGFuPkFsZXJ0IHNlbnQ8L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgICAgICA8c3Ryb25nPntldmVudC5hbGVydH08L3N0cm9uZz5cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2V2ZW50LW1ldGFcIj5cclxuICAgICAgICAgICAgICAgICAgICAgIDxzcGFuPkFja25vd2xlZGdlZDwvc3Bhbj5cclxuICAgICAgICAgICAgICAgICAgICAgIDxzdHJvbmc+e2V2ZW50LmFja308L3N0cm9uZz5cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgPC9hcnRpY2xlPlxyXG4gICAgICAgICAgICAgICAgKSl9XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkIHdlZWtseS1yZXBvcnRfX2NhcmRcIj5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2NhcmQtaGVhZFwiPlxyXG4gICAgICAgICAgICAgICAgPGRpdj5cclxuICAgICAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3NlY3Rpb24tdGl0bGVcIj5Sb3V0aW5lIHJlZ3VsYXJpdHk8L2gzPlxyXG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zZWN0aW9uLXN1YnRpdGxlXCI+TW9ybmluZywgYWZ0ZXJub29uLCBldmVuaW5nLCBhbmQgbmlnaHQgcGF0dGVybiBjb25zaXN0ZW5jeTwvcD5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3JvdXRpbmUtZ3JpZFwiPlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19yb3V0aW5lLWNvcm5lclwiIC8+XHJcbiAgICAgICAgICAgICAgICB7ZGF5TGFiZWxzLm1hcChkYXkgPT4gKFxyXG4gICAgICAgICAgICAgICAgICA8ZGl2IGtleT17ZGF5fSBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19yb3V0aW5lLWRheVwiPntkYXl9PC9kaXY+XHJcbiAgICAgICAgICAgICAgICApKX1cclxuICAgICAgICAgICAgICAgIHtyb3dMYWJlbHMubWFwKChyb3csIHJvd0luZGV4KSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgIDxSZWFjdC5GcmFnbWVudCBrZXk9e3Jvd30+XHJcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19yb3V0aW5lLXJvdy1sYWJlbFwiPntyb3d9PC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAge3JvdXRpbmVIZWF0bWFwW3Jvd0luZGV4XS5tYXAoKHZhbHVlLCBjb2xJbmRleCkgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgICAgY29uc3QgaXNHb29kID0gdmFsdWUgPj0gMC43NTtcclxuICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IGlzTWl4ZWQgPSB2YWx1ZSA+PSAwLjYgJiYgdmFsdWUgPCAwLjc1O1xyXG4gICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIChcclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGtleT17YCR7cm93fS0ke2NvbEluZGV4fWB9XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fcm91dGluZS1jZWxsXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICBzdHlsZT17e1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgYmFja2dyb3VuZDogaXNHb29kXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gJ3JnYmEoMzQsIDE5NywgOTQsIDAuNzIpJ1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6IGlzTWl4ZWRcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA/ICdyZ2JhKDI0NSwgMTU4LCAxMSwgMC42MiknXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOiAncmdiYSgyMzksIDY4LCA2OCwgMC41NiknLFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH19XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgdGl0bGU9e2Ake3Jvd30gJHtkYXlMYWJlbHNbY29sSW5kZXhdfTogJHtNYXRoLnJvdW5kKHZhbHVlICogMTAwKX0lYH1cclxuICAgICAgICAgICAgICAgICAgICAgICAgLz5cclxuICAgICAgICAgICAgICAgICAgICAgICk7XHJcbiAgICAgICAgICAgICAgICAgICAgfSl9XHJcbiAgICAgICAgICAgICAgICAgIDwvUmVhY3QuRnJhZ21lbnQ+XHJcbiAgICAgICAgICAgICAgICApKX1cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19yb3V0aW5lLWxlZ2VuZFwiPlxyXG4gICAgICAgICAgICAgICAgPHNwYW4+PGkgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fbGVnZW5kLWRvdCB3ZWVrbHktcmVwb3J0X19sZWdlbmQtZG90LS1ncmVlblwiIC8+UmVndWxhcjwvc3Bhbj5cclxuICAgICAgICAgICAgICAgIDxzcGFuPjxpIGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2xlZ2VuZC1kb3Qgd2Vla2x5LXJlcG9ydF9fbGVnZW5kLWRvdC0tYW1iZXJcIiAvPk1peGVkPC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgPHNwYW4+PGkgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fbGVnZW5kLWRvdCB3ZWVrbHktcmVwb3J0X19sZWdlbmQtZG90LS1yZWRcIiAvPklycmVndWxhcjwvc3Bhbj5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9faW50ZXJwcmV0YXRpb25cIj5cclxuICAgICAgICAgICAgICAgIE1vcm5pbmcgYWN0aXZpdHkgd2FzIHRoZSBtb3N0IGNvbnNpc3RlbnQsIGFmdGVybm9vbnMgd2VyZSBzbGlnaHRseSBsaWdodGVyIG1pZHdlZWssIGFuZCBldmVuaW5ncyBzdGF5ZWQgY2FsbSBvdmVyYWxsLlxyXG4gICAgICAgICAgICAgIDwvcD5cclxuICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICA8YXNpZGUgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fc2lkZVwiPlxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdsYXNzLWNhcmQgd2Vla2x5LXJlcG9ydF9fY2FyZCB3ZWVrbHktcmVwb3J0X19jYXJkLS1jb21wYWN0XCI+XHJcbiAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3NlY3Rpb24tdGl0bGVcIj5BdHRyaWJ1dGlvbiBxdWFsaXR5PC9oMz5cclxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19zZWN0aW9uLXN1YnRpdGxlXCI+SG93IG11Y2ggb2YgdGhlIGRhdGEgd2FzIGNvbmZpZGVudGx5IHRpZWQgdG8gRGFkIHNwZWNpZmljYWxseTwvcD5cclxuXHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19hdHRyaWJ1dGlvbi1tZXRlclwiPlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19hdHRyaWJ1dGlvbi1tZXRlci1maWxsXCIgc3R5bGU9e3sgd2lkdGg6IGAke2F0dHJpYnV0aW9uSGlnaENvbmZpZGVuY2V9JWAgfX0gLz5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX2F0dHJpYnV0aW9uLXZhbHVlc1wiPlxyXG4gICAgICAgICAgICAgICAgPHN0cm9uZz57YXR0cmlidXRpb25IaWdoQ29uZmlkZW5jZX0lPC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICA8c3Bhbj5oaWdoLWNvbmZpZGVuY2UgYXR0cmlidXRpb248L3NwYW4+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19hdHRyaWJ1dGlvbi1tdXRlZFwiPlxyXG4gICAgICAgICAgICAgICAge2F0dHJpYnV0aW9uUGF1c2VkfSUgb2YgdGhlIHdlZWsgd2FzIGhvdXNlaG9sZCBhY3Rpdml0eSB0aW1lIHdoZXJlIG1vbml0b3Jpbmcgd2FzIHBhdXNlZC5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdsYXNzLWNhcmQgd2Vla2x5LXJlcG9ydF9fY2FyZCB3ZWVrbHktcmVwb3J0X19jYXJkLS1jb21wYWN0XCI+XHJcbiAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT1cIndlZWtseS1yZXBvcnRfX3NlY3Rpb24tdGl0bGVcIj5Db21wYXJlZCB0byBsYXN0IHdlZWs8L2gzPlxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fZGVsdGEtbGlzdFwiPlxyXG4gICAgICAgICAgICAgICAge2NvbXBhcmVkVG9MYXN0V2Vlay5tYXAoaXRlbSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgIDxkaXYga2V5PXtpdGVtLmxhYmVsfSBjbGFzc05hbWU9XCJ3ZWVrbHktcmVwb3J0X19kZWx0YS1yb3dcIj5cclxuICAgICAgICAgICAgICAgICAgICA8c3Bhbj57aXRlbS5sYWJlbH08L3NwYW4+XHJcbiAgICAgICAgICAgICAgICAgICAgPHN0cm9uZyBjbGFzc05hbWU9e2B3ZWVrbHktcmVwb3J0X19kZWx0YS12YWx1ZSB3ZWVrbHktcmVwb3J0X19kZWx0YS12YWx1ZS0tJHtpdGVtLnRvbmV9YH0+e2l0ZW0udmFsdWV9PC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgKSl9XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkIHdlZWtseS1yZXBvcnRfX2FjdGlvbi1jYXJkXCI+XHJcbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwid2Vla2x5LXJlcG9ydF9fYWN0aW9uLWV5ZWJyb3dcIj5PbmUgcmVjb21tZW5kZWQgYWN0aW9uPC9zcGFuPlxyXG4gICAgICAgICAgICAgIDxwPlxyXG4gICAgICAgICAgICAgICAgU2xlZXAgcXVhbGl0eSBoYXMgZGVjbGluZWQgc2xpZ2h0bHkgb3ZlciAzIHdlZWtzLCBzbyBjb25zaWRlciBtZW50aW9uaW5nIHRoaXMgYXQgRGFkJmFwb3M7cyBuZXh0IGNoZWNrLXVwLlxyXG4gICAgICAgICAgICAgIDwvcD5cclxuICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICA8L2FzaWRlPlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgICA8L2Rpdj5cclxuICAgIDwvZGl2PlxyXG4gICk7XHJcbn1cclxuIl0sImZpbGUiOiJDOi9Vc2Vycy9BYXl1c2ggV2Fsc2FuZ2lrYXIvT25lRHJpdmUvRGVza3RvcC9TaWxlbnQgU2Vuc2Uvc3JjL3BhZ2VzL1dlZWtseVJlcG9ydFBhZ2UuanN4In0=

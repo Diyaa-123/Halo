@@ -1,0 +1,215 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/patient/VitalCard.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react;
+import "/src/components/patient/VitalCard.css";
+function Sparkline({ data, color }) {
+  if (!data || data.length < 2) return null;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const w = 80, h = 28;
+  const pts = data.map((v, i) => {
+    const x = i / (data.length - 1) * w;
+    const y = h - (v - min) / range * (h - 4) - 2;
+    return `${x},${y}`;
+  });
+  const area = `M${pts[0]} L${pts.join(" L")} L${(data.length - 1) / (data.length - 1) * w},${h} L0,${h} Z`;
+  return /* @__PURE__ */ jsxDEV("svg", { viewBox: `0 0 ${w} ${h}`, width: w, height: h, style: { overflow: "visible" }, children: [
+    /* @__PURE__ */ jsxDEV("defs", { children: /* @__PURE__ */ jsxDEV("linearGradient", { id: `grad-${color.replace("#", "")}`, x1: "0", y1: "0", x2: "0", y2: "1", children: [
+      /* @__PURE__ */ jsxDEV("stop", { offset: "0%", stopColor: color, stopOpacity: "0.3" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+        lineNumber: 39,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("stop", { offset: "100%", stopColor: color, stopOpacity: "0" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+        lineNumber: 40,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+      lineNumber: 38,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+      lineNumber: 37,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("path", { d: area, fill: `url(#grad-${color.replace("#", "")})` }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+      lineNumber: 43,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(
+      "polyline",
+      {
+        points: pts.join(" "),
+        fill: "none",
+        stroke: color,
+        strokeWidth: "1.5",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+        lineNumber: 44,
+        columnNumber: 7
+      },
+      this
+    ),
+    /* @__PURE__ */ jsxDEV(
+      "circle",
+      {
+        cx: pts[pts.length - 1].split(",")[0],
+        cy: pts[pts.length - 1].split(",")[1],
+        r: "2.5",
+        fill: color
+      },
+      void 0,
+      false,
+      {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+        lineNumber: 53,
+        columnNumber: 7
+      },
+      this
+    )
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+    lineNumber: 36,
+    columnNumber: 5
+  }, this);
+}
+_c = Sparkline;
+const riskConfig = {
+  low: { label: "LOW", class: "badge-stable" },
+  moderate: { label: "MOD", class: "badge-warning" },
+  high: { label: "HIGH", class: "badge-critical" }
+};
+const trendIcons = {
+  up: { icon: "trending_up", positive: true },
+  down: { icon: "trending_down", positive: false },
+  stable: { icon: "trending_flat", positive: null }
+};
+export default function VitalCard({ vital, isSelected, onClick }) {
+  const risk = riskConfig[vital.risk] || riskConfig.low;
+  const trend = trendIcons[vital.trendDir] || trendIcons.stable;
+  const trendColor = trend.positive === true ? "var(--secondary)" : trend.positive === false ? "var(--emergency-red)" : "var(--outline)";
+  return /* @__PURE__ */ jsxDEV(
+    "div",
+    {
+      className: `vital-card ${isSelected ? "vital-card--selected" : ""} ${vital.risk === "high" ? "vital-card--high-risk" : ""}`,
+      onClick,
+      style: { "--vital-color": vital.color },
+      children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "vital-card__header", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "vital-card__name", children: vital.name }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+            lineNumber: 89,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: `badge ${risk.class} vital-card__risk`, children: risk.label }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+            lineNumber: 90,
+            columnNumber: 9
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+          lineNumber: 88,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "vital-card__body", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "vital-card__value-row", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "vital-card__value", children: vital.value }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+              lineNumber: 95,
+              columnNumber: 11
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { className: "vital-card__unit", children: vital.unit }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+              lineNumber: 96,
+              columnNumber: 11
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+            lineNumber: 94,
+            columnNumber: 9
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "vital-card__trend", style: { color: trendColor }, children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: trend.icon }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+              lineNumber: 99,
+              columnNumber: 11
+            }, this),
+            vital.trend && /* @__PURE__ */ jsxDEV("span", { children: vital.trend }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+              lineNumber: 100,
+              columnNumber: 27
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+            lineNumber: 98,
+            columnNumber: 9
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+          lineNumber: 93,
+          columnNumber: 7
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "vital-card__sparkline", children: /* @__PURE__ */ jsxDEV(Sparkline, { data: vital.data, color: vital.color }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+          lineNumber: 105,
+          columnNumber: 9
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+          lineNumber: 104,
+          columnNumber: 7
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx",
+      lineNumber: 83,
+      columnNumber: 5
+    },
+    this
+  );
+}
+_c2 = VitalCard;
+var _c, _c2;
+$RefreshReg$(_c, "Sparkline");
+$RefreshReg$(_c2, "VitalCard");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/patient/VitalCard.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUEsWUFDakQsdUJBQUMsVUFBSyxXQUFVLG9CQUFvQlIsZ0JBQU1TLFFBQTFDO0FBQUE7QUFBQTtBQUFBO0FBQUEsbUJBQStDO0FBQUEsZUFGakQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxpQkFHQTtBQUFBLFVBQ0EsdUJBQUMsU0FBSSxXQUFVLHFCQUFvQixPQUFPLEVBQUUxQyxPQUFPdUMsV0FBVyxHQUM1RDtBQUFBLG1DQUFDLFVBQUssV0FBVSwwQkFBMEJGLGdCQUFNVCxRQUFoRDtBQUFBO0FBQUE7QUFBQTtBQUFBLG1CQUFxRDtBQUFBLFlBQ3BESyxNQUFNSSxTQUFTLHVCQUFDLFVBQU1KLGdCQUFNSSxTQUFiO0FBQUE7QUFBQTtBQUFBO0FBQUEsbUJBQW1CO0FBQUEsZUFGckM7QUFBQTtBQUFBO0FBQUE7QUFBQSxpQkFHQTtBQUFBLGFBUkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQVNBO0FBQUEsUUFFQSx1QkFBQyxTQUFJLFdBQVUseUJBQ2IsaUNBQUMsYUFBVSxNQUFNSixNQUFNbEMsTUFBTSxPQUFPa0MsTUFBTWpDLFNBQTFDO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBZ0QsS0FEbEQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUVBO0FBQUE7QUFBQTtBQUFBLElBdkJGO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxFQXdCQTtBQUVKO0FBQUMyQyxNQWxDdUJYO0FBQVMsSUFBQWIsSUFBQXdCO0FBQUEsYUFBQXhCLElBQUE7QUFBQSxhQUFBd0IsS0FBQSIsIm5hbWVzIjpbIlJlYWN0IiwiU3BhcmtsaW5lIiwiZGF0YSIsImNvbG9yIiwibGVuZ3RoIiwibWluIiwiTWF0aCIsIm1heCIsInJhbmdlIiwidyIsImgiLCJwdHMiLCJtYXAiLCJ2IiwiaSIsIngiLCJ5IiwiYXJlYSIsImpvaW4iLCJvdmVyZmxvdyIsInJlcGxhY2UiLCJzcGxpdCIsIl9jIiwicmlza0NvbmZpZyIsImxvdyIsImxhYmVsIiwiY2xhc3MiLCJtb2RlcmF0ZSIsImhpZ2giLCJ0cmVuZEljb25zIiwidXAiLCJpY29uIiwicG9zaXRpdmUiLCJkb3duIiwic3RhYmxlIiwiVml0YWxDYXJkIiwidml0YWwiLCJpc1NlbGVjdGVkIiwib25DbGljayIsInJpc2siLCJ0cmVuZCIsInRyZW5kRGlyIiwidHJlbmRDb2xvciIsIm5hbWUiLCJ2YWx1ZSIsInVuaXQiLCJfYzIiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiVml0YWxDYXJkLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0ICcuL1ZpdGFsQ2FyZC5jc3MnO1xuXG5mdW5jdGlvbiBTcGFya2xpbmUoeyBkYXRhLCBjb2xvciB9KSB7XG4gIGlmICghZGF0YSB8fCBkYXRhLmxlbmd0aCA8IDIpIHJldHVybiBudWxsO1xuICBjb25zdCBtaW4gPSBNYXRoLm1pbiguLi5kYXRhKTtcbiAgY29uc3QgbWF4ID0gTWF0aC5tYXgoLi4uZGF0YSk7XG4gIGNvbnN0IHJhbmdlID0gbWF4IC0gbWluIHx8IDE7XG4gIGNvbnN0IHcgPSA4MCwgaCA9IDI4O1xuICBjb25zdCBwdHMgPSBkYXRhLm1hcCgodiwgaSkgPT4ge1xuICAgIGNvbnN0IHggPSAoaSAvIChkYXRhLmxlbmd0aCAtIDEpKSAqIHc7XG4gICAgY29uc3QgeSA9IGggLSAoKHYgLSBtaW4pIC8gcmFuZ2UpICogKGggLSA0KSAtIDI7XG4gICAgcmV0dXJuIGAke3h9LCR7eX1gO1xuICB9KTtcbiAgY29uc3QgYXJlYSA9IGBNJHtwdHNbMF19IEwke3B0cy5qb2luKCcgTCcpfSBMJHsoZGF0YS5sZW5ndGggLSAxKSAvIChkYXRhLmxlbmd0aCAtIDEpICogd30sJHtofSBMMCwke2h9IFpgO1xuICByZXR1cm4gKFxuICAgIDxzdmcgdmlld0JveD17YDAgMCAke3d9ICR7aH1gfSB3aWR0aD17d30gaGVpZ2h0PXtofSBzdHlsZT17eyBvdmVyZmxvdzogJ3Zpc2libGUnIH19PlxuICAgICAgPGRlZnM+XG4gICAgICAgIDxsaW5lYXJHcmFkaWVudCBpZD17YGdyYWQtJHtjb2xvci5yZXBsYWNlKCcjJywgJycpfWB9IHgxPVwiMFwiIHkxPVwiMFwiIHgyPVwiMFwiIHkyPVwiMVwiPlxuICAgICAgICAgIDxzdG9wIG9mZnNldD1cIjAlXCIgc3RvcENvbG9yPXtjb2xvcn0gc3RvcE9wYWNpdHk9XCIwLjNcIiAvPlxuICAgICAgICAgIDxzdG9wIG9mZnNldD1cIjEwMCVcIiBzdG9wQ29sb3I9e2NvbG9yfSBzdG9wT3BhY2l0eT1cIjBcIiAvPlxuICAgICAgICA8L2xpbmVhckdyYWRpZW50PlxuICAgICAgPC9kZWZzPlxuICAgICAgPHBhdGggZD17YXJlYX0gZmlsbD17YHVybCgjZ3JhZC0ke2NvbG9yLnJlcGxhY2UoJyMnLCAnJyl9KWB9IC8+XG4gICAgICA8cG9seWxpbmVcbiAgICAgICAgcG9pbnRzPXtwdHMuam9pbignICcpfVxuICAgICAgICBmaWxsPVwibm9uZVwiXG4gICAgICAgIHN0cm9rZT17Y29sb3J9XG4gICAgICAgIHN0cm9rZVdpZHRoPVwiMS41XCJcbiAgICAgICAgc3Ryb2tlTGluZWNhcD1cInJvdW5kXCJcbiAgICAgICAgc3Ryb2tlTGluZWpvaW49XCJyb3VuZFwiXG4gICAgICAvPlxuICAgICAgey8qIExhc3QgcG9pbnQgZG90ICovfVxuICAgICAgPGNpcmNsZVxuICAgICAgICBjeD17cHRzW3B0cy5sZW5ndGggLSAxXS5zcGxpdCgnLCcpWzBdfVxuICAgICAgICBjeT17cHRzW3B0cy5sZW5ndGggLSAxXS5zcGxpdCgnLCcpWzFdfVxuICAgICAgICByPVwiMi41XCJcbiAgICAgICAgZmlsbD17Y29sb3J9XG4gICAgICAvPlxuICAgIDwvc3ZnPlxuICApO1xufVxuXG5jb25zdCByaXNrQ29uZmlnID0ge1xuICBsb3c6IHsgbGFiZWw6ICdMT1cnLCBjbGFzczogJ2JhZGdlLXN0YWJsZScgfSxcbiAgbW9kZXJhdGU6IHsgbGFiZWw6ICdNT0QnLCBjbGFzczogJ2JhZGdlLXdhcm5pbmcnIH0sXG4gIGhpZ2g6IHsgbGFiZWw6ICdISUdIJywgY2xhc3M6ICdiYWRnZS1jcml0aWNhbCcgfSxcbn07XG5cbmNvbnN0IHRyZW5kSWNvbnMgPSB7XG4gIHVwOiB7IGljb246ICd0cmVuZGluZ191cCcsIHBvc2l0aXZlOiB0cnVlIH0sXG4gIGRvd246IHsgaWNvbjogJ3RyZW5kaW5nX2Rvd24nLCBwb3NpdGl2ZTogZmFsc2UgfSxcbiAgc3RhYmxlOiB7IGljb246ICd0cmVuZGluZ19mbGF0JywgcG9zaXRpdmU6IG51bGwgfSxcbn07XG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIFZpdGFsQ2FyZCh7IHZpdGFsLCBpc1NlbGVjdGVkLCBvbkNsaWNrIH0pIHtcbiAgY29uc3QgcmlzayA9IHJpc2tDb25maWdbdml0YWwucmlza10gfHwgcmlza0NvbmZpZy5sb3c7XG4gIGNvbnN0IHRyZW5kID0gdHJlbmRJY29uc1t2aXRhbC50cmVuZERpcl0gfHwgdHJlbmRJY29ucy5zdGFibGU7XG4gIGNvbnN0IHRyZW5kQ29sb3IgPSB0cmVuZC5wb3NpdGl2ZSA9PT0gdHJ1ZSA/ICd2YXIoLS1zZWNvbmRhcnkpJ1xuICAgIDogdHJlbmQucG9zaXRpdmUgPT09IGZhbHNlID8gJ3ZhcigtLWVtZXJnZW5jeS1yZWQpJ1xuICAgIDogJ3ZhcigtLW91dGxpbmUpJztcblxuICByZXR1cm4gKFxuICAgIDxkaXZcbiAgICAgIGNsYXNzTmFtZT17YHZpdGFsLWNhcmQgJHtpc1NlbGVjdGVkID8gJ3ZpdGFsLWNhcmQtLXNlbGVjdGVkJyA6ICcnfSAke3ZpdGFsLnJpc2sgPT09ICdoaWdoJyA/ICd2aXRhbC1jYXJkLS1oaWdoLXJpc2snIDogJyd9YH1cbiAgICAgIG9uQ2xpY2s9e29uQ2xpY2t9XG4gICAgICBzdHlsZT17eyAnLS12aXRhbC1jb2xvcic6IHZpdGFsLmNvbG9yIH19XG4gICAgPlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJ2aXRhbC1jYXJkX19oZWFkZXJcIj5cbiAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidml0YWwtY2FyZF9fbmFtZVwiPnt2aXRhbC5uYW1lfTwvc3Bhbj5cbiAgICAgICAgPHNwYW4gY2xhc3NOYW1lPXtgYmFkZ2UgJHtyaXNrLmNsYXNzfSB2aXRhbC1jYXJkX19yaXNrYH0+e3Jpc2subGFiZWx9PC9zcGFuPlxuICAgICAgPC9kaXY+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwidml0YWwtY2FyZF9fYm9keVwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInZpdGFsLWNhcmRfX3ZhbHVlLXJvd1wiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInZpdGFsLWNhcmRfX3ZhbHVlXCI+e3ZpdGFsLnZhbHVlfTwvc3Bhbj5cbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ2aXRhbC1jYXJkX191bml0XCI+e3ZpdGFsLnVuaXR9PC9zcGFuPlxuICAgICAgICA8L2Rpdj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJ2aXRhbC1jYXJkX190cmVuZFwiIHN0eWxlPXt7IGNvbG9yOiB0cmVuZENvbG9yIH19PlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tc21cIj57dHJlbmQuaWNvbn08L3NwYW4+XG4gICAgICAgICAge3ZpdGFsLnRyZW5kICYmIDxzcGFuPnt2aXRhbC50cmVuZH08L3NwYW4+fVxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cInZpdGFsLWNhcmRfX3NwYXJrbGluZVwiPlxuICAgICAgICA8U3BhcmtsaW5lIGRhdGE9e3ZpdGFsLmRhdGF9IGNvbG9yPXt2aXRhbC5jb2xvcn0gLz5cbiAgICAgIDwvZGl2PlxuICAgIDwvZGl2PlxuICApO1xufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy9BYXl1c2ggV2Fsc2FuZ2lrYXIvT25lRHJpdmUvRGVza3RvcC9TaWxlbnQgU2Vuc2Uvc3JjL2NvbXBvbmVudHMvcGF0aWVudC9WaXRhbENhcmQuanN4In0=

@@ -1,0 +1,210 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/landing/ThreeScene.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react;
+import { Canvas, useFrame, useThree } from "/node_modules/.vite/deps/@react-three_fiber.js?v=6faa39c4";
+import { Environment } from "/node_modules/.vite/deps/@react-three_drei.js?v=6faa39c4";
+import * as THREE from "/node_modules/.vite/deps/three.js?v=6faa39c4";
+import HelixCards from "/src/components/landing/HelixCards.jsx";
+import ParticleField from "/src/components/landing/ParticleField.jsx";
+import SpineModel from "/src/components/landing/SpineModel.jsx";
+function CameraRig({ scrollProgress }) {
+  _s();
+  const { camera, pointer } = useThree();
+  const lookAt = new THREE.Vector3(0, 0, -1.45);
+  useFrame(() => {
+    const targetX = pointer.x * 0.5;
+    const targetY = pointer.y * 0.28;
+    const targetZ = 7.6 + Math.sin(scrollProgress * 0.65) * 0.28;
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.055);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.055);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.04);
+    camera.lookAt(lookAt);
+  });
+  return null;
+}
+_s(CameraRig, "pv5R9tbP8TDYa9dhyuHkVHatLVU=", false, function() {
+  return [useThree, useFrame];
+});
+_c = CameraRig;
+function LightColumns() {
+  return /* @__PURE__ */ jsxDEV("group", { children: [
+    /* @__PURE__ */ jsxDEV("mesh", { position: [-4.4, 0.3, -4.2], rotation: [0, 0.25, 0], children: [
+      /* @__PURE__ */ jsxDEV("boxGeometry", { args: [0.018, 9, 0.018] }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+        lineNumber: 50,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("meshBasicMaterial", { color: "#39f5ff", transparent: true, opacity: 0.32 }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+        lineNumber: 51,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+      lineNumber: 49,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("mesh", { position: [4.1, -0.2, -4.8], rotation: [0, -0.18, 0], children: [
+      /* @__PURE__ */ jsxDEV("boxGeometry", { args: [0.018, 8, 0.018] }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+        lineNumber: 54,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("meshBasicMaterial", { color: "#7c5cff", transparent: true, opacity: 0.26 }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+        lineNumber: 55,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+      lineNumber: 53,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("mesh", { position: [0, -4.6, -3.2], rotation: [-Math.PI / 2, 0, 0], children: [
+      /* @__PURE__ */ jsxDEV("ringGeometry", { args: [1.4, 4.9, 96] }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+        lineNumber: 58,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("meshBasicMaterial", { color: "#0dd8ff", transparent: true, opacity: 0.08, side: THREE.DoubleSide }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+        lineNumber: 59,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+      lineNumber: 57,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+    lineNumber: 48,
+    columnNumber: 5
+  }, this);
+}
+_c2 = LightColumns;
+export default function ThreeScene({ cards, activePanel, scrollProgress }) {
+  return /* @__PURE__ */ jsxDEV("div", { className: "canvas-container", children: /* @__PURE__ */ jsxDEV(
+    Canvas,
+    {
+      camera: { position: [0, 0, 7.8], fov: 38, near: 0.1, far: 80 },
+      dpr: [1, 1.75],
+      gl: { antialias: true, alpha: false, powerPreference: "high-performance" },
+      children: [
+        /* @__PURE__ */ jsxDEV("color", { attach: "background", args: ["#020607"] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 73,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("fog", { attach: "fog", args: ["#020607", 8, 18] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 74,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV(CameraRig, { scrollProgress }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 76,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("ambientLight", { intensity: 0.18, color: "#9eefff" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 78,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("directionalLight", { position: [3.8, 5.5, 4.4], intensity: 2.4, color: "#d9fbff" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 79,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("directionalLight", { position: [-4.8, 1.7, -2.8], intensity: 2.2, color: "#755dff" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 80,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("pointLight", { position: [0.1, 0.2, 2.4], intensity: 2.7, color: "#45f4ff", distance: 7.5 }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 81,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV("pointLight", { position: [-2.8, -2.2, -1.2], intensity: 1.5, color: "#a256ff", distance: 8 }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 82,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV(Environment, { preset: "night" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 84,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV(LightColumns, {}, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 85,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV(ParticleField, { scrollProgress }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 86,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV(SpineModel, { scrollProgress }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 87,
+          columnNumber: 9
+        }, this),
+        /* @__PURE__ */ jsxDEV(HelixCards, { cards, activePanel, scrollProgress }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+          lineNumber: 88,
+          columnNumber: 9
+        }, this)
+      ]
+    },
+    void 0,
+    true,
+    {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+      lineNumber: 68,
+      columnNumber: 7
+    },
+    this
+  ) }, void 0, false, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx",
+    lineNumber: 67,
+    columnNumber: 5
+  }, this);
+}
+_c3 = ThreeScene;
+var _c, _c2, _c3;
+$RefreshReg$(_c, "CameraRig");
+$RefreshReg$(_c2, "LightColumns");
+$RefreshReg$(_c3, "ThreeScene");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ThreeScene.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBOEJROzs7Ozs7Ozs7Ozs7Ozs7OztBQTlCUixPQUFPQSxXQUFXO0FBQ2xCLFNBQVNDLFFBQVFDLFVBQVVDLGdCQUFnQjtBQUMzQyxTQUFTQyxtQkFBbUI7QUFDNUIsWUFBWUMsV0FBVztBQUN2QixPQUFPQyxnQkFBZ0I7QUFDdkIsT0FBT0MsbUJBQW1CO0FBQzFCLE9BQU9DLGdCQUFnQjtBQUV2QixTQUFTQyxVQUFVLEVBQUVDLGVBQWUsR0FBRztBQUFBQyxLQUFBO0FBQ3JDLFFBQU0sRUFBRUMsUUFBUUMsUUFBUSxJQUFJVixTQUFTO0FBQ3JDLFFBQU1XLFNBQVMsSUFBSVQsTUFBTVUsUUFBUSxHQUFHLEdBQUcsS0FBSztBQUU1Q2IsV0FBUyxNQUFNO0FBQ2IsVUFBTWMsVUFBVUgsUUFBUUksSUFBSTtBQUM1QixVQUFNQyxVQUFVTCxRQUFRTSxJQUFJO0FBQzVCLFVBQU1DLFVBQVUsTUFBTUMsS0FBS0MsSUFBSVosaUJBQWlCLElBQUksSUFBSTtBQUV4REUsV0FBT1csU0FBU04sSUFBSVosTUFBTW1CLFVBQVVDLEtBQUtiLE9BQU9XLFNBQVNOLEdBQUdELFNBQVMsS0FBSztBQUMxRUosV0FBT1csU0FBU0osSUFBSWQsTUFBTW1CLFVBQVVDLEtBQUtiLE9BQU9XLFNBQVNKLEdBQUdELFNBQVMsS0FBSztBQUMxRU4sV0FBT1csU0FBU0csSUFBSXJCLE1BQU1tQixVQUFVQyxLQUFLYixPQUFPVyxTQUFTRyxHQUFHTixTQUFTLElBQUk7QUFDekVSLFdBQU9FLE9BQU9BLE1BQU07QUFBQSxFQUN0QixDQUFDO0FBRUQsU0FBTztBQUNUO0FBQUNILEdBaEJRRixXQUFTO0FBQUEsVUFDWU4sVUFHNUJELFFBQVE7QUFBQTtBQUFBLEtBSkRPO0FBa0JULFNBQVNrQixlQUFlO0FBQ3RCLFNBQ0UsdUJBQUMsV0FDQztBQUFBLDJCQUFDLFVBQUssVUFBVSxDQUFDLE1BQU0sS0FBSyxJQUFJLEdBQUcsVUFBVSxDQUFDLEdBQUcsTUFBTSxDQUFDLEdBQ3REO0FBQUEsNkJBQUMsaUJBQVksTUFBTSxDQUFDLE9BQU8sR0FBRyxLQUFLLEtBQW5DO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFBcUM7QUFBQSxNQUNyQyx1QkFBQyx1QkFBa0IsT0FBTSxXQUFVLGFBQVcsTUFBQyxTQUFTLFFBQXhEO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFBNkQ7QUFBQSxTQUYvRDtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBR0E7QUFBQSxJQUNBLHVCQUFDLFVBQUssVUFBVSxDQUFDLEtBQUssTUFBTSxJQUFJLEdBQUcsVUFBVSxDQUFDLEdBQUcsT0FBTyxDQUFDLEdBQ3ZEO0FBQUEsNkJBQUMsaUJBQVksTUFBTSxDQUFDLE9BQU8sR0FBRyxLQUFLLEtBQW5DO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFBcUM7QUFBQSxNQUNyQyx1QkFBQyx1QkFBa0IsT0FBTSxXQUFVLGFBQVcsTUFBQyxTQUFTLFFBQXhEO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFBNkQ7QUFBQSxTQUYvRDtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBR0E7QUFBQSxJQUNBLHVCQUFDLFVBQUssVUFBVSxDQUFDLEdBQUcsTUFBTSxJQUFJLEdBQUcsVUFBVSxDQUFDLENBQUNOLEtBQUtPLEtBQUssR0FBRyxHQUFHLENBQUMsR0FDNUQ7QUFBQSw2QkFBQyxrQkFBYSxNQUFNLENBQUMsS0FBSyxLQUFLLEVBQUUsS0FBakM7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQUFtQztBQUFBLE1BQ25DLHVCQUFDLHVCQUFrQixPQUFNLFdBQVUsYUFBVyxNQUFDLFNBQVMsTUFBTSxNQUFNdkIsTUFBTXdCLGNBQTFFO0FBQUE7QUFBQTtBQUFBO0FBQUEsYUFBcUY7QUFBQSxTQUZ2RjtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBR0E7QUFBQSxPQVpGO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0FhQTtBQUVKO0FBQUNDLE1BakJRSDtBQW1CVCx3QkFBd0JJLFdBQVcsRUFBRUMsT0FBT0MsYUFBYXZCLGVBQWUsR0FBRztBQUN6RSxTQUNFLHVCQUFDLFNBQUksV0FBVSxvQkFDYjtBQUFBLElBQUM7QUFBQTtBQUFBLE1BQ0MsUUFBUSxFQUFFYSxVQUFVLENBQUMsR0FBRyxHQUFHLEdBQUcsR0FBR1csS0FBSyxJQUFJQyxNQUFNLEtBQUtDLEtBQUssR0FBRztBQUFBLE1BQzdELEtBQUssQ0FBQyxHQUFHLElBQUk7QUFBQSxNQUNiLElBQUksRUFBRUMsV0FBVyxNQUFNQyxPQUFPLE9BQU9DLGlCQUFpQixtQkFBbUI7QUFBQSxNQUV6RTtBQUFBLCtCQUFDLFdBQU0sUUFBTyxjQUFhLE1BQU0sQ0FBQyxTQUFTLEtBQTNDO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBNkM7QUFBQSxRQUM3Qyx1QkFBQyxTQUFJLFFBQU8sT0FBTSxNQUFNLENBQUMsV0FBVyxHQUFHLEVBQUUsS0FBekM7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUEyQztBQUFBLFFBRTNDLHVCQUFDLGFBQVUsa0JBQVg7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUEwQztBQUFBLFFBRTFDLHVCQUFDLGtCQUFhLFdBQVcsTUFBTSxPQUFNLGFBQXJDO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBOEM7QUFBQSxRQUM5Qyx1QkFBQyxzQkFBaUIsVUFBVSxDQUFDLEtBQUssS0FBSyxHQUFHLEdBQUcsV0FBVyxLQUFLLE9BQU0sYUFBbkU7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUE0RTtBQUFBLFFBQzVFLHVCQUFDLHNCQUFpQixVQUFVLENBQUMsTUFBTSxLQUFLLElBQUksR0FBRyxXQUFXLEtBQUssT0FBTSxhQUFyRTtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQThFO0FBQUEsUUFDOUUsdUJBQUMsZ0JBQVcsVUFBVSxDQUFDLEtBQUssS0FBSyxHQUFHLEdBQUcsV0FBVyxLQUFLLE9BQU0sV0FBVSxVQUFVLE9BQWpGO0FBQUE7QUFBQTtBQUFBO0FBQUEsZUFBcUY7QUFBQSxRQUNyRix1QkFBQyxnQkFBVyxVQUFVLENBQUMsTUFBTSxNQUFNLElBQUksR0FBRyxXQUFXLEtBQUssT0FBTSxXQUFVLFVBQVUsS0FBcEY7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUFzRjtBQUFBLFFBRXRGLHVCQUFDLGVBQVksUUFBTyxXQUFwQjtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQTJCO0FBQUEsUUFDM0IsdUJBQUMsa0JBQUQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxlQUFhO0FBQUEsUUFDYix1QkFBQyxpQkFBYyxrQkFBZjtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQThDO0FBQUEsUUFDOUMsdUJBQUMsY0FBVyxrQkFBWjtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQTJDO0FBQUEsUUFDM0MsdUJBQUMsY0FBVyxPQUFjLGFBQTBCLGtCQUFwRDtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBQW1GO0FBQUE7QUFBQTtBQUFBLElBcEJyRjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsRUFxQkEsS0F0QkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQXVCQTtBQUVKO0FBQUNDLE1BM0J1QlQ7QUFBVSxJQUFBVSxJQUFBWCxLQUFBVTtBQUFBLGFBQUFDLElBQUE7QUFBQSxhQUFBWCxLQUFBO0FBQUEsYUFBQVUsS0FBQSIsIm5hbWVzIjpbIlJlYWN0IiwiQ2FudmFzIiwidXNlRnJhbWUiLCJ1c2VUaHJlZSIsIkVudmlyb25tZW50IiwiVEhSRUUiLCJIZWxpeENhcmRzIiwiUGFydGljbGVGaWVsZCIsIlNwaW5lTW9kZWwiLCJDYW1lcmFSaWciLCJzY3JvbGxQcm9ncmVzcyIsIl9zIiwiY2FtZXJhIiwicG9pbnRlciIsImxvb2tBdCIsIlZlY3RvcjMiLCJ0YXJnZXRYIiwieCIsInRhcmdldFkiLCJ5IiwidGFyZ2V0WiIsIk1hdGgiLCJzaW4iLCJwb3NpdGlvbiIsIk1hdGhVdGlscyIsImxlcnAiLCJ6IiwiTGlnaHRDb2x1bW5zIiwiUEkiLCJEb3VibGVTaWRlIiwiX2MyIiwiVGhyZWVTY2VuZSIsImNhcmRzIiwiYWN0aXZlUGFuZWwiLCJmb3YiLCJuZWFyIiwiZmFyIiwiYW50aWFsaWFzIiwiYWxwaGEiLCJwb3dlclByZWZlcmVuY2UiLCJfYzMiLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJUaHJlZVNjZW5lLmpzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgQ2FudmFzLCB1c2VGcmFtZSwgdXNlVGhyZWUgfSBmcm9tICdAcmVhY3QtdGhyZWUvZmliZXInO1xuaW1wb3J0IHsgRW52aXJvbm1lbnQgfSBmcm9tICdAcmVhY3QtdGhyZWUvZHJlaSc7XG5pbXBvcnQgKiBhcyBUSFJFRSBmcm9tICd0aHJlZSc7XG5pbXBvcnQgSGVsaXhDYXJkcyBmcm9tICcuL0hlbGl4Q2FyZHMnO1xuaW1wb3J0IFBhcnRpY2xlRmllbGQgZnJvbSAnLi9QYXJ0aWNsZUZpZWxkJztcbmltcG9ydCBTcGluZU1vZGVsIGZyb20gJy4vU3BpbmVNb2RlbCc7XG5cbmZ1bmN0aW9uIENhbWVyYVJpZyh7IHNjcm9sbFByb2dyZXNzIH0pIHtcbiAgY29uc3QgeyBjYW1lcmEsIHBvaW50ZXIgfSA9IHVzZVRocmVlKCk7XG4gIGNvbnN0IGxvb2tBdCA9IG5ldyBUSFJFRS5WZWN0b3IzKDAsIDAsIC0xLjQ1KTtcblxuICB1c2VGcmFtZSgoKSA9PiB7XG4gICAgY29uc3QgdGFyZ2V0WCA9IHBvaW50ZXIueCAqIDAuNTtcbiAgICBjb25zdCB0YXJnZXRZID0gcG9pbnRlci55ICogMC4yODtcbiAgICBjb25zdCB0YXJnZXRaID0gNy42ICsgTWF0aC5zaW4oc2Nyb2xsUHJvZ3Jlc3MgKiAwLjY1KSAqIDAuMjg7XG5cbiAgICBjYW1lcmEucG9zaXRpb24ueCA9IFRIUkVFLk1hdGhVdGlscy5sZXJwKGNhbWVyYS5wb3NpdGlvbi54LCB0YXJnZXRYLCAwLjA1NSk7XG4gICAgY2FtZXJhLnBvc2l0aW9uLnkgPSBUSFJFRS5NYXRoVXRpbHMubGVycChjYW1lcmEucG9zaXRpb24ueSwgdGFyZ2V0WSwgMC4wNTUpO1xuICAgIGNhbWVyYS5wb3NpdGlvbi56ID0gVEhSRUUuTWF0aFV0aWxzLmxlcnAoY2FtZXJhLnBvc2l0aW9uLnosIHRhcmdldFosIDAuMDQpO1xuICAgIGNhbWVyYS5sb29rQXQobG9va0F0KTtcbiAgfSk7XG5cbiAgcmV0dXJuIG51bGw7XG59XG5cbmZ1bmN0aW9uIExpZ2h0Q29sdW1ucygpIHtcbiAgcmV0dXJuIChcbiAgICA8Z3JvdXA+XG4gICAgICA8bWVzaCBwb3NpdGlvbj17Wy00LjQsIDAuMywgLTQuMl19IHJvdGF0aW9uPXtbMCwgMC4yNSwgMF19PlxuICAgICAgICA8Ym94R2VvbWV0cnkgYXJncz17WzAuMDE4LCA5LCAwLjAxOF19IC8+XG4gICAgICAgIDxtZXNoQmFzaWNNYXRlcmlhbCBjb2xvcj1cIiMzOWY1ZmZcIiB0cmFuc3BhcmVudCBvcGFjaXR5PXswLjMyfSAvPlxuICAgICAgPC9tZXNoPlxuICAgICAgPG1lc2ggcG9zaXRpb249e1s0LjEsIC0wLjIsIC00LjhdfSByb3RhdGlvbj17WzAsIC0wLjE4LCAwXX0+XG4gICAgICAgIDxib3hHZW9tZXRyeSBhcmdzPXtbMC4wMTgsIDgsIDAuMDE4XX0gLz5cbiAgICAgICAgPG1lc2hCYXNpY01hdGVyaWFsIGNvbG9yPVwiIzdjNWNmZlwiIHRyYW5zcGFyZW50IG9wYWNpdHk9ezAuMjZ9IC8+XG4gICAgICA8L21lc2g+XG4gICAgICA8bWVzaCBwb3NpdGlvbj17WzAsIC00LjYsIC0zLjJdfSByb3RhdGlvbj17Wy1NYXRoLlBJIC8gMiwgMCwgMF19PlxuICAgICAgICA8cmluZ0dlb21ldHJ5IGFyZ3M9e1sxLjQsIDQuOSwgOTZdfSAvPlxuICAgICAgICA8bWVzaEJhc2ljTWF0ZXJpYWwgY29sb3I9XCIjMGRkOGZmXCIgdHJhbnNwYXJlbnQgb3BhY2l0eT17MC4wOH0gc2lkZT17VEhSRUUuRG91YmxlU2lkZX0gLz5cbiAgICAgIDwvbWVzaD5cbiAgICA8L2dyb3VwPlxuICApO1xufVxuXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBUaHJlZVNjZW5lKHsgY2FyZHMsIGFjdGl2ZVBhbmVsLCBzY3JvbGxQcm9ncmVzcyB9KSB7XG4gIHJldHVybiAoXG4gICAgPGRpdiBjbGFzc05hbWU9XCJjYW52YXMtY29udGFpbmVyXCI+XG4gICAgICA8Q2FudmFzXG4gICAgICAgIGNhbWVyYT17eyBwb3NpdGlvbjogWzAsIDAsIDcuOF0sIGZvdjogMzgsIG5lYXI6IDAuMSwgZmFyOiA4MCB9fVxuICAgICAgICBkcHI9e1sxLCAxLjc1XX1cbiAgICAgICAgZ2w9e3sgYW50aWFsaWFzOiB0cnVlLCBhbHBoYTogZmFsc2UsIHBvd2VyUHJlZmVyZW5jZTogJ2hpZ2gtcGVyZm9ybWFuY2UnIH19XG4gICAgICA+XG4gICAgICAgIDxjb2xvciBhdHRhY2g9XCJiYWNrZ3JvdW5kXCIgYXJncz17WycjMDIwNjA3J119IC8+XG4gICAgICAgIDxmb2cgYXR0YWNoPVwiZm9nXCIgYXJncz17WycjMDIwNjA3JywgOCwgMThdfSAvPlxuXG4gICAgICAgIDxDYW1lcmFSaWcgc2Nyb2xsUHJvZ3Jlc3M9e3Njcm9sbFByb2dyZXNzfSAvPlxuXG4gICAgICAgIDxhbWJpZW50TGlnaHQgaW50ZW5zaXR5PXswLjE4fSBjb2xvcj1cIiM5ZWVmZmZcIiAvPlxuICAgICAgICA8ZGlyZWN0aW9uYWxMaWdodCBwb3NpdGlvbj17WzMuOCwgNS41LCA0LjRdfSBpbnRlbnNpdHk9ezIuNH0gY29sb3I9XCIjZDlmYmZmXCIgLz5cbiAgICAgICAgPGRpcmVjdGlvbmFsTGlnaHQgcG9zaXRpb249e1stNC44LCAxLjcsIC0yLjhdfSBpbnRlbnNpdHk9ezIuMn0gY29sb3I9XCIjNzU1ZGZmXCIgLz5cbiAgICAgICAgPHBvaW50TGlnaHQgcG9zaXRpb249e1swLjEsIDAuMiwgMi40XX0gaW50ZW5zaXR5PXsyLjd9IGNvbG9yPVwiIzQ1ZjRmZlwiIGRpc3RhbmNlPXs3LjV9IC8+XG4gICAgICAgIDxwb2ludExpZ2h0IHBvc2l0aW9uPXtbLTIuOCwgLTIuMiwgLTEuMl19IGludGVuc2l0eT17MS41fSBjb2xvcj1cIiNhMjU2ZmZcIiBkaXN0YW5jZT17OH0gLz5cblxuICAgICAgICA8RW52aXJvbm1lbnQgcHJlc2V0PVwibmlnaHRcIiAvPlxuICAgICAgICA8TGlnaHRDb2x1bW5zIC8+XG4gICAgICAgIDxQYXJ0aWNsZUZpZWxkIHNjcm9sbFByb2dyZXNzPXtzY3JvbGxQcm9ncmVzc30gLz5cbiAgICAgICAgPFNwaW5lTW9kZWwgc2Nyb2xsUHJvZ3Jlc3M9e3Njcm9sbFByb2dyZXNzfSAvPlxuICAgICAgICA8SGVsaXhDYXJkcyBjYXJkcz17Y2FyZHN9IGFjdGl2ZVBhbmVsPXthY3RpdmVQYW5lbH0gc2Nyb2xsUHJvZ3Jlc3M9e3Njcm9sbFByb2dyZXNzfSAvPlxuICAgICAgPC9DYW52YXM+XG4gICAgPC9kaXY+XG4gICk7XG59XG4iXSwiZmlsZSI6IkM6L1VzZXJzL0FheXVzaCBXYWxzYW5naWthci9PbmVEcml2ZS9EZXNrdG9wL1NpbGVudCBTZW5zZS9zcmMvY29tcG9uZW50cy9sYW5kaW5nL1RocmVlU2NlbmUuanN4In0=

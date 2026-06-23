@@ -1,0 +1,262 @@
+
+<h2 class="sr-only">Silent Sense — phased build plan for Active Theory-style landing page, from foundation to scroll-jacking</h2>
+<style>
+  .phase-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 0.75rem; transition: border-color 0.2s; cursor: pointer; }
+  .phase-card.active { border-color: #1D9E75; border-width: 1.5px; }
+  .phase-card.done { opacity: 0.5; }
+  .phase-tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; letter-spacing: 0.04em; }
+  .tag-foundation { background: #E1F5EE; color: #085041; }
+  .tag-layer { background: #E6F1FB; color: #0C447C; }
+  .tag-interaction { background: #FAEEDA; color: #633806; }
+  .tag-scroll { background: #FAECE7; color: #712B13; }
+  .tag-polish { background: #EEEDFE; color: #3C3489; }
+  .phase-header { display: flex; align-items: center; justify-content: space-between; }
+  .phase-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0; }
+  .phase-time { font-size: 12px; color: var(--color-text-secondary); font-family: var(--font-mono); }
+  .phase-body { display: none; margin-top: 10px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .phase-body.open { display: block; }
+  .task-row { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; border-top: 0.5px solid var(--color-border-tertiary); }
+  .task-check { width: 16px; height: 16px; border: 0.5px solid var(--color-border-secondary); border-radius: 3px; margin-top: 1px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s; }
+  .task-check.checked { background: #1D9E75; border-color: #1D9E75; }
+  .task-check.checked::after { content: '✓'; font-size: 10px; color: #E1F5EE; }
+  .task-label { flex: 1; }
+  .task-file { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; padding-left: 8px; white-space: nowrap; }
+  .verify-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 10px; margin-top: 8px; font-size: 12px; }
+  .verify-label { font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .progress-bar-outer { height: 4px; background: var(--color-border-tertiary); border-radius: 2px; margin: 12px 0 4px; }
+  .progress-bar-inner { height: 4px; background: #1D9E75; border-radius: 2px; transition: width 0.3s; }
+  .progress-label { font-size: 11px; color: var(--color-text-secondary); font-family: var(--font-mono); }
+  .dep-badge { display: inline-block; font-size: 10px; background: var(--color-background-secondary); color: var(--color-text-secondary); padding: 1px 6px; border-radius: 3px; margin-left: 4px; }
+</style>
+
+<div style="padding: 0.5rem 0;">
+  <div class="progress-bar-outer"><div class="progress-bar-inner" id="global-bar" style="width:0%"></div></div>
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <span class="progress-label" id="global-label">0 of 20 tasks complete</span>
+    <button onclick="resetAll()" style="font-size:11px; font-family:var(--font-mono); color:var(--color-text-tertiary); background:none; border:none; cursor:pointer; padding:0;">reset</button>
+  </div>
+</div>
+
+<div id="phase-0" class="phase-card active" onclick="togglePhase(0)">
+  <div class="phase-header">
+    <div>
+      <span class="phase-tag tag-foundation">Phase 0 · Foundation</span>
+      <p class="phase-title">Project scaffolding + token system</p>
+    </div>
+    <span class="phase-time">~30 min</span>
+  </div>
+  <div class="phase-body open" id="body-0">
+    <div class="verify-box"><div class="verify-label">Gate check before proceeding</div>Vite dev server runs at localhost:5173, fonts load, CSS vars resolve in DevTools.</div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,0,0)"></div><span class="task-label">Create Vite + React project: <code>npm create vite@latest silentsense -- --template react</code></span><span class="task-file">root</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,0,1)"></div><span class="task-label">Install deps: <code>gsap framer-motion react-router-dom</code></span><span class="task-file">package.json</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,0,2)"></div><span class="task-label">Create <code>src/styles/tokens.css</code> with all <code>--ss-*</code> color vars + Google Fonts @import (Space Grotesk, Inter, JetBrains Mono)</span><span class="task-file">tokens.css</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,0,3)"></div><span class="task-label">Set up <code>src/styles/global.css</code>: <code>* { box-sizing: border-box }</code>, body background <code>var(--ss-void)</code>, <code>cursor: none</code>, font-family defaults</span><span class="task-file">global.css</span></div>
+  </div>
+</div>
+
+<div id="phase-1" class="phase-card" onclick="togglePhase(1)">
+  <div class="phase-header">
+    <div>
+      <span class="phase-tag tag-foundation">Phase 1 · Static Shell</span>
+      <p class="phase-title">Layout, nav, hero content — no animation yet</p>
+    </div>
+    <span class="phase-time">~45 min</span>
+  </div>
+  <div class="phase-body" id="body-1">
+    <div class="verify-box"><div class="verify-label">Gate check</div>Page renders hero text + nav in correct colors. No animation. Layout looks right at 1440px.</div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,1,0)"></div><span class="task-label">Build <code>Landing.jsx</code> with 5 full-viewport <code>&lt;section&gt;</code> blocks (100vh each), stacked vertically</span><span class="task-file">pages/Landing.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,1,1)"></div><span class="task-label">Add hero headline, subheading, and CTA button with correct fonts — no animation, just static placement</span><span class="task-file">sections/Hero.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,1,2)"></div><span class="task-label">Build ghost nav bar (top-right): "Technology · Mission · Demo · Login" in 14px JetBrains Mono</span><span class="task-file">components/Nav.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,1,3)"></div><span class="task-label">Add "SS" wordmark (top-left) with a static teal ring placeholder beside it</span><span class="task-file">components/Wordmark.jsx</span></div>
+  </div>
+</div>
+
+<div id="phase-2" class="phase-card" onclick="togglePhase(2)">
+  <div class="phase-header">
+    <div>
+      <span class="phase-tag tag-layer">Phase 2 · Spine + Particle Canvas</span>
+      <p class="phase-title">The two structural background systems</p>
+    </div>
+    <span class="phase-time">~2 hrs</span>
+  </div>
+  <div class="phase-body" id="body-2">
+    <div class="verify-box"><div class="verify-label">Gate check — your "is this working" moment</div>Spine draws in from top on load. Particles drift + repel from mouse. Both visible simultaneously with hero text above them.</div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,2,0)"></div>
+      <span class="task-label"><strong>Spine.jsx</strong> — fixed-position SVG, left: 48px, full height. Animate <code>stroke-dashoffset</code> on a <code>&lt;line&gt;</code> from 0→full length over 1.2s using GSAP <code>gsap.fromTo()</code>. Color: <code>--ss-spine</code> (teal 30% alpha).</span><span class="task-file">components/Spine.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,2,1)"></div>
+      <span class="task-label"><strong>ParticleCanvas.jsx</strong> — full-screen canvas via <code>useRef</code>. Init 160 particles with random x/y, dx/dy velocities (±0.3). rAF loop: move each particle, wrap edges, draw 1.5px circles. 50% teal (#1D9E75), 50% ice (#E1F5EE), opacity 0.4–0.7 random.</span><span class="task-file">components/ParticleCanvas.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,2,2)"></div>
+      <span class="task-label">Add mouse repulsion to <code>ParticleCanvas</code>: track <code>mousemove</code>, for each particle within 120px radius push it away using force = <code>(1 - dist/120) * 2</code>. Apply to <code>dx/dy</code>, cap at ±4.</span><span class="task-file">components/ParticleCanvas.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,2,3)"></div>
+      <span class="task-label">Layer them in <code>Hero.jsx</code>: canvas <code>position:absolute z-index:0</code>, Spine <code>z-index:100</code>, content <code>z-index:10</code>.</span><span class="task-file">sections/Hero.jsx</span></div>
+  </div>
+</div>
+
+<div id="phase-3" class="phase-card" onclick="togglePhase(3)">
+  <div class="phase-header">
+    <div>
+      <span class="phase-tag tag-interaction">Phase 3 · Custom Cursor</span>
+      <p class="phase-title">Magnetic dual-ring cursor system</p>
+    </div>
+    <span class="phase-time">~1 hr</span>
+  </div>
+  <div class="phase-body" id="body-3">
+    <div class="verify-box"><div class="verify-label">Gate check</div>Inner dot snaps exactly to cursor. Outer ring lags visibly behind. Ring expands on hovering a button. Default cursor invisible.</div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,3,0)"></div>
+      <span class="task-label"><strong>CustomCursor.jsx</strong> — two divs: <code>#cursor-dot</code> (8px filled teal circle) + <code>#cursor-ring</code> (40px border-only ring). Both <code>position:fixed, pointer-events:none, z-index:9999</code>.</span><span class="task-file">components/CustomCursor.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,3,1)"></div>
+      <span class="task-label">rAF lerp loop: dot teleports to <code>mouseX/Y</code> via <code>transform:translate()</code>. Ring uses lerp: <code>ringX += (mouseX - ringX) * 0.1</code> each frame. Fire only after first <code>mousemove</code> event.</span><span class="task-file">components/CustomCursor.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,3,2)"></div>
+      <span class="task-label">Hover expansion: add <code>data-cursor="expand"</code> to all buttons/nav links. Listen for <code>mouseenter/leave</code> globally, toggle ring to 70px + color shift via CSS class <code>.cursor-expanded</code>.</span><span class="task-file">components/CustomCursor.jsx</span></div>
+  </div>
+</div>
+
+<div id="phase-4" class="phase-card" onclick="togglePhase(4)">
+  <div class="phase-header">
+    <div>
+      <span class="phase-tag tag-interaction">Phase 4 · Text Reveals + Stagger</span>
+      <p class="phase-title">Character-split headline animations</p>
+    </div>
+    <span class="phase-time">~1.5 hrs</span>
+  </div>
+  <div class="phase-body" id="body-4">
+    <div class="verify-box"><div class="verify-label">Gate check</div>Hero headline chars rise in on load with visible stagger. Subheading words follow at 0.4s offset. Re-trigger by refreshing page.</div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,4,0)"></div>
+      <span class="task-label">Write <code>splitChars(text)</code> utility: splits string into <code>&lt;span&gt;</code> per char, wraps each in <code>overflow:hidden</code> parent. Returns array of char refs.</span><span class="task-file">utils/splitText.js</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,4,1)"></div>
+      <span class="task-label">In Hero, apply to H1: <code>gsap.from(chars, {y:80, opacity:0, duration:0.7, stagger:0.03, ease:'power3.out', delay:0.5})</code> after spine draw completes.</span><span class="task-file">sections/Hero.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,4,2)"></div>
+      <span class="task-label">Apply word-level stagger to subheading: split by spaces, <code>stagger:0.06, delay:0.9</code>. Add <code>@media (prefers-reduced-motion: reduce)</code> guard — skip animation, show content static.</span><span class="task-file">sections/Hero.jsx</span></div>
+  </div>
+</div>
+
+<div id="phase-5" class="phase-card" onclick="togglePhase(5)">
+  <div class="phase-header">
+    <div>
+      <span class="phase-tag tag-scroll">Phase 5 · Scroll-Jacking</span>
+      <p class="phase-title">Full-viewport panel transitions — the hardest part</p>
+    </div>
+    <span class="phase-time">~3 hrs</span>
+  </div>
+  <div class="phase-body" id="body-5">
+    <div class="verify-box"><div class="verify-label">Gate check — the big one</div>Scrolling moves between panels with smooth GSAP transition. Right-edge pills update. No double-fire on fast scroll. Mobile falls back to normal scroll.</div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,5,0)"></div>
+      <span class="task-label"><strong>useScrollSection.js</strong> hook: track <code>activePanel (0–4)</code>, expose <code>goTo(n)</code>. Add 900ms cooldown flag <code>isTransitioning</code> to block rapid-fire.</span><span class="task-file">hooks/useScrollSection.js</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,5,1)"></div>
+      <span class="task-label">Intercept <code>wheel</code> event on <code>window</code> with <code>e.preventDefault()</code>. <code>deltaY &gt; 0</code> → <code>goTo(active+1)</code>, <code>&lt; 0</code> → <code>goTo(active-1)</code>. Must call <code>addEventListener('wheel', fn, {passive:false})</code>.</span><span class="task-file">hooks/useScrollSection.js</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,5,2)"></div>
+      <span class="task-label"><strong>Transition logic</strong>: outgoing panel → <code>gsap.to(outEl, {y:'-100%', opacity:0, scale:0.95, duration:0.85, ease:'power3.inOut'})</code>. Incoming panel → <code>gsap.fromTo(inEl, {y:'100%',opacity:0,scale:0.97}, {y:0,opacity:1,scale:1,...})</code>. Run both simultaneously.</span><span class="task-file">hooks/useScrollSection.js</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,5,3)"></div>
+      <span class="task-label"><strong>ScrollProgress.jsx</strong>: 5 vertical pills (right edge, fixed). Active pill fills with teal. Add touch event handlers (<code>touchstart/touchend</code>) for mobile swipe. Disable wheel hijack on <code>pointer: coarse</code> devices.</span><span class="task-file">components/ScrollProgress.jsx</span></div>
+  </div>
+</div>
+
+<div id="phase-6" class="phase-card" onclick="togglePhase(6)">
+  <div class="phase-header">
+    <div>
+      <span class="phase-tag tag-polish">Phase 6 · Sections + Polish</span>
+      <p class="phase-title">3D tilt cards, marquee, SVG floor plan, login</p>
+    </div>
+    <span class="phase-time">~3 hrs</span>
+  </div>
+  <div class="phase-body" id="body-6">
+    <div class="verify-box"><div class="verify-label">Gate check</div>All 5 panels complete with content. Cards tilt on hover. Marquee scrolls. Login page accessible from hero nav. Noise overlay visible (subtle grain).</div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,6,0)"></div>
+      <span class="task-label"><strong>TiltCard.jsx</strong>: <code>onMouseMove</code> → compute rotateX/rotateY from cursor offset relative to card center (max ±12deg). Apply via <code>transform</code> style. <code>onMouseLeave</code> → spring back with <code>gsap.to(el, {rotateX:0, rotateY:0, ease:'elastic.out(1,0.5)'})</code>.</span><span class="task-file">components/TiltCard.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,6,1)"></div>
+      <span class="task-label"><strong>MarqueeTicker.jsx</strong>: two identical <code>&lt;span&gt;</code> rows with CSS <code>@keyframes marquee { to { transform:translateX(-50%) } }</code>. On <code>mouseenter</code>, slow animation to 20% speed via inline <code>animation-duration</code>.</span><span class="task-file">components/MarqueeTicker.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,6,2)"></div>
+      <span class="task-label"><strong>SvgFloorPlan.jsx</strong>: inline SVG of simple floor plan. Use <code>stroke-dasharray + stroke-dashoffset</code> on all paths, animated via GSAP ScrollTrigger (or section-entry callback) to draw in over 1.5s. Color: #1D9E75 strokes on transparent.</span><span class="task-file">components/SvgFloorPlan.jsx</span></div>
+    <div class="task-row"><div class="task-check" onclick="toggleTask(event,6,3)"></div>
+      <span class="task-label"><strong>Login.jsx</strong> + <strong>NoiseOverlay.jsx</strong>: full login page per spec. Noise overlay: fixed div, full screen, SVG <code>feTurbulence</code> filter, opacity 3%, <code>pointer-events:none, z-index:1000</code>.</span><span class="task-file">pages/Login.jsx</span></div>
+  </div>
+</div>
+
+<div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; margin-top: 0.5rem; display:flex; gap: 12px; flex-wrap:wrap; align-items:center;">
+  <span style="font-size:12px; color:var(--color-text-secondary); font-family:var(--font-mono);">critical path order:</span>
+  <span style="font-size:12px; color:#085041; background:#E1F5EE; padding:2px 7px; border-radius:3px;">0 scaffold</span>
+  <span style="font-size:12px; color:var(--color-text-tertiary)">→</span>
+  <span style="font-size:12px; color:#085041; background:#E1F5EE; padding:2px 7px; border-radius:3px;">1 static shell</span>
+  <span style="font-size:12px; color:var(--color-text-tertiary)">→</span>
+  <span style="font-size:12px; color:#0C447C; background:#E6F1FB; padding:2px 7px; border-radius:3px;">2 spine + particles</span>
+  <span style="font-size:12px; color:var(--color-text-tertiary)">→</span>
+  <span style="font-size:12px; color:#633806; background:#FAEEDA; padding:2px 7px; border-radius:3px;">3 cursor</span>
+  <span style="font-size:12px; color:var(--color-text-tertiary)">→</span>
+  <span style="font-size:12px; color:#633806; background:#FAEEDA; padding:2px 7px; border-radius:3px;">4 text reveals</span>
+  <span style="font-size:12px; color:var(--color-text-tertiary)">→</span>
+  <span style="font-size:12px; color:#712B13; background:#FAECE7; padding:2px 7px; border-radius:3px;">5 scroll-jacking</span>
+  <span style="font-size:12px; color:var(--color-text-tertiary)">→</span>
+  <span style="font-size:12px; color:#3C3489; background:#EEEDFE; padding:2px 7px; border-radius:3px;">6 polish</span>
+</div>
+
+<div style="margin-top:0.75rem; display:flex; gap:8px; flex-wrap:wrap;">
+  <button onclick="sendPrompt('Give me the complete production code for ParticleCanvas.jsx with mouse repulsion fully implemented')" style="font-size:12px; font-family:var(--font-mono); padding:7px 12px; border-radius:6px;">Generate ParticleCanvas.jsx ↗</button>
+  <button onclick="sendPrompt('Give me the complete production code for Spine.jsx with GSAP draw-on animation')" style="font-size:12px; font-family:var(--font-mono); padding:7px 12px; border-radius:6px;">Generate Spine.jsx ↗</button>
+  <button onclick="sendPrompt('Give me the complete useScrollSection.js hook with wheel interception, GSAP panel transitions, and mobile fallback')" style="font-size:12px; font-family:var(--font-mono); padding:7px 12px; border-radius:6px;">Generate scroll hook ↗</button>
+</div>
+
+<script>
+  const PHASES = 7;
+  const TASKS = [[4],[4],[4],[3],[3],[4],[4]];
+  let state = {};
+
+  function loadState() {
+    try { state = JSON.parse(localStorage.getItem('ss-build') || '{}'); } catch(e) { state = {}; }
+  }
+  function saveState() {
+    try { localStorage.setItem('ss-build', JSON.stringify(state)); } catch(e) {}
+  }
+
+  function totalTasks() { return TASKS.flat().length; }
+  function completedTasks() { return Object.values(state).filter(Boolean).length; }
+
+  function updateGlobal() {
+    const done = completedTasks();
+    const total = totalTasks();
+    const pct = Math.round(done/total*100);
+    document.getElementById('global-bar').style.width = pct + '%';
+    document.getElementById('global-label').textContent = done + ' of ' + total + ' tasks complete';
+  }
+
+  function togglePhase(p) {
+    const body = document.getElementById('body-'+p);
+    const card = document.getElementById('phase-'+p);
+    body.classList.toggle('open');
+    card.classList.toggle('active', body.classList.contains('open'));
+  }
+
+  function toggleTask(event, phase, task) {
+    event.stopPropagation();
+    const key = phase + '-' + task;
+    state[key] = !state[key];
+    const el = event.currentTarget;
+    el.classList.toggle('checked', state[key]);
+    saveState();
+    updateGlobal();
+  }
+
+  function resetAll() {
+    state = {};
+    document.querySelectorAll('.task-check').forEach(el => el.classList.remove('checked'));
+    saveState();
+    updateGlobal();
+  }
+
+  function initChecks() {
+    document.querySelectorAll('.task-check').forEach((el, i) => {
+      let phase = 0, task = 0, count = 0;
+      for(let p=0; p<PHASES; p++) {
+        for(let t=0; t<TASKS[p].length; t++) {
+          if(count === i) { phase = p; task = t; }
+          count++;
+        }
+      }
+      const key = phase + '-' + task;
+      el.classList.toggle('checked', !!state[key]);
+    });
+  }
+
+  loadState();
+  initChecks();
+  updateGlobal();
+</script>

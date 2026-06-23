@@ -1,0 +1,540 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/GaitAnalysisPage.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react; const useState = __vite__cjsImport3_react["useState"];
+import "/src/pages/PageLayout.css";
+import "/src/pages/GaitAnalysisPage.css";
+const gaitDataWeek = [78, 76, 74, 73, 72, 71, 70];
+const gaitDataMonth = [82, 80, 79, 78, 77, 76, 75, 74, 74, 73, 72, 71, 70, 69, 68, 67, 65, 64, 63, 62, 61, 60, 61, 62, 63, 64, 65, 66, 67, 68];
+const gaitStats = [
+  { label: "Walking Speed", value: "0.72", unit: "m/s", color: "#ffb786", note: "slow but steady" },
+  { label: "Cadence", value: "88", unit: "spm", color: "#F59E0B", note: "below target" },
+  { label: "Symmetry", value: "96", unit: "%", color: "#4edea3", note: "good alignment" },
+  { label: "Double Support", value: "32", unit: "%", color: "#EF4444", note: "elevated" },
+  { label: "Mobility Score", value: "65", unit: "/100", color: "#adc6ff", note: "watch trend" }
+];
+function GaitSparkline({ data, color }) {
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const w = 420;
+  const h = 110;
+  const padding = 16;
+  const points = data.map((value, index) => {
+    const x = padding + (w - padding * 2) * index / (data.length - 1);
+    const y = padding + (1 - (value - min) / range) * (h - padding * 2);
+    return { x, y, value };
+  });
+  const path = points.map((p, index) => `${index === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+  return /* @__PURE__ */ jsxDEV("svg", { viewBox: `0 0 ${w} ${h}`, className: "gait-chart__svg", role: "img", "aria-label": "Gait score trend", children: [
+    /* @__PURE__ */ jsxDEV("defs", { children: /* @__PURE__ */ jsxDEV("linearGradient", { id: "gaitFill", x1: "0", x2: "0", y1: "0", y2: "1", children: [
+      /* @__PURE__ */ jsxDEV("stop", { offset: "0%", stopColor: color, stopOpacity: "0.25" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+        lineNumber: 53,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("stop", { offset: "100%", stopColor: color, stopOpacity: "0.04" }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+        lineNumber: 54,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+      lineNumber: 52,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+      lineNumber: 51,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("path", { d: `${path} L ${points[points.length - 1].x} ${h - padding} L ${points[0].x} ${h - padding} Z`, fill: "url(#gaitFill)" }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+      lineNumber: 57,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("path", { d: path, className: "gait-chart__line", style: { stroke: color } }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+      lineNumber: 58,
+      columnNumber: 7
+    }, this),
+    points.map(
+      (point, index) => /* @__PURE__ */ jsxDEV(
+        "circle",
+        {
+          cx: point.x,
+          cy: point.y,
+          r: index === points.length - 1 ? 5 : 3.5,
+          className: `gait-chart__point ${index === 4 ? "gait-chart__point--dip" : ""}`,
+          style: { fill: index === 4 ? "#EF4444" : color }
+        },
+        index,
+        false,
+        {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+          lineNumber: 60,
+          columnNumber: 7
+        },
+        this
+      )
+    )
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+    lineNumber: 50,
+    columnNumber: 5
+  }, this);
+}
+_c = GaitSparkline;
+export default function GaitAnalysisPage() {
+  _s();
+  const [range, setRange] = useState("week");
+  const chartData = range === "week" ? gaitDataWeek : gaitDataMonth;
+  return /* @__PURE__ */ jsxDEV("div", { className: "page-layout gait-page", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__header", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "page-layout__title-group", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-lg", style: { color: "#ffb786" }, children: "directions_walk" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+          lineNumber: 81,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("h1", { className: "page-layout__title", children: "Gait Analysis Dashboard" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 83,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "page-layout__subtitle", children: "Mobility metrics and fall risk prediction for Mr. Raghav Iyer" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 84,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+          lineNumber: 82,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+        lineNumber: 80,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "page-layout__filters", children: ["week", "month", "quarter"].map(
+        (item) => /* @__PURE__ */ jsxDEV(
+          "button",
+          {
+            className: `page-layout__filter-btn ${range === item ? "page-layout__filter-btn--active" : ""}`,
+            onClick: () => setRange(item),
+            children: item.charAt(0).toUpperCase() + item.slice(1)
+          },
+          item,
+          false,
+          {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 89,
+            columnNumber: 11
+          },
+          this
+        )
+      ) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+        lineNumber: 87,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+      lineNumber: 79,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__content", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "gait-page__kpis", children: gaitStats.map(
+        (metric) => /* @__PURE__ */ jsxDEV("div", { className: "glass-card gait-kpi", style: { borderTop: `4px solid ${metric.color}` }, children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "gait-kpi__label", children: metric.label }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 104,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "gait-kpi__value-row", children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "gait-kpi__value", style: { color: metric.color }, children: metric.value }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 106,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { className: "gait-kpi__unit", children: metric.unit }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 107,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 105,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "gait-kpi__note", children: metric.note }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 109,
+            columnNumber: 15
+          }, this)
+        ] }, metric.label, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+          lineNumber: 103,
+          columnNumber: 11
+        }, this)
+      ) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+        lineNumber: 101,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "gait-page__layout", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "gait-page__main", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card gait-card", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "gait-card__header", children: [
+              /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("h3", { className: "gait-card__title", children: "Mobility Score Trend" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 119,
+                  columnNumber: 19
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "gait-card__subtitle", children: "Rolling trend with mild downward pressure in the weekly window" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 120,
+                  columnNumber: 19
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 118,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { className: "badge badge-warning", children: "DECLINING" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 122,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 117,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV(GaitSparkline, { data: chartData, color: "#ffb786" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 125,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "gait-axis", children: range === "week" ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+              (day) => /* @__PURE__ */ jsxDEV("span", { children: day }, day, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 130,
+                columnNumber: 17
+              }, this)
+            ) : Array.from(
+              { length: 30 },
+              (_, index) => /* @__PURE__ */ jsxDEV("span", { children: (index + 1) % 5 === 0 ? `Day ${index + 1}` : "" }, index, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 133,
+                columnNumber: 17
+              }, this)
+            ) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 127,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 116,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "gait-grid", children: [
+            /* @__PURE__ */ jsxDEV("div", { className: "glass-card gait-card", children: [
+              /* @__PURE__ */ jsxDEV("div", { className: "gait-card__header", children: /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("h3", { className: "gait-card__title", children: "3D Skeletal Gait Overlay" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 142,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "gait-card__subtitle", children: "Simplified posture render with instability focus points" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 143,
+                  columnNumber: 21
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 141,
+                columnNumber: 19
+              }, this) }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 140,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "gait-figure", children: /* @__PURE__ */ jsxDEV("svg", { viewBox: "0 0 220 300", className: "gait-figure__svg", "aria-label": "Skeleton gait overlay", children: [
+                /* @__PURE__ */ jsxDEV("circle", { cx: "110", cy: "30", r: "18", fill: "none", stroke: "#ffb786", strokeWidth: "2" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 148,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "110", y1: "48", x2: "110", y2: "108", stroke: "#ffb786", strokeWidth: "2" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 149,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "110", y1: "68", x2: "72", y2: "98", stroke: "#ffb786", strokeWidth: "2" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 150,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "110", y1: "68", x2: "148", y2: "98", stroke: "#ffb786", strokeWidth: "2" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 151,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "72", y1: "98", x2: "64", y2: "140", stroke: "#ffb786", strokeWidth: "2" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 152,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "148", y1: "98", x2: "156", y2: "140", stroke: "#ffb786", strokeWidth: "2" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 153,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "110", y1: "108", x2: "94", y2: "160", stroke: "#F59E0B", strokeWidth: "2.5" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 154,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "110", y1: "108", x2: "126", y2: "160", stroke: "#F59E0B", strokeWidth: "2.5" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 155,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "94", y1: "160", x2: "90", y2: "224", stroke: "#EF4444", strokeWidth: "3" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 156,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("line", { x1: "126", y1: "160", x2: "130", y2: "224", stroke: "#EF4444", strokeWidth: "3" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 157,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("g", { children: [
+                  /* @__PURE__ */ jsxDEV("circle", { cx: "90", cy: "224", r: "8", fill: "none", stroke: "#EF4444", strokeWidth: "1.5", opacity: "0.7" }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                    lineNumber: 159,
+                    columnNumber: 23
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("circle", { cx: "130", cy: "224", r: "8", fill: "none", stroke: "#EF4444", strokeWidth: "1.5", opacity: "0.7" }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                    lineNumber: 160,
+                    columnNumber: 23
+                  }, this)
+                ] }, void 0, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 158,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("text", { x: "110", y: "264", textAnchor: "middle", fontSize: "10", fill: "#F59E0B", fontWeight: "700", children: "Mild instability at turn" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 162,
+                  columnNumber: 21
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 147,
+                columnNumber: 19
+              }, this) }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 146,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 139,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "glass-card gait-card", children: [
+              /* @__PURE__ */ jsxDEV("div", { className: "gait-card__header", children: /* @__PURE__ */ jsxDEV("div", { children: [
+                /* @__PURE__ */ jsxDEV("h3", { className: "gait-card__title", children: "Stride Analysis" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 170,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("p", { className: "gait-card__subtitle", children: "Measured values compared against the resident baseline" }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 171,
+                  columnNumber: 21
+                }, this)
+              ] }, void 0, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 169,
+                columnNumber: 19
+              }, this) }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 168,
+                columnNumber: 17
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { className: "gait-stride-list", children: [
+                { label: "Left stride length", value: "0.54m", ref: "0.65m", ok: false },
+                { label: "Right stride length", value: "0.55m", ref: "0.65m", ok: false },
+                { label: "Stride symmetry", value: "96%", ref: "100%", ok: true },
+                { label: "Cadence", value: "88 spm", ref: "100 spm", ok: false },
+                { label: "Double support", value: "32%", ref: "20%", ok: false }
+              ].map(
+                (item) => /* @__PURE__ */ jsxDEV("div", { className: "gait-stride-row", children: [
+                  /* @__PURE__ */ jsxDEV("span", { className: "gait-stride-row__label", children: item.label }, void 0, false, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                    lineNumber: 183,
+                    columnNumber: 23
+                  }, this),
+                  /* @__PURE__ */ jsxDEV("div", { className: "gait-stride-row__values", children: [
+                    /* @__PURE__ */ jsxDEV("strong", { className: item.ok ? "gait-stride-row__value--good" : "gait-stride-row__value--warn", children: item.value }, void 0, false, {
+                      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                      lineNumber: 185,
+                      columnNumber: 25
+                    }, this),
+                    /* @__PURE__ */ jsxDEV("span", { children: [
+                      "ref ",
+                      item.ref
+                    ] }, void 0, true, {
+                      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                      lineNumber: 186,
+                      columnNumber: 25
+                    }, this)
+                  ] }, void 0, true, {
+                    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                    lineNumber: 184,
+                    columnNumber: 23
+                  }, this)
+                ] }, item.label, true, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 182,
+                  columnNumber: 19
+                }, this)
+              ) }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 174,
+                columnNumber: 17
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 167,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 138,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+          lineNumber: 115,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("aside", { className: "gait-page__side", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card gait-card gait-card--tight", children: [
+            /* @__PURE__ */ jsxDEV("h3", { className: "gait-card__title", children: "Daily Mobility Snapshot" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 197,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { className: "gait-snapshot", children: [
+              { key: "Morning walk", value: "21 min" },
+              { key: "Assisted transfers", value: "6" },
+              { key: "Night bathroom trips", value: "2" },
+              { key: "Near-fall moments", value: "1" }
+            ].map(
+              (item) => /* @__PURE__ */ jsxDEV("div", { className: "gait-snapshot__row", children: [
+                /* @__PURE__ */ jsxDEV("span", { children: item.key }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 206,
+                  columnNumber: 21
+                }, this),
+                /* @__PURE__ */ jsxDEV("strong", { children: item.value }, void 0, false, {
+                  fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                  lineNumber: 207,
+                  columnNumber: 21
+                }, this)
+              ] }, item.key, true, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+                lineNumber: 205,
+                columnNumber: 17
+              }, this)
+            ) }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 198,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 196,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { className: "glass-card gait-card gait-card--tight", children: [
+            /* @__PURE__ */ jsxDEV("h3", { className: "gait-card__title", children: "Safety Guidance" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 214,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { className: "gait-card__text", children: "Keep supervised evening walks in place, reduce corridor clutter, and prioritize slow sit-to-stand transitions after prolonged rest." }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+              lineNumber: 215,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+            lineNumber: 213,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+          lineNumber: 195,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+        lineNumber: 114,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+      lineNumber: 100,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx",
+    lineNumber: 78,
+    columnNumber: 5
+  }, this);
+}
+_s(GaitAnalysisPage, "kLR8bSVPOtxpXMxIeUkTL/ZRUoc=");
+_c2 = GaitAnalysisPage;
+var _c, _c2;
+$RefreshReg$(_c, "GaitSparkline");
+$RefreshReg$(_c2, "GaitAnalysisPage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/GaitAnalysisPage.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFVLGFBQVksT0FBcEU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBdUU7QUFBQSxnQkFDdkUsdUJBQUMsVUFBSyxJQUFHLE9BQU0sSUFBRyxNQUFLLElBQUcsT0FBTSxJQUFHLE1BQUssUUFBTyxXQUFVLGFBQVksT0FBckU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBd0U7QUFBQSxnQkFDeEUsdUJBQUMsVUFBSyxJQUFHLE1BQUssSUFBRyxNQUFLLElBQUcsTUFBSyxJQUFHLE9BQU0sUUFBTyxXQUFVLGFBQVksT0FBcEU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBdUU7QUFBQSxnQkFDdkUsdUJBQUMsVUFBSyxJQUFHLE9BQU0sSUFBRyxNQUFLLElBQUcsT0FBTSxJQUFHLE9BQU0sUUFBTyxXQUFVLGFBQVksT0FBdEU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBeUU7QUFBQSxnQkFDekUsdUJBQUMsVUFBSyxJQUFHLE9BQU0sSUFBRyxPQUFNLElBQUcsTUFBSyxJQUFHLE9BQU0sUUFBTyxXQUFVLGFBQVksU0FBdEU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBMkU7QUFBQSxnQkFDM0UsdUJBQUMsVUFBSyxJQUFHLE9BQU0sSUFBRyxPQUFNLElBQUcsT0FBTSxJQUFHLE9BQU0sUUFBTyxXQUFVLGFBQVksU0FBdkU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBNEU7QUFBQSxnQkFDNUUsdUJBQUMsVUFBSyxJQUFHLE1BQUssSUFBRyxPQUFNLElBQUcsTUFBSyxJQUFHLE9BQU0sUUFBTyxXQUFVLGFBQVksT0FBckU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBd0U7QUFBQSxnQkFDeEUsdUJBQUMsVUFBSyxJQUFHLE9BQU0sSUFBRyxPQUFNLElBQUcsT0FBTSxJQUFHLE9BQU0sUUFBTyxXQUFVLGFBQVksT0FBdkU7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFBMEU7QUFBQSxnQkFDMUUsdUJBQUMsT0FDQztBQUFBLHlDQUFDLFlBQU8sSUFBRyxNQUFLLElBQUcsT0FBTSxHQUFFLEtBQUksTUFBSyxRQUFPLFFB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QUFBO0FBQUEsYUFBQWtCLEtBQUEiLCJuYW1lcyI6WyJSZWFjdCIsInVzZVN0YXRlIiwiZ2FpdERhdGFXZWVrIiwiZ2FpdERhdGFNb250aCIsImdhaXRTdGF0cyIsImxhYmVsIiwidmFsdWUiLCJ1bml0IiwiY29sb3IiLCJub3RlIiwiR2FpdFNwYXJrbGluZSIsImRhdGEiLCJtaW4iLCJNYXRoIiwibWF4IiwicmFuZ2UiLCJ3IiwiaCIsInBhZGRpbmciLCJwb2ludHMiLCJtYXAiLCJpbmRleCIsIngiLCJsZW5ndGgiLCJ5IiwicGF0aCIsInAiLCJqb2luIiwic3Ryb2tlIiwicG9pbnQiLCJmaWxsIiwiX2MiLCJHYWl0QW5hbHlzaXNQYWdlIiwiX3MiLCJzZXRSYW5nZSIsImNoYXJ0RGF0YSIsIml0ZW0iLCJjaGFyQXQiLCJ0b1VwcGVyQ2FzZSIsInNsaWNlIiwibWV0cmljIiwiYm9yZGVyVG9wIiwiZGF5IiwiQXJyYXkiLCJmcm9tIiwiXyIsInJlZiIsIm9rIiwia2V5IiwiX2MyIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIkdhaXRBbmFseXNpc1BhZ2UuanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyB1c2VTdGF0ZSB9IGZyb20gJ3JlYWN0JztcclxuaW1wb3J0ICcuL1BhZ2VMYXlvdXQuY3NzJztcclxuaW1wb3J0ICcuL0dhaXRBbmFseXNpc1BhZ2UuY3NzJztcclxuXHJcbmNvbnN0IGdhaXREYXRhV2VlayA9IFs3OCwgNzYsIDc0LCA3MywgNzIsIDcxLCA3MF07XHJcbmNvbnN0IGdhaXREYXRhTW9udGggPSBbODIsIDgwLCA3OSwgNzgsIDc3LCA3NiwgNzUsIDc0LCA3NCwgNzMsIDcyLCA3MSwgNzAsIDY5LCA2OCwgNjcsIDY1LCA2NCwgNjMsIDYyLCA2MSwgNjAsIDYxLCA2MiwgNjMsIDY0LCA2NSwgNjYsIDY3LCA2OF07XHJcblxyXG5jb25zdCBnYWl0U3RhdHMgPSBbXHJcbiAgeyBsYWJlbDogJ1dhbGtpbmcgU3BlZWQnLCB2YWx1ZTogJzAuNzInLCB1bml0OiAnbS9zJywgY29sb3I6ICcjZmZiNzg2Jywgbm90ZTogJ3Nsb3cgYnV0IHN0ZWFkeScgfSxcclxuICB7IGxhYmVsOiAnQ2FkZW5jZScsIHZhbHVlOiAnODgnLCB1bml0OiAnc3BtJywgY29sb3I6ICcjRjU5RTBCJywgbm90ZTogJ2JlbG93IHRhcmdldCcgfSxcclxuICB7IGxhYmVsOiAnU3ltbWV0cnknLCB2YWx1ZTogJzk2JywgdW5pdDogJyUnLCBjb2xvcjogJyM0ZWRlYTMnLCBub3RlOiAnZ29vZCBhbGlnbm1lbnQnIH0sXHJcbiAgeyBsYWJlbDogJ0RvdWJsZSBTdXBwb3J0JywgdmFsdWU6ICczMicsIHVuaXQ6ICclJywgY29sb3I6ICcjRUY0NDQ0Jywgbm90ZTogJ2VsZXZhdGVkJyB9LFxyXG4gIHsgbGFiZWw6ICdNb2JpbGl0eSBTY29yZScsIHZhbHVlOiAnNjUnLCB1bml0OiAnLzEwMCcsIGNvbG9yOiAnI2FkYzZmZicsIG5vdGU6ICd3YXRjaCB0cmVuZCcgfSxcclxuXTtcclxuXHJcbmZ1bmN0aW9uIEdhaXRTcGFya2xpbmUoeyBkYXRhLCBjb2xvciB9KSB7XHJcbiAgY29uc3QgbWluID0gTWF0aC5taW4oLi4uZGF0YSk7XHJcbiAgY29uc3QgbWF4ID0gTWF0aC5tYXgoLi4uZGF0YSk7XHJcbiAgY29uc3QgcmFuZ2UgPSBtYXggLSBtaW4gfHwgMTtcclxuICBjb25zdCB3ID0gNDIwO1xyXG4gIGNvbnN0IGggPSAxMTA7XHJcbiAgY29uc3QgcGFkZGluZyA9IDE2O1xyXG4gIGNvbnN0IHBvaW50cyA9IGRhdGEubWFwKCh2YWx1ZSwgaW5kZXgpID0+IHtcclxuICAgIGNvbnN0IHggPSBwYWRkaW5nICsgKCh3IC0gcGFkZGluZyAqIDIpICogaW5kZXgpIC8gKGRhdGEubGVuZ3RoIC0gMSk7XHJcbiAgICBjb25zdCB5ID0gcGFkZGluZyArICgxIC0gKHZhbHVlIC0gbWluKSAvIHJhbmdlKSAqIChoIC0gcGFkZGluZyAqIDIpO1xyXG4gICAgcmV0dXJuIHsgeCwgeSwgdmFsdWUgfTtcclxuICB9KTtcclxuICBjb25zdCBwYXRoID0gcG9pbnRzLm1hcCgocCwgaW5kZXgpID0+IGAke2luZGV4ID09PSAwID8gJ00nIDogJ0wnfSAke3AueH0gJHtwLnl9YCkuam9pbignICcpO1xyXG5cclxuICByZXR1cm4gKFxyXG4gICAgPHN2ZyB2aWV3Qm94PXtgMCAwICR7d30gJHtofWB9IGNsYXNzTmFtZT1cImdhaXQtY2hhcnRfX3N2Z1wiIHJvbGU9XCJpbWdcIiBhcmlhLWxhYmVsPVwiR2FpdCBzY29yZSB0cmVuZFwiPlxyXG4gICAgICA8ZGVmcz5cclxuICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9XCJnYWl0RmlsbFwiIHgxPVwiMFwiIHgyPVwiMFwiIHkxPVwiMFwiIHkyPVwiMVwiPlxyXG4gICAgICAgICAgPHN0b3Agb2Zmc2V0PVwiMCVcIiBzdG9wQ29sb3I9e2NvbG9yfSBzdG9wT3BhY2l0eT1cIjAuMjVcIiAvPlxyXG4gICAgICAgICAgPHN0b3Agb2Zmc2V0PVwiMTAwJVwiIHN0b3BDb2xvcj17Y29sb3J9IHN0b3BPcGFjaXR5PVwiMC4wNFwiIC8+XHJcbiAgICAgICAgPC9saW5lYXJHcmFkaWVudD5cclxuICAgICAgPC9kZWZzPlxyXG4gICAgICA8cGF0aCBkPXtgJHtwYXRofSBMICR7cG9pbnRzW3BvaW50cy5sZW5ndGggLSAxXS54fSAke2ggLSBwYWRkaW5nfSBMICR7cG9pbnRzWzBdLnh9ICR7aCAtIHBhZGRpbmd9IFpgfSBmaWxsPVwidXJsKCNnYWl0RmlsbClcIiAvPlxyXG4gICAgICA8cGF0aCBkPXtwYXRofSBjbGFzc05hbWU9XCJnYWl0LWNoYXJ0X19saW5lXCIgc3R5bGU9e3sgc3Ryb2tlOiBjb2xvciB9fSAvPlxyXG4gICAgICB7cG9pbnRzLm1hcCgocG9pbnQsIGluZGV4KSA9PiAoXHJcbiAgICAgICAgPGNpcmNsZVxyXG4gICAgICAgICAga2V5PXtpbmRleH1cclxuICAgICAgICAgIGN4PXtwb2ludC54fVxyXG4gICAgICAgICAgY3k9e3BvaW50Lnl9XHJcbiAgICAgICAgICByPXtpbmRleCA9PT0gcG9pbnRzLmxlbmd0aCAtIDEgPyA1IDogMy41fVxyXG4gICAgICAgICAgY2xhc3NOYW1lPXtgZ2FpdC1jaGFydF9fcG9pbnQgJHtpbmRleCA9PT0gNCA/ICdnYWl0LWNoYXJ0X19wb2ludC0tZGlwJyA6ICcnfWB9XHJcbiAgICAgICAgICBzdHlsZT17eyBmaWxsOiBpbmRleCA9PT0gNCA/ICcjRUY0NDQ0JyA6IGNvbG9yIH19XHJcbiAgICAgICAgLz5cclxuICAgICAgKSl9XHJcbiAgICA8L3N2Zz5cclxuICApO1xyXG59XHJcblxyXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBHYWl0QW5hbHlzaXNQYWdlKCkge1xyXG4gIGNvbnN0IFtyYW5nZSwgc2V0UmFuZ2VdID0gdXNlU3RhdGUoJ3dlZWsnKTtcclxuICBjb25zdCBjaGFydERhdGEgPSByYW5nZSA9PT0gJ3dlZWsnID8gZ2FpdERhdGFXZWVrIDogZ2FpdERhdGFNb250aDtcclxuXHJcbiAgcmV0dXJuIChcclxuICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXQgZ2FpdC1wYWdlXCI+XHJcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX2hlYWRlclwiPlxyXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX3RpdGxlLWdyb3VwXCI+XHJcbiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29ucyBpY29uLWxnXCIgc3R5bGU9e3sgY29sb3I6ICcjZmZiNzg2JyB9fT5kaXJlY3Rpb25zX3dhbGs8L3NwYW4+XHJcbiAgICAgICAgICA8ZGl2PlxyXG4gICAgICAgICAgICA8aDEgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX3RpdGxlXCI+R2FpdCBBbmFseXNpcyBEYXNoYm9hcmQ8L2gxPlxyXG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9fc3VidGl0bGVcIj5Nb2JpbGl0eSBtZXRyaWNzIGFuZCBmYWxsIHJpc2sgcHJlZGljdGlvbiBmb3IgTXIuIFJhZ2hhdiBJeWVyPC9wPlxyXG4gICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9fZmlsdGVyc1wiPlxyXG4gICAgICAgICAge1snd2VlaycsICdtb250aCcsICdxdWFydGVyJ10ubWFwKGl0ZW0gPT4gKFxyXG4gICAgICAgICAgICA8YnV0dG9uXHJcbiAgICAgICAgICAgICAga2V5PXtpdGVtfVxyXG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17YHBhZ2UtbGF5b3V0X19maWx0ZXItYnRuICR7cmFuZ2UgPT09IGl0ZW0gPyAncGFnZS1sYXlvdXRfX2ZpbHRlci1idG4tLWFjdGl2ZScgOiAnJ31gfVxyXG4gICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldFJhbmdlKGl0ZW0pfVxyXG4gICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAge2l0ZW0uY2hhckF0KDApLnRvVXBwZXJDYXNlKCkgKyBpdGVtLnNsaWNlKDEpfVxyXG4gICAgICAgICAgICA8L2J1dHRvbj5cclxuICAgICAgICAgICkpfVxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgICA8L2Rpdj5cclxuXHJcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX2NvbnRlbnRcIj5cclxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdhaXQtcGFnZV9fa3Bpc1wiPlxyXG4gICAgICAgICAge2dhaXRTdGF0cy5tYXAobWV0cmljID0+IChcclxuICAgICAgICAgICAgPGRpdiBrZXk9e21ldHJpYy5sYWJlbH0gY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZCBnYWl0LWtwaVwiIHN0eWxlPXt7IGJvcmRlclRvcDogYDRweCBzb2xpZCAke21ldHJpYy5jb2xvcn1gIH19PlxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2FpdC1rcGlfX2xhYmVsXCI+e21ldHJpYy5sYWJlbH08L2Rpdj5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdhaXQta3BpX192YWx1ZS1yb3dcIj5cclxuICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImdhaXQta3BpX192YWx1ZVwiIHN0eWxlPXt7IGNvbG9yOiBtZXRyaWMuY29sb3IgfX0+e21ldHJpYy52YWx1ZX08L3NwYW4+XHJcbiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJnYWl0LWtwaV9fdW5pdFwiPnttZXRyaWMudW5pdH08L3NwYW4+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnYWl0LWtwaV9fbm90ZVwiPnttZXRyaWMubm90ZX08L2Rpdj5cclxuICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICApKX1cclxuICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnYWl0LXBhZ2VfX2xheW91dFwiPlxyXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnYWl0LXBhZ2VfX21haW5cIj5cclxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkIGdhaXQtY2FyZFwiPlxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2FpdC1jYXJkX19oZWFkZXJcIj5cclxuICAgICAgICAgICAgICAgIDxkaXY+XHJcbiAgICAgICAgICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJnYWl0LWNhcmRfX3RpdGxlXCI+TW9iaWxpdHkgU2NvcmUgVHJlbmQ8L2gzPlxyXG4gICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJnYWl0LWNhcmRfX3N1YnRpdGxlXCI+Um9sbGluZyB0cmVuZCB3aXRoIG1pbGQgZG93bndhcmQgcHJlc3N1cmUgaW4gdGhlIHdlZWtseSB3aW5kb3c8L3A+XHJcbiAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cImJhZGdlIGJhZGdlLXdhcm5pbmdcIj5ERUNMSU5JTkc8L3NwYW4+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICAgIDxHYWl0U3BhcmtsaW5lIGRhdGE9e2NoYXJ0RGF0YX0gY29sb3I9XCIjZmZiNzg2XCIgLz5cclxuXHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnYWl0LWF4aXNcIj5cclxuICAgICAgICAgICAgICAgIHtyYW5nZSA9PT0gJ3dlZWsnXHJcbiAgICAgICAgICAgICAgICAgID8gWydNb24nLCAnVHVlJywgJ1dlZCcsICdUaHUnLCAnRnJpJywgJ1NhdCcsICdTdW4nXS5tYXAoZGF5ID0+IChcclxuICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGtleT17ZGF5fT57ZGF5fTwvc3Bhbj5cclxuICAgICAgICAgICAgICAgICAgICApKVxyXG4gICAgICAgICAgICAgICAgICA6IEFycmF5LmZyb20oeyBsZW5ndGg6IDMwIH0sIChfLCBpbmRleCkgPT4gKFxyXG4gICAgICAgICAgICAgICAgICAgICAgPHNwYW4ga2V5PXtpbmRleH0+eyhpbmRleCArIDEpICUgNSA9PT0gMCA/IGBEYXkgJHtpbmRleCArIDF9YCA6ICcnfTwvc3Bhbj5cclxuICAgICAgICAgICAgICAgICAgICApKX1cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdhaXQtZ3JpZFwiPlxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZCBnYWl0LWNhcmRcIj5cclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2FpdC1jYXJkX19oZWFkZXJcIj5cclxuICAgICAgICAgICAgICAgICAgPGRpdj5cclxuICAgICAgICAgICAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwiZ2FpdC1jYXJkX190aXRsZVwiPjNEIFNrZWxldGFsIEdhaXQgT3ZlcmxheTwvaDM+XHJcbiAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwiZ2FpdC1jYXJkX19zdWJ0aXRsZVwiPlNpbXBsaWZpZWQgcG9zdHVyZSByZW5kZXIgd2l0aCBpbnN0YWJpbGl0eSBmb2N1cyBwb2ludHM8L3A+XHJcbiAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdhaXQtZmlndXJlXCI+XHJcbiAgICAgICAgICAgICAgICAgIDxzdmcgdmlld0JveD1cIjAgMCAyMjAgMzAwXCIgY2xhc3NOYW1lPVwiZ2FpdC1maWd1cmVfX3N2Z1wiIGFyaWEtbGFiZWw9XCJTa2VsZXRvbiBnYWl0IG92ZXJsYXlcIj5cclxuICAgICAgICAgICAgICAgICAgICA8Y2lyY2xlIGN4PVwiMTEwXCIgY3k9XCIzMFwiIHI9XCIxOFwiIGZpbGw9XCJub25lXCIgc3Ryb2tlPVwiI2ZmYjc4NlwiIHN0cm9rZVdpZHRoPVwiMlwiIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgPGxpbmUgeDE9XCIxMTBcIiB5MT1cIjQ4XCIgeDI9XCIxMTBcIiB5Mj1cIjEwOFwiIHN0cm9rZT1cIiNmZmI3ODZcIiBzdHJva2VXaWR0aD1cIjJcIiAvPlxyXG4gICAgICAgICAgICAgICAgICAgIDxsaW5lIHgxPVwiMTEwXCIgeTE9XCI2OFwiIHgyPVwiNzJcIiB5Mj1cIjk4XCIgc3Ryb2tlPVwiI2ZmYjc4NlwiIHN0cm9rZVdpZHRoPVwiMlwiIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgPGxpbmUgeDE9XCIxMTBcIiB5MT1cIjY4XCIgeDI9XCIxNDhcIiB5Mj1cIjk4XCIgc3Ryb2tlPVwiI2ZmYjc4NlwiIHN0cm9rZVdpZHRoPVwiMlwiIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgPGxpbmUgeDE9XCI3MlwiIHkxPVwiOThcIiB4Mj1cIjY0XCIgeTI9XCIxNDBcIiBzdHJva2U9XCIjZmZiNzg2XCIgc3Ryb2tlV2lkdGg9XCIyXCIgLz5cclxuICAgICAgICAgICAgICAgICAgICA8bGluZSB4MT1cIjE0OFwiIHkxPVwiOThcIiB4Mj1cIjE1NlwiIHkyPVwiMTQwXCIgc3Ryb2tlPVwiI2ZmYjc4NlwiIHN0cm9rZVdpZHRoPVwiMlwiIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgPGxpbmUgeDE9XCIxMTBcIiB5MT1cIjEwOFwiIHgyPVwiOTRcIiB5Mj1cIjE2MFwiIHN0cm9rZT1cIiNGNTlFMEJcIiBzdHJva2VXaWR0aD1cIjIuNVwiIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgPGxpbmUgeDE9XCIxMTBcIiB5MT1cIjEwOFwiIHgyPVwiMTI2XCIgeTI9XCIxNjBcIiBzdHJva2U9XCIjRjU5RTBCXCIgc3Ryb2tlV2lkdGg9XCIyLjVcIiAvPlxyXG4gICAgICAgICAgICAgICAgICAgIDxsaW5lIHgxPVwiOTRcIiB5MT1cIjE2MFwiIHgyPVwiOTBcIiB5Mj1cIjIyNFwiIHN0cm9rZT1cIiNFRjQ0NDRcIiBzdHJva2VXaWR0aD1cIjNcIiAvPlxyXG4gICAgICAgICAgICAgICAgICAgIDxsaW5lIHgxPVwiMTI2XCIgeTE9XCIxNjBcIiB4Mj1cIjEzMFwiIHkyPVwiMjI0XCIgc3Ryb2tlPVwiI0VGNDQ0NFwiIHN0cm9rZVdpZHRoPVwiM1wiIC8+XHJcbiAgICAgICAgICAgICAgICAgICAgPGc+XHJcbiAgICAgICAgICAgICAgICAgICAgICA8Y2lyY2xlIGN4PVwiOTBcIiBjeT1cIjIyNFwiIHI9XCI4XCIgZmlsbD1cIm5vbmVcIiBzdHJva2U9XCIjRUY0NDQ0XCIgc3Ryb2tlV2lkdGg9XCIxLjVcIiBvcGFjaXR5PVwiMC43XCIgLz5cclxuICAgICAgICAgICAgICAgICAgICAgIDxjaXJjbGUgY3g9XCIxMzBcIiBjeT1cIjIyNFwiIHI9XCI4XCIgZmlsbD1cIm5vbmVcIiBzdHJva2U9XCIjRUY0NDQ0XCIgc3Ryb2tlV2lkdGg9XCIxLjVcIiBvcGFjaXR5PVwiMC43XCIgLz5cclxuICAgICAgICAgICAgICAgICAgICA8L2c+XHJcbiAgICAgICAgICAgICAgICAgICAgPHRleHQgeD1cIjExMFwiIHk9XCIyNjRcIiB0ZXh0QW5jaG9yPVwibWlkZGxlXCIgZm9udFNpemU9XCIxMFwiIGZpbGw9XCIjRjU5RTBCXCIgZm9udFdlaWdodD1cIjcwMFwiPk1pbGQgaW5zdGFiaWxpdHkgYXQgdHVybjwvdGV4dD5cclxuICAgICAgICAgICAgICAgICAgPC9zdmc+XHJcbiAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkIGdhaXQtY2FyZFwiPlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnYWl0LWNhcmRfX2hlYWRlclwiPlxyXG4gICAgICAgICAgICAgICAgICA8ZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJnYWl0LWNhcmRfX3RpdGxlXCI+U3RyaWRlIEFuYWx5c2lzPC9oMz5cclxuICAgICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJnYWl0LWNhcmRfX3N1YnRpdGxlXCI+TWVhc3VyZWQgdmFsdWVzIGNvbXBhcmVkIGFnYWluc3QgdGhlIHJlc2lkZW50IGJhc2VsaW5lPC9wPlxyXG4gICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnYWl0LXN0cmlkZS1saXN0XCI+XHJcbiAgICAgICAgICAgICAgICAgIHtbXHJcbiAgICAgICAgICAgICAgICAgICAgeyBsYWJlbDogJ0xlZnQgc3RyaWRlIGxlbmd0aCcsIHZhbHVlOiAnMC41NG0nLCByZWY6ICcwLjY1bScsIG9rOiBmYWxzZSB9LFxyXG4gICAgICAgICAgICAgICAgICAgIHsgbGFiZWw6ICdSaWdodCBzdHJpZGUgbGVuZ3RoJywgdmFsdWU6ICcwLjU1bScsIHJlZjogJzAuNjVtJywgb2s6IGZhbHNlIH0sXHJcbiAgICAgICAgICAgICAgICAgICAgeyBsYWJlbDogJ1N0cmlkZSBzeW1tZXRyeScsIHZhbHVlOiAnOTYlJywgcmVmOiAnMTAwJScsIG9rOiB0cnVlIH0sXHJcbiAgICAgICAgICAgICAgICAgICAgeyBsYWJlbDogJ0NhZGVuY2UnLCB2YWx1ZTogJzg4IHNwbScsIHJlZjogJzEwMCBzcG0nLCBvazogZmFsc2UgfSxcclxuICAgICAgICAgICAgICAgICAgICB7IGxhYmVsOiAnRG91YmxlIHN1cHBvcnQnLCB2YWx1ZTogJzMyJScsIHJlZjogJzIwJScsIG9rOiBmYWxzZSB9LFxyXG4gICAgICAgICAgICAgICAgICBdLm1hcChpdGVtID0+IChcclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGtleT17aXRlbS5sYWJlbH0gY2xhc3NOYW1lPVwiZ2FpdC1zdHJpZGUtcm93XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJnYWl0LXN0cmlkZS1yb3dfX2xhYmVsXCI+e2l0ZW0ubGFiZWx9PC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnYWl0LXN0cmlkZS1yb3dfX3ZhbHVlc1wiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8c3Ryb25nIGNsYXNzTmFtZT17aXRlbS5vayA/ICdnYWl0LXN0cmlkZS1yb3dfX3ZhbHVlLS1nb29kJyA6ICdnYWl0LXN0cmlkZS1yb3dfX3ZhbHVlLS13YXJuJ30+e2l0ZW0udmFsdWV9PC9zdHJvbmc+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuPnJlZiB7aXRlbS5yZWZ9PC9zcGFuPlxyXG4gICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICkpfVxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgPC9kaXY+XHJcblxyXG4gICAgICAgICAgPGFzaWRlIGNsYXNzTmFtZT1cImdhaXQtcGFnZV9fc2lkZVwiPlxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdsYXNzLWNhcmQgZ2FpdC1jYXJkIGdhaXQtY2FyZC0tdGlnaHRcIj5cclxuICAgICAgICAgICAgICA8aDMgY2xhc3NOYW1lPVwiZ2FpdC1jYXJkX190aXRsZVwiPkRhaWx5IE1vYmlsaXR5IFNuYXBzaG90PC9oMz5cclxuICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdhaXQtc25hcHNob3RcIj5cclxuICAgICAgICAgICAgICAgIHtbXHJcbiAgICAgICAgICAgICAgICAgIHsga2V5OiAnTW9ybmluZyB3YWxrJywgdmFsdWU6ICcyMSBtaW4nIH0sXHJcbiAgICAgICAgICAgICAgICAgIHsga2V5OiAnQXNzaXN0ZWQgdHJhbnNmZXJzJywgdmFsdWU6ICc2JyB9LFxyXG4gICAgICAgICAgICAgICAgICB7IGtleTogJ05pZ2h0IGJhdGhyb29tIHRyaXBzJywgdmFsdWU6ICcyJyB9LFxyXG4gICAgICAgICAgICAgICAgICB7IGtleTogJ05lYXItZmFsbCBtb21lbnRzJywgdmFsdWU6ICcxJyB9LFxyXG4gICAgICAgICAgICAgICAgXS5tYXAoaXRlbSA9PiAoXHJcbiAgICAgICAgICAgICAgICAgIDxkaXYga2V5PXtpdGVtLmtleX0gY2xhc3NOYW1lPVwiZ2FpdC1zbmFwc2hvdF9fcm93XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgPHNwYW4+e2l0ZW0ua2V5fTwvc3Bhbj5cclxuICAgICAgICAgICAgICAgICAgICA8c3Ryb25nPntpdGVtLnZhbHVlfTwvc3Ryb25nPlxyXG4gICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICkpfVxyXG4gICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZCBnYWl0LWNhcmQgZ2FpdC1jYXJkLS10aWdodFwiPlxyXG4gICAgICAgICAgICAgIDxoMyBjbGFzc05hbWU9XCJnYWl0LWNhcmRfX3RpdGxlXCI+U2FmZXR5IEd1aWRhbmNlPC9oMz5cclxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJnYWl0LWNhcmRfX3RleHRcIj5cclxuICAgICAgICAgICAgICAgIEtlZXAgc3VwZXJ2aXNlZCBldmVuaW5nIHdhbGtzIGluIHBsYWNlLCByZWR1Y2UgY29ycmlkb3IgY2x1dHRlciwgYW5kIHByaW9yaXRpemUgc2xvdyBzaXQtdG8tc3RhbmQgdHJhbnNpdGlvbnMgYWZ0ZXIgcHJvbG9uZ2VkIHJlc3QuXHJcbiAgICAgICAgICAgICAgPC9wPlxyXG4gICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgIDwvYXNpZGU+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgIDwvZGl2PlxyXG4gICAgPC9kaXY+XHJcbiAgKTtcclxufVxyXG4iXSwiZmlsZSI6IkM6L1VzZXJzL0FheXVzaCBXYWxzYW5naWthci9PbmVEcml2ZS9EZXNrdG9wL1NpbGVudCBTZW5zZS9zcmMvcGFnZXMvR2FpdEFuYWx5c2lzUGFnZS5qc3gifQ==

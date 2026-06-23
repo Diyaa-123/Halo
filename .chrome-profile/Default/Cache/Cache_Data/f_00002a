@@ -1,0 +1,169 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/components/landing/ProceduralSpine.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react; const useMemo = __vite__cjsImport3_react["useMemo"]; const useRef = __vite__cjsImport3_react["useRef"];
+import { useFrame } from "/node_modules/.vite/deps/@react-three_fiber.js?v=6faa39c4";
+import * as THREE from "/node_modules/.vite/deps/three.js?v=6faa39c4";
+export default function ProceduralSpine({ numVertebrae = 28, scrollProgress = 0 }) {
+  _s();
+  const groupRef = useRef(null);
+  const materials = useMemo(() => {
+    const bone = new THREE.MeshPhysicalMaterial({
+      color: "#e4eef0",
+      roughness: 0.36,
+      metalness: 0.05,
+      clearcoat: 0.85,
+      clearcoatRoughness: 0.2,
+      emissive: "#092b34",
+      emissiveIntensity: 0.28,
+      envMapIntensity: 1.45
+    });
+    const disc = new THREE.MeshPhysicalMaterial({
+      color: "#86f8ff",
+      roughness: 0.24,
+      metalness: 0.22,
+      transparent: true,
+      opacity: 0.35,
+      emissive: "#0fe6ff",
+      emissiveIntensity: 0.18
+    });
+    return { bone, disc };
+  }, []);
+  const vertebrae = useMemo(() => {
+    return Array.from({ length: numVertebrae }).map((_, i) => {
+      const t = i / (numVertebrae - 1);
+      const y = (0.5 - t) * 5.8;
+      const cervicalCurve = Math.sin(t * Math.PI * 2.2) * 0.14;
+      const lumbarCurve = Math.sin((t - 0.15) * Math.PI * 1.6) * 0.32;
+      const x = cervicalCurve + lumbarCurve;
+      const z = Math.cos(t * Math.PI * 1.7) * 0.22;
+      const scale = 0.38 + Math.sin(t * Math.PI) * 0.09 + (1 - t) * 0.14;
+      const twist = Math.sin(t * Math.PI * 3) * 0.16;
+      return { index: i, position: [x, y, z], scale, twist, t };
+    });
+  }, [numVertebrae]);
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    const time = state.clock.elapsedTime;
+    groupRef.current.rotation.y = Math.sin(time * 0.22) * 0.2 + scrollProgress * 0.16;
+    groupRef.current.rotation.x = Math.sin(time * 0.14) * 0.035;
+    groupRef.current.position.y = Math.sin(time * 0.52) * 0.08;
+    groupRef.current.children.forEach((child, i) => {
+      child.rotation.y = Math.sin(time * 0.65 + i * 0.23) * 0.035;
+      child.position.x += Math.sin(time * 0.55 + i * 0.4) * 8e-4;
+    });
+  });
+  return /* @__PURE__ */ jsxDEV("group", { ref: groupRef, position: [0, -0.05, -0.8], scale: 1.08, children: [
+    /* @__PURE__ */ jsxDEV("mesh", { position: [0, -3.18, 0.04], rotation: [0.18, 0, 0], material: materials.bone, children: /* @__PURE__ */ jsxDEV("dodecahedronGeometry", { args: [0.62, 1] }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+      lineNumber: 80,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+      lineNumber: 79,
+      columnNumber: 7
+    }, this),
+    vertebrae.map(
+      (v) => /* @__PURE__ */ jsxDEV("group", { position: v.position, rotation: [v.twist * 0.4, v.twist, 0], scale: v.scale, children: [
+        /* @__PURE__ */ jsxDEV("mesh", { material: materials.bone, rotation: [Math.PI / 2, 0, 0], children: /* @__PURE__ */ jsxDEV("cylinderGeometry", { args: [0.72, 0.82, 0.28, 24, 1, false] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 86,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 85,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("mesh", { material: materials.disc, rotation: [Math.PI / 2, 0, 0], position: [0, -0.16, 0], children: /* @__PURE__ */ jsxDEV("cylinderGeometry", { args: [0.68, 0.74, 0.08, 24] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 89,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 88,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("mesh", { material: materials.bone, position: [0, 0, -0.72], rotation: [Math.PI / 2, 0, 0], children: /* @__PURE__ */ jsxDEV("coneGeometry", { args: [0.18, 0.9, 5] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 92,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 91,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("mesh", { material: materials.bone, position: [0.68, 0, -0.1], rotation: [0, 0, -Math.PI / 2], children: /* @__PURE__ */ jsxDEV("coneGeometry", { args: [0.14, 0.78, 5] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 95,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 94,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("mesh", { material: materials.bone, position: [-0.68, 0, -0.1], rotation: [0, 0, Math.PI / 2], children: /* @__PURE__ */ jsxDEV("coneGeometry", { args: [0.14, 0.78, 5] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 98,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 97,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("mesh", { material: materials.bone, position: [0, 0.1, 0.16], rotation: [Math.PI / 2, 0, 0], children: /* @__PURE__ */ jsxDEV("torusGeometry", { args: [0.42, 0.055, 8, 24, Math.PI * 1.6] }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 101,
+          columnNumber: 13
+        }, this) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+          lineNumber: 100,
+          columnNumber: 11
+        }, this)
+      ] }, v.index, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+        lineNumber: 84,
+        columnNumber: 7
+      }, this)
+    )
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx",
+    lineNumber: 78,
+    columnNumber: 5
+  }, this);
+}
+_s(ProceduralSpine, "HqRgnlwEbEXEJ+t2CHRIMiULsJs=", false, function() {
+  return [useFrame];
+});
+_c = ProceduralSpine;
+var _c;
+$RefreshReg$(_c, "ProceduralSpine");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/components/landing/ProceduralSpine.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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RTtBQUFlLElBQUFrRDtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJSZWFjdCIsInVzZU1lbW8iLCJ1c2VSZWYiLCJ1c2VGcmFtZSIsIlRIUkVFIiwiUHJvY2VkdXJhbFNwaW5lIiwibnVtVmVydGVicmFlIiwic2Nyb2xsUHJvZ3Jlc3MiLCJfcyIsImdyb3VwUmVmIiwibWF0ZXJpYWxzIiwiYm9uZSIsIk1lc2hQaHlzaWNhbE1hdGVyaWFsIiwiY29sb3IiLCJyb3VnaG5lc3MiLCJtZXRhbG5lc3MiLCJjbGVhcmNvYXQiLCJjbGVhcmNvYXRSb3VnaG5lc3MiLCJlbWlzc2l2ZSIsImVtaXNzaXZlSW50ZW5zaXR5IiwiZW52TWFwSW50ZW5zaXR5IiwiZGlzYyIsInRyYW5zcGFyZW50Iiwib3BhY2l0eSIsInZlcnRlYnJhZSIsIkFycmF5IiwiZnJvbSIsImxlbmd0aCIsIm1hcCIsIl8iLCJpIiwidCIsInkiLCJjZXJ2aWNhbEN1cnZlIiwiTWF0aCIsInNpbiIsIlBJIiwibHVtYmFyQ3VydmUiLCJ4IiwieiIsImNvcyIsInNjYWxlIiwidHdpc3QiLCJpbmRleCIsInBvc2l0aW9uIiwic3RhdGUiLCJjdXJyZW50IiwidGltZSIsImNsb2NrIiwiZWxhcHNlZFRpbWUiLCJyb3RhdGlvbiIsImNoaWxkcmVuIiwiZm9yRWFjaCIsImNoaWxkIiwidiIsIl9jIl0sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VzIjpbIlByb2NlZHVyYWxTcGluZS5qc3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0LCB7IHVzZU1lbW8sIHVzZVJlZiB9IGZyb20gJ3JlYWN0JztcbmltcG9ydCB7IHVzZUZyYW1lIH0gZnJvbSAnQHJlYWN0LXRocmVlL2ZpYmVyJztcbmltcG9ydCAqIGFzIFRIUkVFIGZyb20gJ3RocmVlJztcblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gUHJvY2VkdXJhbFNwaW5lKHsgbnVtVmVydGVicmFlID0gMjgsIHNjcm9sbFByb2dyZXNzID0gMCB9KSB7XG4gIGNvbnN0IGdyb3VwUmVmID0gdXNlUmVmKG51bGwpO1xuXG4gIGNvbnN0IG1hdGVyaWFscyA9IHVzZU1lbW8oKCkgPT4ge1xuICAgIGNvbnN0IGJvbmUgPSBuZXcgVEhSRUUuTWVzaFBoeXNpY2FsTWF0ZXJpYWwoe1xuICAgICAgY29sb3I6ICcjZTRlZWYwJyxcbiAgICAgIHJvdWdobmVzczogMC4zNixcbiAgICAgIG1ldGFsbmVzczogMC4wNSxcbiAgICAgIGNsZWFyY29hdDogMC44NSxcbiAgICAgIGNsZWFyY29hdFJvdWdobmVzczogMC4yLFxuICAgICAgZW1pc3NpdmU6ICcjMDkyYjM0JyxcbiAgICAgIGVtaXNzaXZlSW50ZW5zaXR5OiAwLjI4LFxuICAgICAgZW52TWFwSW50ZW5zaXR5OiAxLjQ1LFxuICAgIH0pO1xuICAgIGNvbnN0IGRpc2MgPSBuZXcgVEhSRUUuTWVzaFBoeXNpY2FsTWF0ZXJpYWwoe1xuICAgICAgY29sb3I6ICcjODZmOGZmJyxcbiAgICAgIHJvdWdobmVzczogMC4yNCxcbiAgICAgIG1ldGFsbmVzczogMC4yMixcbiAgICAgIHRyYW5zcGFyZW50OiB0cnVlLFxuICAgICAgb3BhY2l0eTogMC4zNSxcbiAgICAgIGVtaXNzaXZlOiAnIzBmZTZmZicsXG4gICAgICBlbWlzc2l2ZUludGVuc2l0eTogMC4xOCxcbiAgICB9KTtcbiAgICByZXR1cm4geyBib25lLCBkaXNjIH07XG4gIH0sIFtdKTtcblxuICBjb25zdCB2ZXJ0ZWJyYWUgPSB1c2VNZW1vKCgpID0+IHtcbiAgICByZXR1cm4gQXJyYXkuZnJvbSh7IGxlbmd0aDogbnVtVmVydGVicmFlIH0pLm1hcCgoXywgaSkgPT4ge1xuICAgICAgY29uc3QgdCA9IGkgLyAobnVtVmVydGVicmFlIC0gMSk7XG4gICAgICBjb25zdCB5ID0gKDAuNSAtIHQpICogNS44O1xuICAgICAgY29uc3QgY2VydmljYWxDdXJ2ZSA9IE1hdGguc2luKHQgKiBNYXRoLlBJICogMi4yKSAqIDAuMTQ7XG4gICAgICBjb25zdCBsdW1iYXJDdXJ2ZSA9IE1hdGguc2luKCh0IC0gMC4xNSkgKiBNYXRoLlBJICogMS42KSAqIDAuMzI7XG4gICAgICBjb25zdCB4ID0gY2VydmljYWxDdXJ2ZSArIGx1bWJhckN1cnZlO1xuICAgICAgY29uc3QgeiA9IE1hdGguY29zKHQgKiBNYXRoLlBJICogMS43KSAqIDAuMjI7XG4gICAgICBjb25zdCBzY2FsZSA9IDAuMzggKyBNYXRoLnNpbih0ICogTWF0aC5QSSkgKiAwLjA5ICsgKDEgLSB0KSAqIDAuMTQ7XG4gICAgICBjb25zdCB0d2lzdCA9IE1hdGguc2luKHQgKiBNYXRoLlBJICogMykgKiAwLjE2O1xuICAgICAgcmV0dXJuIHsgaW5kZXg6IGksIHBvc2l0aW9uOiBbeCwgeSwgel0sIHNjYWxlLCB0d2lzdCwgdCB9O1xuICAgIH0pO1xuICB9LCBbbnVtVmVydGVicmFlXSk7XG5cbiAgdXNlRnJhbWUoKHN0YXRlKSA9PiB7XG4gICAgaWYgKCFncm91cFJlZi5jdXJyZW50KSByZXR1cm47XG4gICAgY29uc3QgdGltZSA9IHN0YXRlLmNsb2NrLmVsYXBzZWRUaW1lO1xuICAgIGdyb3VwUmVmLmN1cnJlbnQucm90YXRpb24ueSA9IE1hdGguc2luKHRpbWUgKiAwLjIyKSAqIDAuMiArIHNjcm9sbFByb2dyZXNzICogMC4xNjtcbiAgICBncm91cFJlZi5jdXJyZW50LnJvdGF0aW9uLnggPSBNYXRoLnNpbih0aW1lICogMC4xNCkgKiAwLjAzNTtcbiAgICBncm91cFJlZi5jdXJyZW50LnBvc2l0aW9uLnkgPSBNYXRoLnNpbih0aW1lICogMC41MikgKiAwLjA4O1xuXG4gICAgZ3JvdXBSZWYuY3VycmVudC5jaGlsZHJlbi5mb3JFYWNoKChjaGlsZCwgaSkgPT4ge1xuICAgICAgY2hpbGQucm90YXRpb24ueSA9IE1hdGguc2luKHRpbWUgKiAwLjY1ICsgaSAqIDAuMjMpICogMC4wMzU7XG4gICAgICBjaGlsZC5wb3NpdGlvbi54ICs9IE1hdGguc2luKHRpbWUgKiAwLjU1ICsgaSAqIDAuNCkgKiAwLjAwMDg7XG4gICAgfSk7XG4gIH0pO1xuXG4gIHJldHVybiAoXG4gICAgPGdyb3VwIHJlZj17Z3JvdXBSZWZ9IHBvc2l0aW9uPXtbMCwgLTAuMDUsIC0wLjhdfSBzY2FsZT17MS4wOH0+XG4gICAgICA8bWVzaCBwb3NpdGlvbj17WzAsIC0zLjE4LCAwLjA0XX0gcm90YXRpb249e1swLjE4LCAwLCAwXX0gbWF0ZXJpYWw9e21hdGVyaWFscy5ib25lfT5cbiAgICAgICAgPGRvZGVjYWhlZHJvbkdlb21ldHJ5IGFyZ3M9e1swLjYyLCAxXX0gLz5cbiAgICAgIDwvbWVzaD5cblxuICAgICAge3ZlcnRlYnJhZS5tYXAoKHYpID0+IChcbiAgICAgICAgPGdyb3VwIGtleT17di5pbmRleH0gcG9zaXRpb249e3YucG9zaXRpb259IHJvdGF0aW9uPXtbdi50d2lzdCAqIDAuNCwgdi50d2lzdCwgMF19IHNjYWxlPXt2LnNjYWxlfT5cbiAgICAgICAgICA8bWVzaCBtYXRlcmlhbD17bWF0ZXJpYWxzLmJvbmV9IHJvdGF0aW9uPXtbTWF0aC5QSSAvIDIsIDAsIDBdfT5cbiAgICAgICAgICAgIDxjeWxpbmRlckdlb21ldHJ5IGFyZ3M9e1swLjcyLCAwLjgyLCAwLjI4LCAyNCwgMSwgZmFsc2VdfSAvPlxuICAgICAgICAgIDwvbWVzaD5cbiAgICAgICAgICA8bWVzaCBtYXRlcmlhbD17bWF0ZXJpYWxzLmRpc2N9IHJvdGF0aW9uPXtbTWF0aC5QSSAvIDIsIDAsIDBdfSBwb3NpdGlvbj17WzAsIC0wLjE2LCAwXX0+XG4gICAgICAgICAgICA8Y3lsaW5kZXJHZW9tZXRyeSBhcmdzPXtbMC42OCwgMC43NCwgMC4wOCwgMjRdfSAvPlxuICAgICAgICAgIDwvbWVzaD5cbiAgICAgICAgICA8bWVzaCBtYXRlcmlhbD17bWF0ZXJpYWxzLmJvbmV9IHBvc2l0aW9uPXtbMCwgMCwgLTAuNzJdfSByb3RhdGlvbj17W01hdGguUEkgLyAyLCAwLCAwXX0+XG4gICAgICAgICAgICA8Y29uZUdlb21ldHJ5IGFyZ3M9e1swLjE4LCAwLjksIDVdfSAvPlxuICAgICAgICAgIDwvbWVzaD5cbiAgICAgICAgICA8bWVzaCBtYXRlcmlhbD17bWF0ZXJpYWxzLmJvbmV9IHBvc2l0aW9uPXtbMC42OCwgMCwgLTAuMV19IHJvdGF0aW9uPXtbMCwgMCwgLU1hdGguUEkgLyAyXX0+XG4gICAgICAgICAgICA8Y29uZUdlb21ldHJ5IGFyZ3M9e1swLjE0LCAwLjc4LCA1XX0gLz5cbiAgICAgICAgICA8L21lc2g+XG4gICAgICAgICAgPG1lc2ggbWF0ZXJpYWw9e21hdGVyaWFscy5ib25lfSBwb3NpdGlvbj17Wy0wLjY4LCAwLCAtMC4xXX0gcm90YXRpb249e1swLCAwLCBNYXRoLlBJIC8gMl19PlxuICAgICAgICAgICAgPGNvbmVHZW9tZXRyeSBhcmdzPXtbMC4xNCwgMC43OCwgNV19IC8+XG4gICAgICAgICAgPC9tZXNoPlxuICAgICAgICAgIDxtZXNoIG1hdGVyaWFsPXttYXRlcmlhbHMuYm9uZX0gcG9zaXRpb249e1swLCAwLjEsIDAuMTZdfSByb3RhdGlvbj17W01hdGguUEkgLyAyLCAwLCAwXX0+XG4gICAgICAgICAgICA8dG9ydXNHZW9tZXRyeSBhcmdzPXtbMC40MiwgMC4wNTUsIDgsIDI0LCBNYXRoLlBJICogMS42XX0gLz5cbiAgICAgICAgICA8L21lc2g+XG4gICAgICAgIDwvZ3JvdXA+XG4gICAgICApKX1cbiAgICA8L2dyb3VwPlxuICApO1xufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy9BYXl1c2ggV2Fsc2FuZ2lrYXIvT25lRHJpdmUvRGVza3RvcC9TaWxlbnQgU2Vuc2Uvc3JjL2NvbXBvbmVudHMvbGFuZGluZy9Qcm9jZWR1cmFsU3BpbmUuanN4In0=

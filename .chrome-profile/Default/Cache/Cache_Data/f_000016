@@ -1,0 +1,387 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/pages/ClinicalReportPage.jsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=6faa39c4"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=6faa39c4"; const React = __vite__cjsImport3_react.__esModule ? __vite__cjsImport3_react.default : __vite__cjsImport3_react; const useState = __vite__cjsImport3_react["useState"];
+import "/src/pages/PageLayout.css";
+export default function ClinicalReportPage() {
+  _s();
+  const [generating, setGenerating] = useState(false);
+  const [generated, setGenerated] = useState(true);
+  const handleGenerate = () => {
+    setGenerating(true);
+    setGenerated(false);
+    setTimeout(() => {
+      setGenerating(false);
+      setGenerated(true);
+    }, 2e3);
+  };
+  return /* @__PURE__ */ jsxDEV("div", { className: "page-layout", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "page-layout__header", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "page-layout__title-group", children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-lg", style: { color: "var(--primary)" }, children: "description" }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 37,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("h1", { className: "page-layout__title", children: "AI Clinical Reports" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 39,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "page-layout__subtitle", children: "Auto-generated clinical intelligence — BED 04 / Aarav Mehta" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 40,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 38,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 36,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", gap: 8 }, children: [
+        /* @__PURE__ */ jsxDEV("button", { className: "btn btn-ghost", onClick: handleGenerate, disabled: generating, children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: generating ? "hourglass_empty" : "refresh" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 45,
+            columnNumber: 13
+          }, this),
+          generating ? "Generating..." : "Regenerate"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 44,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("button", { className: "btn btn-primary", children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: "picture_as_pdf" }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 49,
+            columnNumber: 13
+          }, this),
+          "Export PDF"
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 48,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 43,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+      lineNumber: 35,
+      columnNumber: 7
+    }, this),
+    generating && /* @__PURE__ */ jsxDEV("div", { style: { padding: "40px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }, children: [
+      /* @__PURE__ */ jsxDEV("div", { style: { width: 48, height: 48, border: "4px solid var(--border-muted)", borderTopColor: "var(--primary)", borderRadius: "50%", animation: "spin 1s linear infinite" } }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 57,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("p", { style: { color: "var(--on-surface-variant)", fontSize: 14 }, children: "AI is analyzing patient data and generating clinical report..." }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 58,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+      lineNumber: 56,
+      columnNumber: 7
+    }, this),
+    generated && !generating && /* @__PURE__ */ jsxDEV("div", { className: "page-layout__content", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 20 }, children: [
+        /* @__PURE__ */ jsxDEV("div", { style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 16, paddingBottom: 16, borderBottom: "1px solid var(--border-muted)" }, children: [
+          { label: "PATIENT", value: "BED 04 / Aarav Mehta" },
+          { label: "PERIOD", value: "Last 24 Hours" },
+          { label: "ALERTS", value: "3 Respiratory Events" },
+          { label: "GENERATED", value: (/* @__PURE__ */ new Date()).toLocaleString() }
+        ].map(
+          (item) => /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV("div", { style: { fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--outline)", fontWeight: 700, marginBottom: 4 }, children: item.label }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 74,
+              columnNumber: 19
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { style: { fontSize: 12, fontWeight: 600, color: "var(--on-surface)" }, children: item.value }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 75,
+              columnNumber: 19
+            }, this)
+          ] }, item.label, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 73,
+            columnNumber: 13
+          }, this)
+        ) }, void 0, false, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 66,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", gap: 16, alignItems: "center" }, children: [
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.3)", borderRadius: 8 }, children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: { color: "#EF4444", fontSize: 20 }, children: "warning" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 83,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV("div", { style: { fontSize: 10, color: "var(--outline)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }, children: "Assessment" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 85,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { style: { fontSize: 14, fontWeight: 700, color: "#EF4444" }, children: "Risk Elevated" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 86,
+                columnNumber: 19
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 84,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 82,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", alignItems: "center", gap: 8, padding: "8px 16px", background: "rgba(78, 222, 163, 0.08)", border: "1px solid rgba(78, 222, 163, 0.2)", borderRadius: 8 }, children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: { color: "#4edea3", fontSize: 20 }, children: "psychology" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 90,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("div", { children: [
+              /* @__PURE__ */ jsxDEV("div", { style: { fontSize: 10, color: "var(--outline)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }, children: "AI Confidence" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 92,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV("div", { style: { fontSize: 14, fontWeight: 700, color: "#4edea3" }, children: "84%" }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 93,
+                columnNumber: 19
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 91,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 89,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 81,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 65,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }, children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 16 }, children: [
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", alignItems: "center", gap: 6, marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid var(--border-muted)" }, children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: { color: "var(--primary)", fontSize: 18 }, children: "search" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 104,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { style: { fontSize: 13, fontWeight: 700, color: "var(--on-surface)" }, children: "Observations" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 105,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 103,
+            columnNumber: 15
+          }, this),
+          [
+            { obs: "Breathing declined from 13 → 8 BPM over 6 hours", severity: "critical", icon: "air" },
+            { obs: "2 Apnea Episodes detected (14:22, 03:15)", severity: "warning", icon: "bedtime" },
+            { obs: "Restlessness above baseline — agitation index 24/100", severity: "warning", icon: "psychology_alt" },
+            { obs: "Mobility score declined 3 points (65 → 62)", severity: "warning", icon: "directions_walk" },
+            { obs: "Heart rate remained stable (72 BPM avg)", severity: "stable", icon: "favorite" },
+            { obs: "Nutrition adherence at 76% — 1 meal skipped", severity: "warning", icon: "restaurant" }
+          ].map(
+            (item, i) => /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", gap: 8, padding: "8px 0", borderBottom: "1px solid rgba(48, 54, 61, 0.5)" }, children: [
+              /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: {
+                fontSize: 14,
+                color: item.severity === "critical" ? "#EF4444" : item.severity === "warning" ? "#F59E0B" : "#4edea3",
+                flexShrink: 0,
+                marginTop: 1
+              }, children: item.icon }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 116,
+                columnNumber: 19
+              }, this),
+              /* @__PURE__ */ jsxDEV("p", { style: { fontSize: 11, color: "var(--on-surface-variant)", lineHeight: 1.5 }, children: item.obs }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 122,
+                columnNumber: 19
+              }, this)
+            ] }, i, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 115,
+              columnNumber: 13
+            }, this)
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 102,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 16 }, children: [
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", alignItems: "center", gap: 6, marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid var(--border-muted)" }, children: [
+            /* @__PURE__ */ jsxDEV("span", { className: "material-icons", style: { color: "#4edea3", fontSize: 18 }, children: "recommend" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 130,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("span", { style: { fontSize: 13, fontWeight: 700, color: "var(--on-surface)" }, children: "AI Recommendation" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 131,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 129,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { padding: 12, background: "rgba(77, 142, 255, 0.06)", borderRadius: 8, border: "1px solid rgba(77, 142, 255, 0.15)", marginBottom: 12 }, children: [
+            /* @__PURE__ */ jsxDEV("p", { style: { fontSize: 13, fontWeight: 600, color: "var(--primary)", marginBottom: 6 }, children: "Clinical Review Required" }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 134,
+              columnNumber: 17
+            }, this),
+            /* @__PURE__ */ jsxDEV("p", { style: { fontSize: 11, color: "var(--on-surface-variant)", lineHeight: 1.7 }, children: "Patient presents elevated respiratory risk with declining breathing rate trend. Immediate physician review recommended. Consider adjusting CPAP settings and initiating oxygen supplementation protocol." }, void 0, false, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 135,
+              columnNumber: 17
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 133,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", flexDirection: "column", gap: 8 }, children: [
+            "Schedule respiratory assessment within 2 hours",
+            "Monitor breathing rate every 15 minutes",
+            "Increase caregiver check-in frequency to 30-min intervals",
+            "Review current medication interactions with pulmonologist",
+            "Enable enhanced fall detection monitoring overnight"
+          ].map(
+            (rec, i) => /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", gap: 8, alignItems: "flex-start" }, children: [
+              /* @__PURE__ */ jsxDEV("span", { style: { width: 20, height: 20, borderRadius: "50%", background: "rgba(77, 142, 255, 0.15)", border: "1px solid rgba(77, 142, 255, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: "var(--primary)", flexShrink: 0 }, children: i + 1 }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 148,
+                columnNumber: 21
+              }, this),
+              /* @__PURE__ */ jsxDEV("span", { style: { fontSize: 11, color: "var(--on-surface-variant)", lineHeight: 1.5 }, children: rec }, void 0, false, {
+                fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+                lineNumber: 149,
+                columnNumber: 21
+              }, this)
+            ] }, i, true, {
+              fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+              lineNumber: 147,
+              columnNumber: 15
+            }, this)
+          ) }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 139,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 128,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 100,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV("div", { className: "glass-card", style: { padding: 14 }, children: /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", gap: 10, justifyContent: "flex-end" }, children: [
+        { icon: "picture_as_pdf", label: "Export PDF", cls: "btn-primary" },
+        { icon: "print", label: "Print", cls: "btn-ghost" },
+        { icon: "share", label: "Share", cls: "btn-ghost" },
+        { icon: "send", label: "Send to EMR", cls: "btn-secondary" }
+      ].map(
+        (a) => /* @__PURE__ */ jsxDEV("button", { className: `btn ${a.cls}`, children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "material-icons icon-sm", children: a.icon }, void 0, false, {
+            fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+            lineNumber: 166,
+            columnNumber: 19
+          }, this),
+          a.label
+        ] }, a.label, true, {
+          fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+          lineNumber: 165,
+          columnNumber: 13
+        }, this)
+      ) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 158,
+        columnNumber: 13
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+        lineNumber: 157,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+      lineNumber: 63,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx",
+    lineNumber: 34,
+    columnNumber: 5
+  }, this);
+}
+_s(ClinicalReportPage, "NAGD8vJmlSecAi3KyU0FUZWM8tE=");
+_c = ClinicalReportPage;
+var _c;
+$RefreshReg$(_c, "ClinicalReportPage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Aayush Walsangikar/OneDrive/Desktop/Silent Sense/src/pages/ClinicalReportPage.jsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUE7QUFBQTtBQUFBO0FBQUEsZUF5QkE7QUFBQSxXQXJERjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBc0RBO0FBQUEsTUFHQSx1QkFBQyxTQUFJLFdBQVUsY0FBYSxPQUFPLEVBQUU1QixTQUFTLEdBQUcsR0FDL0MsaUNBQUMsU0FBSSxPQUFPLEVBQUVGLFNBQVMsUUFBUUMsS0FBSyxJQUFJa0MsZ0JBQWdCLFdBQVcsR0FDaEU7QUFBQSxRQUNDLEVBQUVOLE1BQU0sa0JBQWtCWixPQUFPLGNBQWNtQixLQUFLLGNBQWM7QUFBQSxRQUNsRSxFQUFFUCxNQUFNLFNBQVNaLE9BQU8sU0FBU21CLEtBQUssWUFBWTtBQUFBLFFBQ2xELEVBQUVQLE1BQU0sU0FBU1osT0FBTyxTQUFTbUIsS0FBSyxZQUFZO0FBQUEsUUFDbEQsRUFBRVAsTUFBTSxRQUFRWixPQUFPLGVBQWVtQixLQUFLLGdCQUFnQjtBQUFBLE1BQUMsRUFDNURmO0FBQUFBLFFBQUksQ0FBQWdCLE1BQ0osdUJBQUMsWUFBcUIsV0FBVyxPQUFPQSxFQUFFRCxHQUFHLElBQzNDO0FBQUEsaUNBQUMsVUFBSyxXQUFVLDBCQUEwQkMsWUFBRVIsUUFBNUM7QUFBQTtBQUFBO0FBQUE7QUFBQSxpQkFBaUQ7QUFBQSxVQUNoRFEsRUFBRXBCO0FBQUFBLGFBRlFvQixFQUFFcEIsT0FBZjtBQUFBO0FBQUE7QUFBQTtBQUFBLGVBR0E7QUFBQSxNQUNELEtBWEg7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQVlBLEtBYkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxhQWNBO0FBQUEsU0E1R0Y7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQTZHQTtBQUFBLE9BMUlKO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0E0SUE7QUFFSjtBQUFDekIsR0F6SnVCRCxvQkFBa0I7QUFBQSxLQUFsQkE7QUFBa0IsSUFBQStDO0FBQUEsYUFBQUEsSUFBQSIsIm5hbWVzIjpbIlJlYWN0IiwidXNlU3RhdGUiLCJDbGluaWNhbFJlcG9ydFBhZ2UiLCJfcyIsImdlbmVyYXRpbmciLCJzZXRHZW5lcmF0aW5nIiwiZ2VuZXJhdGVkIiwic2V0R2VuZXJhdGVkIiwiaGFuZGxlR2VuZXJhdGUiLCJzZXRUaW1lb3V0IiwiY29sb3IiLCJkaXNwbGF5IiwiZ2FwIiwicGFkZGluZyIsInRleHRBbGlnbiIsImZsZXhEaXJlY3Rpb24iLCJhbGlnbkl0ZW1zIiwid2lkdGgiLCJoZWlnaHQiLCJib3JkZXIiLCJib3JkZXJUb3BDb2xvciIsImJvcmRlclJhZGl1cyIsImFuaW1hdGlvbiIsImZvbnRTaXplIiwiZ3JpZFRlbXBsYXRlQ29sdW1ucyIsIm1hcmdpbkJvdHRvbSIsInBhZGRpbmdCb3R0b20iLCJib3JkZXJCb3R0b20iLCJsYWJlbCIsInZhbHVlIiwiRGF0ZSIsInRvTG9jYWxlU3RyaW5nIiwibWFwIiwiaXRlbSIsImxldHRlclNwYWNpbmciLCJ0ZXh0VHJhbnNmb3JtIiwiZm9udFdlaWdodCIsImJhY2tncm91bmQiLCJvYnMiLCJzZXZlcml0eSIsImljb24iLCJpIiwiZmxleFNocmluayIsIm1hcmdpblRvcCIsImxpbmVIZWlnaHQiLCJyZWMiLCJqdXN0aWZ5Q29udGVudCIsImNscyIsImEiLCJfYyJdLCJpZ25vcmVMaXN0IjpbXSwic291cmNlcyI6WyJDbGluaWNhbFJlcG9ydFBhZ2UuanN4Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCwgeyB1c2VTdGF0ZSB9IGZyb20gJ3JlYWN0JztcbmltcG9ydCAnLi9QYWdlTGF5b3V0LmNzcyc7XG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIENsaW5pY2FsUmVwb3J0UGFnZSgpIHtcbiAgY29uc3QgW2dlbmVyYXRpbmcsIHNldEdlbmVyYXRpbmddID0gdXNlU3RhdGUoZmFsc2UpO1xuICBjb25zdCBbZ2VuZXJhdGVkLCBzZXRHZW5lcmF0ZWRdID0gdXNlU3RhdGUodHJ1ZSk7XG5cbiAgY29uc3QgaGFuZGxlR2VuZXJhdGUgPSAoKSA9PiB7XG4gICAgc2V0R2VuZXJhdGluZyh0cnVlKTtcbiAgICBzZXRHZW5lcmF0ZWQoZmFsc2UpO1xuICAgIHNldFRpbWVvdXQoKCkgPT4geyBzZXRHZW5lcmF0aW5nKGZhbHNlKTsgc2V0R2VuZXJhdGVkKHRydWUpOyB9LCAyMDAwKTtcbiAgfTtcblxuICByZXR1cm4gKFxuICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRcIj5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX2hlYWRlclwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInBhZ2UtbGF5b3V0X190aXRsZS1ncm91cFwiPlxuICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tbGdcIiBzdHlsZT17eyBjb2xvcjogJ3ZhcigtLXByaW1hcnkpJyB9fT5kZXNjcmlwdGlvbjwvc3Bhbj5cbiAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgPGgxIGNsYXNzTmFtZT1cInBhZ2UtbGF5b3V0X190aXRsZVwiPkFJIENsaW5pY2FsIFJlcG9ydHM8L2gxPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwicGFnZS1sYXlvdXRfX3N1YnRpdGxlXCI+QXV0by1nZW5lcmF0ZWQgY2xpbmljYWwgaW50ZWxsaWdlbmNlIOKAlCBCRUQgMDQgLyBBYXJhdiBNZWh0YTwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICAgIDxkaXYgc3R5bGU9e3sgZGlzcGxheTogJ2ZsZXgnLCBnYXA6IDggfX0+XG4gICAgICAgICAgPGJ1dHRvbiBjbGFzc05hbWU9XCJidG4gYnRuLWdob3N0XCIgb25DbGljaz17aGFuZGxlR2VuZXJhdGV9IGRpc2FibGVkPXtnZW5lcmF0aW5nfT5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cIm1hdGVyaWFsLWljb25zIGljb24tc21cIj57Z2VuZXJhdGluZyA/ICdob3VyZ2xhc3NfZW1wdHknIDogJ3JlZnJlc2gnfTwvc3Bhbj5cbiAgICAgICAgICAgIHtnZW5lcmF0aW5nID8gJ0dlbmVyYXRpbmcuLi4nIDogJ1JlZ2VuZXJhdGUnfVxuICAgICAgICAgIDwvYnV0dG9uPlxuICAgICAgICAgIDxidXR0b24gY2xhc3NOYW1lPVwiYnRuIGJ0bi1wcmltYXJ5XCI+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29ucyBpY29uLXNtXCI+cGljdHVyZV9hc19wZGY8L3NwYW4+XG4gICAgICAgICAgICBFeHBvcnQgUERGXG4gICAgICAgICAgPC9idXR0b24+XG4gICAgICAgIDwvZGl2PlxuICAgICAgPC9kaXY+XG5cbiAgICAgIHtnZW5lcmF0aW5nICYmIChcbiAgICAgICAgPGRpdiBzdHlsZT17eyBwYWRkaW5nOiAnNDBweCAyNHB4JywgdGV4dEFsaWduOiAnY2VudGVyJywgZGlzcGxheTogJ2ZsZXgnLCBmbGV4RGlyZWN0aW9uOiAnY29sdW1uJywgYWxpZ25JdGVtczogJ2NlbnRlcicsIGdhcDogMTYgfX0+XG4gICAgICAgICAgPGRpdiBzdHlsZT17eyB3aWR0aDogNDgsIGhlaWdodDogNDgsIGJvcmRlcjogJzRweCBzb2xpZCB2YXIoLS1ib3JkZXItbXV0ZWQpJywgYm9yZGVyVG9wQ29sb3I6ICd2YXIoLS1wcmltYXJ5KScsIGJvcmRlclJhZGl1czogJzUwJScsIGFuaW1hdGlvbjogJ3NwaW4gMXMgbGluZWFyIGluZmluaXRlJyB9fSAvPlxuICAgICAgICAgIDxwIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0tb24tc3VyZmFjZS12YXJpYW50KScsIGZvbnRTaXplOiAxNCB9fT5BSSBpcyBhbmFseXppbmcgcGF0aWVudCBkYXRhIGFuZCBnZW5lcmF0aW5nIGNsaW5pY2FsIHJlcG9ydC4uLjwvcD5cbiAgICAgICAgPC9kaXY+XG4gICAgICApfVxuXG4gICAgICB7Z2VuZXJhdGVkICYmICFnZW5lcmF0aW5nICYmIChcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJwYWdlLWxheW91dF9fY29udGVudFwiPlxuICAgICAgICAgIHsvKiBSZXBvcnQgSGVhZGVyICovfVxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZFwiIHN0eWxlPXt7IHBhZGRpbmc6IDIwIH19PlxuICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBkaXNwbGF5OiAnZ3JpZCcsIGdyaWRUZW1wbGF0ZUNvbHVtbnM6ICdyZXBlYXQoNCwgMWZyKScsIGdhcDogMTYsIG1hcmdpbkJvdHRvbTogMTYsIHBhZGRpbmdCb3R0b206IDE2LCBib3JkZXJCb3R0b206ICcxcHggc29saWQgdmFyKC0tYm9yZGVyLW11dGVkKScgfX0+XG4gICAgICAgICAgICAgIHtbXG4gICAgICAgICAgICAgICAgeyBsYWJlbDogJ1BBVElFTlQnLCB2YWx1ZTogJ0JFRCAwNCAvIEFhcmF2IE1laHRhJyB9LFxuICAgICAgICAgICAgICAgIHsgbGFiZWw6ICdQRVJJT0QnLCB2YWx1ZTogJ0xhc3QgMjQgSG91cnMnIH0sXG4gICAgICAgICAgICAgICAgeyBsYWJlbDogJ0FMRVJUUycsIHZhbHVlOiAnMyBSZXNwaXJhdG9yeSBFdmVudHMnIH0sXG4gICAgICAgICAgICAgICAgeyBsYWJlbDogJ0dFTkVSQVRFRCcsIHZhbHVlOiBuZXcgRGF0ZSgpLnRvTG9jYWxlU3RyaW5nKCkgfSxcbiAgICAgICAgICAgICAgXS5tYXAoaXRlbSA9PiAoXG4gICAgICAgICAgICAgICAgPGRpdiBrZXk9e2l0ZW0ubGFiZWx9PlxuICAgICAgICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBmb250U2l6ZTogOSwgbGV0dGVyU3BhY2luZzogJzAuMTJlbScsIHRleHRUcmFuc2Zvcm06ICd1cHBlcmNhc2UnLCBjb2xvcjogJ3ZhcigtLW91dGxpbmUpJywgZm9udFdlaWdodDogNzAwLCBtYXJnaW5Cb3R0b206IDQgfX0+e2l0ZW0ubGFiZWx9PC9kaXY+XG4gICAgICAgICAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGZvbnRTaXplOiAxMiwgZm9udFdlaWdodDogNjAwLCBjb2xvcjogJ3ZhcigtLW9uLXN1cmZhY2UpJyB9fT57aXRlbS52YWx1ZX08L2Rpdj5cbiAgICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgey8qIENvbmZpZGVuY2UgKyBSaXNrICovfVxuICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGdhcDogMTYsIGFsaWduSXRlbXM6ICdjZW50ZXInIH19PlxuICAgICAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2NlbnRlcicsIGdhcDogOCwgcGFkZGluZzogJzhweCAxNnB4JywgYmFja2dyb3VuZDogJ3JnYmEoMjM5LCA2OCwgNjgsIDAuMSknLCBib3JkZXI6ICcxcHggc29saWQgcmdiYSgyMzksIDY4LCA2OCwgMC4zKScsIGJvcmRlclJhZGl1czogOCB9fT5cbiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29uc1wiIHN0eWxlPXt7IGNvbG9yOiAnI0VGNDQ0NCcsIGZvbnRTaXplOiAyMCB9fT53YXJuaW5nPC9zcGFuPlxuICAgICAgICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGZvbnRTaXplOiAxMCwgY29sb3I6ICd2YXIoLS1vdXRsaW5lKScsIGZvbnRXZWlnaHQ6IDcwMCwgdGV4dFRyYW5zZm9ybTogJ3VwcGVyY2FzZScsIGxldHRlclNwYWNpbmc6ICcwLjA2ZW0nIH19PkFzc2Vzc21lbnQ8L2Rpdj5cbiAgICAgICAgICAgICAgICAgIDxkaXYgc3R5bGU9e3sgZm9udFNpemU6IDE0LCBmb250V2VpZ2h0OiA3MDAsIGNvbG9yOiAnI0VGNDQ0NCcgfX0+UmlzayBFbGV2YXRlZDwvZGl2PlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBnYXA6IDgsIHBhZGRpbmc6ICc4cHggMTZweCcsIGJhY2tncm91bmQ6ICdyZ2JhKDc4LCAyMjIsIDE2MywgMC4wOCknLCBib3JkZXI6ICcxcHggc29saWQgcmdiYSg3OCwgMjIyLCAxNjMsIDAuMiknLCBib3JkZXJSYWRpdXM6IDggfX0+XG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnNcIiBzdHlsZT17eyBjb2xvcjogJyM0ZWRlYTMnLCBmb250U2l6ZTogMjAgfX0+cHN5Y2hvbG9neTwvc3Bhbj5cbiAgICAgICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBmb250U2l6ZTogMTAsIGNvbG9yOiAndmFyKC0tb3V0bGluZSknLCBmb250V2VpZ2h0OiA3MDAsIHRleHRUcmFuc2Zvcm06ICd1cHBlcmNhc2UnLCBsZXR0ZXJTcGFjaW5nOiAnMC4wNmVtJyB9fT5BSSBDb25maWRlbmNlPC9kaXY+XG4gICAgICAgICAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGZvbnRTaXplOiAxNCwgZm9udFdlaWdodDogNzAwLCBjb2xvcjogJyM0ZWRlYTMnIH19Pjg0JTwvZGl2PlxuICAgICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgey8qIFJlcG9ydCBTZWN0aW9ucyAqL31cbiAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGRpc3BsYXk6ICdncmlkJywgZ3JpZFRlbXBsYXRlQ29sdW1uczogJzFmciAxZnInLCBnYXA6IDE2IH19PlxuICAgICAgICAgICAgey8qIE9ic2VydmF0aW9ucyAqL31cbiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ2xhc3MtY2FyZFwiIHN0eWxlPXt7IHBhZGRpbmc6IDE2IH19PlxuICAgICAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGRpc3BsYXk6ICdmbGV4JywgYWxpZ25JdGVtczogJ2NlbnRlcicsIGdhcDogNiwgbWFyZ2luQm90dG9tOiAxMiwgcGFkZGluZ0JvdHRvbTogMTAsIGJvcmRlckJvdHRvbTogJzFweCBzb2xpZCB2YXIoLS1ib3JkZXItbXV0ZWQpJyB9fT5cbiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJtYXRlcmlhbC1pY29uc1wiIHN0eWxlPXt7IGNvbG9yOiAndmFyKC0tcHJpbWFyeSknLCBmb250U2l6ZTogMTggfX0+c2VhcmNoPC9zcGFuPlxuICAgICAgICAgICAgICAgIDxzcGFuIHN0eWxlPXt7IGZvbnRTaXplOiAxMywgZm9udFdlaWdodDogNzAwLCBjb2xvcjogJ3ZhcigtLW9uLXN1cmZhY2UpJyB9fT5PYnNlcnZhdGlvbnM8L3NwYW4+XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgICB7W1xuICAgICAgICAgICAgICAgIHsgb2JzOiAnQnJlYXRoaW5nIGRlY2xpbmVkIGZyb20gMTMg4oaSIDggQlBNIG92ZXIgNiBob3VycycsIHNldmVyaXR5OiAnY3JpdGljYWwnLCBpY29uOiAnYWlyJyB9LFxuICAgICAgICAgICAgICAgIHsgb2JzOiAnMiBBcG5lYSBFcGlzb2RlcyBkZXRlY3RlZCAoMTQ6MjIsIDAzOjE1KScsIHNldmVyaXR5OiAnd2FybmluZycsIGljb246ICdiZWR0aW1lJyB9LFxuICAgICAgICAgICAgICAgIHsgb2JzOiAnUmVzdGxlc3NuZXNzIGFib3ZlIGJhc2VsaW5lIOKAlCBhZ2l0YXRpb24gaW5kZXggMjQvMTAwJywgc2V2ZXJpdHk6ICd3YXJuaW5nJywgaWNvbjogJ3BzeWNob2xvZ3lfYWx0JyB9LFxuICAgICAgICAgICAgICAgIHsgb2JzOiAnTW9iaWxpdHkgc2NvcmUgZGVjbGluZWQgMyBwb2ludHMgKDY1IOKGkiA2MiknLCBzZXZlcml0eTogJ3dhcm5pbmcnLCBpY29uOiAnZGlyZWN0aW9uc193YWxrJyB9LFxuICAgICAgICAgICAgICAgIHsgb2JzOiAnSGVhcnQgcmF0ZSByZW1haW5lZCBzdGFibGUgKDcyIEJQTSBhdmcpJywgc2V2ZXJpdHk6ICdzdGFibGUnLCBpY29uOiAnZmF2b3JpdGUnIH0sXG4gICAgICAgICAgICAgICAgeyBvYnM6ICdOdXRyaXRpb24gYWRoZXJlbmNlIGF0IDc2JSDigJQgMSBtZWFsIHNraXBwZWQnLCBzZXZlcml0eTogJ3dhcm5pbmcnLCBpY29uOiAncmVzdGF1cmFudCcgfSxcbiAgICAgICAgICAgICAgXS5tYXAoKGl0ZW0sIGkpID0+IChcbiAgICAgICAgICAgICAgICA8ZGl2IGtleT17aX0gc3R5bGU9e3sgZGlzcGxheTogJ2ZsZXgnLCBnYXA6IDgsIHBhZGRpbmc6ICc4cHggMCcsIGJvcmRlckJvdHRvbTogJzFweCBzb2xpZCByZ2JhKDQ4LCA1NCwgNjEsIDAuNSknIH19PlxuICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnNcIiBzdHlsZT17e1xuICAgICAgICAgICAgICAgICAgICBmb250U2l6ZTogMTQsXG4gICAgICAgICAgICAgICAgICAgIGNvbG9yOiBpdGVtLnNldmVyaXR5ID09PSAnY3JpdGljYWwnID8gJyNFRjQ0NDQnIDogaXRlbS5zZXZlcml0eSA9PT0gJ3dhcm5pbmcnID8gJyNGNTlFMEInIDogJyM0ZWRlYTMnLFxuICAgICAgICAgICAgICAgICAgICBmbGV4U2hyaW5rOiAwLFxuICAgICAgICAgICAgICAgICAgICBtYXJnaW5Ub3A6IDEsXG4gICAgICAgICAgICAgICAgICB9fT57aXRlbS5pY29ufTwvc3Bhbj5cbiAgICAgICAgICAgICAgICAgIDxwIHN0eWxlPXt7IGZvbnRTaXplOiAxMSwgY29sb3I6ICd2YXIoLS1vbi1zdXJmYWNlLXZhcmlhbnQpJywgbGluZUhlaWdodDogMS41IH19PntpdGVtLm9ic308L3A+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICkpfVxuICAgICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICAgIHsvKiBSZWNvbW1lbmRhdGlvbnMgKi99XG4gICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cImdsYXNzLWNhcmRcIiBzdHlsZT17eyBwYWRkaW5nOiAxNiB9fT5cbiAgICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBnYXA6IDYsIG1hcmdpbkJvdHRvbTogMTIsIHBhZGRpbmdCb3R0b206IDEwLCBib3JkZXJCb3R0b206ICcxcHggc29saWQgdmFyKC0tYm9yZGVyLW11dGVkKScgfX0+XG4gICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnNcIiBzdHlsZT17eyBjb2xvcjogJyM0ZWRlYTMnLCBmb250U2l6ZTogMTggfX0+cmVjb21tZW5kPC9zcGFuPlxuICAgICAgICAgICAgICAgIDxzcGFuIHN0eWxlPXt7IGZvbnRTaXplOiAxMywgZm9udFdlaWdodDogNzAwLCBjb2xvcjogJ3ZhcigtLW9uLXN1cmZhY2UpJyB9fT5BSSBSZWNvbW1lbmRhdGlvbjwvc3Bhbj5cbiAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgIDxkaXYgc3R5bGU9e3sgcGFkZGluZzogMTIsIGJhY2tncm91bmQ6ICdyZ2JhKDc3LCAxNDIsIDI1NSwgMC4wNiknLCBib3JkZXJSYWRpdXM6IDgsIGJvcmRlcjogJzFweCBzb2xpZCByZ2JhKDc3LCAxNDIsIDI1NSwgMC4xNSknLCBtYXJnaW5Cb3R0b206IDEyIH19PlxuICAgICAgICAgICAgICAgIDxwIHN0eWxlPXt7IGZvbnRTaXplOiAxMywgZm9udFdlaWdodDogNjAwLCBjb2xvcjogJ3ZhcigtLXByaW1hcnkpJywgbWFyZ2luQm90dG9tOiA2IH19PkNsaW5pY2FsIFJldmlldyBSZXF1aXJlZDwvcD5cbiAgICAgICAgICAgICAgICA8cCBzdHlsZT17eyBmb250U2l6ZTogMTEsIGNvbG9yOiAndmFyKC0tb24tc3VyZmFjZS12YXJpYW50KScsIGxpbmVIZWlnaHQ6IDEuNyB9fT5cbiAgICAgICAgICAgICAgICAgIFBhdGllbnQgcHJlc2VudHMgZWxldmF0ZWQgcmVzcGlyYXRvcnkgcmlzayB3aXRoIGRlY2xpbmluZyBicmVhdGhpbmcgcmF0ZSB0cmVuZC4gSW1tZWRpYXRlIHBoeXNpY2lhbiByZXZpZXcgcmVjb21tZW5kZWQuIENvbnNpZGVyIGFkanVzdGluZyBDUEFQIHNldHRpbmdzIGFuZCBpbml0aWF0aW5nIG94eWdlbiBzdXBwbGVtZW50YXRpb24gcHJvdG9jb2wuXG4gICAgICAgICAgICAgICAgPC9wPlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPGRpdiBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGZsZXhEaXJlY3Rpb246ICdjb2x1bW4nLCBnYXA6IDggfX0+XG4gICAgICAgICAgICAgICAge1tcbiAgICAgICAgICAgICAgICAgICdTY2hlZHVsZSByZXNwaXJhdG9yeSBhc3Nlc3NtZW50IHdpdGhpbiAyIGhvdXJzJyxcbiAgICAgICAgICAgICAgICAgICdNb25pdG9yIGJyZWF0aGluZyByYXRlIGV2ZXJ5IDE1IG1pbnV0ZXMnLFxuICAgICAgICAgICAgICAgICAgJ0luY3JlYXNlIGNhcmVnaXZlciBjaGVjay1pbiBmcmVxdWVuY3kgdG8gMzAtbWluIGludGVydmFscycsXG4gICAgICAgICAgICAgICAgICAnUmV2aWV3IGN1cnJlbnQgbWVkaWNhdGlvbiBpbnRlcmFjdGlvbnMgd2l0aCBwdWxtb25vbG9naXN0JyxcbiAgICAgICAgICAgICAgICAgICdFbmFibGUgZW5oYW5jZWQgZmFsbCBkZXRlY3Rpb24gbW9uaXRvcmluZyBvdmVybmlnaHQnLFxuICAgICAgICAgICAgICAgIF0ubWFwKChyZWMsIGkpID0+IChcbiAgICAgICAgICAgICAgICAgIDxkaXYga2V5PXtpfSBzdHlsZT17eyBkaXNwbGF5OiAnZmxleCcsIGdhcDogOCwgYWxpZ25JdGVtczogJ2ZsZXgtc3RhcnQnIH19PlxuICAgICAgICAgICAgICAgICAgICA8c3BhbiBzdHlsZT17eyB3aWR0aDogMjAsIGhlaWdodDogMjAsIGJvcmRlclJhZGl1czogJzUwJScsIGJhY2tncm91bmQ6ICdyZ2JhKDc3LCAxNDIsIDI1NSwgMC4xNSknLCBib3JkZXI6ICcxcHggc29saWQgcmdiYSg3NywgMTQyLCAyNTUsIDAuMyknLCBkaXNwbGF5OiAnZmxleCcsIGFsaWduSXRlbXM6ICdjZW50ZXInLCBqdXN0aWZ5Q29udGVudDogJ2NlbnRlcicsIGZvbnRTaXplOiA5LCBmb250V2VpZ2h0OiA3MDAsIGNvbG9yOiAndmFyKC0tcHJpbWFyeSknLCBmbGV4U2hyaW5rOiAwIH19PntpICsgMX08L3NwYW4+XG4gICAgICAgICAgICAgICAgICAgIDxzcGFuIHN0eWxlPXt7IGZvbnRTaXplOiAxMSwgY29sb3I6ICd2YXIoLS1vbi1zdXJmYWNlLXZhcmlhbnQpJywgbGluZUhlaWdodDogMS41IH19PntyZWN9PC9zcGFuPlxuICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgKSl9XG4gICAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICB7LyogQWN0aW9uIEJ1dHRvbnMgKi99XG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJnbGFzcy1jYXJkXCIgc3R5bGU9e3sgcGFkZGluZzogMTQgfX0+XG4gICAgICAgICAgICA8ZGl2IHN0eWxlPXt7IGRpc3BsYXk6ICdmbGV4JywgZ2FwOiAxMCwganVzdGlmeUNvbnRlbnQ6ICdmbGV4LWVuZCcgfX0+XG4gICAgICAgICAgICAgIHtbXG4gICAgICAgICAgICAgICAgeyBpY29uOiAncGljdHVyZV9hc19wZGYnLCBsYWJlbDogJ0V4cG9ydCBQREYnLCBjbHM6ICdidG4tcHJpbWFyeScgfSxcbiAgICAgICAgICAgICAgICB7IGljb246ICdwcmludCcsIGxhYmVsOiAnUHJpbnQnLCBjbHM6ICdidG4tZ2hvc3QnIH0sXG4gICAgICAgICAgICAgICAgeyBpY29uOiAnc2hhcmUnLCBsYWJlbDogJ1NoYXJlJywgY2xzOiAnYnRuLWdob3N0JyB9LFxuICAgICAgICAgICAgICAgIHsgaWNvbjogJ3NlbmQnLCBsYWJlbDogJ1NlbmQgdG8gRU1SJywgY2xzOiAnYnRuLXNlY29uZGFyeScgfSxcbiAgICAgICAgICAgICAgXS5tYXAoYSA9PiAoXG4gICAgICAgICAgICAgICAgPGJ1dHRvbiBrZXk9e2EubGFiZWx9IGNsYXNzTmFtZT17YGJ0biAke2EuY2xzfWB9PlxuICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwibWF0ZXJpYWwtaWNvbnMgaWNvbi1zbVwiPnthLmljb259PC9zcGFuPlxuICAgICAgICAgICAgICAgICAge2EubGFiZWx9XG4gICAgICAgICAgICAgICAgPC9idXR0b24+XG4gICAgICAgICAgICAgICkpfVxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvZGl2PlxuICAgICAgKX1cbiAgICA8L2Rpdj5cbiAgKTtcbn1cbiJdLCJmaWxlIjoiQzovVXNlcnMvQWF5dXNoIFdhbHNhbmdpa2FyL09uZURyaXZlL0Rlc2t0b3AvU2lsZW50IFNlbnNlL3NyYy9wYWdlcy9DbGluaWNhbFJlcG9ydFBhZ2UuanN4In0=

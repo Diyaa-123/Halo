@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 
 import TopNav from './components/layout/TopNav';
 import IconSidebar from './components/layout/IconSidebar';
@@ -27,12 +27,12 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import './styles/global.css';
 import './App.css';
 
-function AppShell({ activeSidebar, setActiveSidebar }) {
+function DashboardLayout({ activeSidebar, setActiveSidebar }) {
   const location = useLocation();
 
   useEffect(() => {
     const sidebarByPath = {
-      '/': 'family',
+      '/dashboard': 'family',
       '/clinical': 'twin',
       '/live': 'sensors',
       '/report': 'reports',
@@ -48,7 +48,7 @@ function AppShell({ activeSidebar, setActiveSidebar }) {
         <IconSidebar activeId={activeSidebar} onSelect={setActiveSidebar} />
         <main className="app__main">
           <Routes>
-            <Route path="/" element={<HomeDashboard />} />
+            <Route path="/dashboard" element={<HomeDashboard />} />
             <Route path="/sleep" element={<SleepAnalyticsPage />} />
             <Route path="/mobility" element={<MobilityPage />} />
             <Route path="/biometrics" element={<BiometricProfilePage />} />
@@ -67,12 +67,18 @@ function AppShell({ activeSidebar, setActiveSidebar }) {
             <Route path="/registry" element={<PatientRegistryPage />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/demo" element={<DemoModePage />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
       </div>
     </>
   );
 }
+
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import MissionPage from './pages/MissionPage';
+import TechnologyPage from './pages/TechnologyPage';
 
 export default function App() {
   const [activeSidebar, setActiveSidebar] = useState('family');
@@ -81,7 +87,13 @@ export default function App() {
     <BrowserRouter>
       <div className="ambient-blob-2" />
       <div className="app">
-        <AppShell activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/mission" element={<MissionPage />} />
+          <Route path="/technology" element={<TechnologyPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/*" element={<DashboardLayout activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} />} />
+        </Routes>
       </div>
     </BrowserRouter>
   );
