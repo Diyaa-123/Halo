@@ -7,21 +7,21 @@ export default function HeroSection() {
       <div className="hero-content-wrapper">
         <div className="hero-badge">Clinical Grade Monitoring</div>
         <h1 className="hero-headline">
-          Ambient Health Monitoring.<br/>
-          <span className="hero-highlight">Attributed.</span>
+          Ambient Health Intelligence.<br/>
+          <span className="hero-highlight">Perfected.</span>
         </h1>
         
         <div className="hero-text-grid">
           <div className="hero-text-column">
-            <h3 className="column-title">The Problem</h3>
+            <h3 className="column-title">The Attribution Gap</h3>
             <p className="column-body">
-              Existing passive WiFi products operate at the household level. They detect that something changed in the home, but cannot attribute that change to a specific person. In any home with more than one occupant, this makes individual health-trend tracking unreliable. Wearables are forgotten. Cameras are rejected.
+              Passive sensors fail in multi-occupant environments, blending individual health trends into chaotic noise. Wearables are routinely discarded. Cameras violate personal privacy. The result is a broken cycle of unreliable data and compromised ambient care.
             </p>
           </div>
           <div className="hero-text-column">
-            <h3 className="column-title">Our Framework</h3>
+            <h3 className="column-title">The SilentSense Engine</h3>
             <p className="column-body">
-              SilentSense solves the multi-person attribution gap by combining four independent evidence sources: spatial containment, temporal scheduling, biometric signature matching, and behavioural context priors. This allows us to selectively monitor a target individual without requiring signal separation or invasive hardware.
+              We deploy a proprietary four-pillar attribution matrix—fusing spatial topography, temporal heuristics, biometric signatures, and contextual priors. This intelligent engine isolates target individuals with clinical precision, delivering zero-friction monitoring without cameras or wearables.
             </p>
           </div>
         </div>

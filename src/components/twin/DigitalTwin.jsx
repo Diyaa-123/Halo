@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import HealthScoreWidget from './HealthScoreWidget';
-import BodyRegionPin from './BodyRegionPin';
 import { useToast } from '../layout/ToastContext';
 import './DigitalTwin.css';
+import { Canvas } from '@react-three/fiber';
+import HumanTwinModel from './HumanTwinModel';
 
 const bodyRegions = [
   { id: 'brain', label: 'Brain', x: '50%', y: '5%', status: 'stable', alerts: 0, details: { metric: 'Cognitive Score', value: '88/100', risk: 'Low', recommendation: 'Continue routine monitoring.' } },
@@ -25,27 +26,15 @@ const stateConfigs = {
 export default function DigitalTwin({ patientState = 'stable', setPatientState, healthScore = 82 }) {
   const toast = useToast();
   const [activePin, setActivePin] = useState(null);
-  const [rotation, setRotation] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const rafRef = useRef(null);
   const stateConf = stateConfigs[patientState] || stateConfigs.stable;
 
-  // Idle slow rotation
-  useEffect(() => {
-    let angle = 0;
-    const animate = () => {
-      angle += 0.02; // ~3 deg/sec at 60fps
-      setRotation(angle);
-      rafRef.current = requestAnimationFrame(animate);
-    };
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, []);
 
   const handlePinClick = (regionId) => {
     setActivePin(activePin === regionId ? null : regionId);
   };
+
 
   return (
     <div className={`digital-twin ${stateConf.animClass} ${isFullscreen ? 'digital-twin--fullscreen' : ''}`}>
@@ -92,61 +81,37 @@ export default function DigitalTwin({ patientState = 'stable', setPatientState, 
         {/* Holographic Platform */}
         <div className="digital-twin__platform" />
 
-        {/* Sleek Minimalist Human Figure */}
+        {/* 3D Human Twin Canvas with embedded anatomical pins */}
         <div
-          className={`digital-twin__figure ${stateConf.animClass}`}
           style={{
-            transform: `scale(${zoom}) rotateY(${rotation}rad)`,
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             '--body-color': stateConf.bodyColor,
             '--glow-color': stateConf.glowColor,
           }}
         >
-          {/* Detailed Hologram Silhouette SVG */}
-          <svg className="digital-twin__body-svg" viewBox="0 0 200 450" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="holoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={stateConf.bodyColor} stopOpacity="0.8" />
-                <stop offset="50%" stopColor={stateConf.bodyColor} stopOpacity="0.3" />
-                <stop offset="100%" stopColor={stateConf.bodyColor} stopOpacity="0.8" />
-              </linearGradient>
-              <filter id="holoGlow">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            {/* Minimalist Tech Outline */}
-            <path 
-              d="M100 20 C112 20 120 30 120 45 C120 60 110 70 100 70 C90 70 80 60 80 45 C80 30 88 20 100 20 Z
-                 M100 75 C120 75 140 80 150 90 L165 180 L145 185 L135 120 L135 230 L115 420 L95 420 L95 240 L85 420 L65 420 L85 230 L85 120 L75 185 L55 180 L70 90 C80 80 100 75 100 75 Z"
-              fill="none" 
-              stroke="url(#holoGrad)" 
-              strokeWidth="2.5" 
-              filter="url(#holoGlow)"
-              strokeLinejoin="round"
-            />
-            {/* Mesh Lines Overlay for 3D feel */}
-            <path d="M85 120 Q100 135 135 120 M85 150 Q100 165 135 150 M85 180 Q100 195 135 180 M90 210 Q100 220 130 210" fill="none" stroke={stateConf.bodyColor} strokeOpacity="0.2" strokeWidth="1" />
-            <path d="M110 75 L110 220 M90 75 L90 220" fill="none" stroke={stateConf.bodyColor} strokeOpacity="0.2" strokeWidth="1" />
-            
-            {/* Core Energy Line */}
-            <line x1="100" y1="80" x2="100" y2="230" stroke={stateConf.bodyColor} strokeWidth="4" opacity="0.4" filter="url(#holoGlow)" />
-
-            {/* Respiratory distress: red chest glow */}
-            {patientState === 'respiratory_distress' && (
-              <ellipse cx="100" cy="120" rx="35" ry="25" fill="rgba(239,68,68,0.3)" className="twin__chest-pulse" filter="url(#holoGlow)" />
-            )}
-          </svg>
+          <div style={{ width: '340px', height: '600px', transform: `scale(${zoom})` }}>
+            <Canvas camera={{ position: [0, 0, 8], fov: 50 }} style={{ cursor: 'grab' }}>
+              <ambientLight intensity={1.8} />
+              <directionalLight position={[5, 10, 5]} intensity={1.2} />
+              <directionalLight position={[-5, -5, 5]} intensity={0.4} />
+              <HumanTwinModel
+                color={stateConf.bodyColor}
+                wireframe={true}
+                scaleFactor={0.75}
+                animate={false}
+                regions={bodyRegions}
+                activePin={activePin}
+                onPinClick={handlePinClick}
+                enableControls={true}
+              />
+            </Canvas>
+          </div>
         </div>
 
-        {/* Body Region Pins */}
-        {bodyRegions.map(region => (
-          <BodyRegionPin
-            key={region.id}
-            region={region}
-            isActive={activePin === region.id}
-            onClick={() => handlePinClick(region.id)}
-          />
-        ))}
       </div>
 
       {/* Controls */}

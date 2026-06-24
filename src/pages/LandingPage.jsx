@@ -14,6 +14,17 @@ export default function LandingPage() {
   const [loaded, setLoaded] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState(null);
   const lenis = useLenis();
+  const bgRef = React.useRef(null);
+
+  // Fade out the static background image based on scroll to reveal the 3D scene
+  useLenis(({ scroll }) => {
+    if (bgRef.current) {
+      // Fade from 1 at scroll=0 to 0 at scroll=100vh
+      const vh = window.innerHeight;
+      const opacity = Math.max(0, 1 - (scroll / vh));
+      bgRef.current.style.opacity = opacity;
+    }
+  });
 
   // Prevent background scrolling and handle scroll-to-return when overlay is active
   useEffect(() => {
@@ -82,6 +93,7 @@ export default function LandingPage() {
       
       <ReactLenis root options={{ lerp: 0.05, smoothWheel: true }}>
         <div className="landing-page">
+          <div className="landing-image-bg" ref={bgRef} />
           <CustomCursor />
           <LandingNav />
 

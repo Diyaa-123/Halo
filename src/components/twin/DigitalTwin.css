@@ -243,3 +243,20 @@
 
 .telemetry-value--green { color: var(--secondary); }
 .telemetry-value--blue { color: var(--primary); }
+
+/* ── 3D Pin Animations (injected into the drei <Html> context) ── */
+@keyframes pin-pulse {
+  0%   { box-shadow: 0 0 0 0px currentColor; }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0px transparent; }
+}
+
+@keyframes pin-ripple {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

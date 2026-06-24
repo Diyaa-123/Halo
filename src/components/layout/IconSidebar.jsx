@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './IconSidebar.css';
 
 const sidebarItems = [
-  { id: 'family', icon: 'diversity_1', title: 'Family Members', path: '/' },
+  { id: 'family', icon: 'diversity_1', title: 'Family Members', path: '/dashboard' },
   { id: 'twin', icon: 'accessibility_new', title: 'Ambient Twin', path: '/clinical' },
   { id: 'sensors', icon: 'router', title: 'Network Status', path: '/live' },
   { id: 'reports', icon: 'assignment', title: 'Weekly Summaries', path: '/report' },

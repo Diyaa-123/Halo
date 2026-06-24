@@ -17,7 +17,7 @@
   inset: -50%;
   width: 200%;
   height: 200%;
-  z-index: -1;
+  z-index: -2;
   background: 
     radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.08) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
@@ -26,6 +26,21 @@
     linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 50%, #f8fafc 100%);
   pointer-events: none;
   animation: dynamicMeshBg 25s ease-in-out infinite;
+}
+
+.landing-image-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-image: url('/assets/BG/BG image.png?v=2');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  transform: translateZ(0); /* Force GPU compositing */
+  will-change: opacity;
 }
 
 @keyframes dynamicMeshBg {
@@ -593,16 +608,16 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 0 5%;
+  padding: 0 10%;
   z-index: 10;
   pointer-events: auto;
 }
 
 .hero-content-wrapper {
   max-width: 1000px;
-  text-align: center;
+  text-align: left;
 }
 
 .hero-badge {
@@ -621,7 +636,7 @@
 .hero-headline {
   font-family: 'Share Tech Mono', monospace;
   font-size: clamp(36px, 6vw, 64px);
-  color: var(--on-surface);
+  color: #ffffff;
   line-height: 1.1;
   margin: 0 0 48px;
   text-transform: uppercase;
@@ -638,6 +653,22 @@
   text-align: left;
 }
 
+.hero-text-column {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  padding: 32px 36px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.hero-text-column:hover {
+  background: rgba(15, 23, 42, 0.55);
+  transform: translateY(-4px);
+}
+
 .column-title {
   font-size: 14px;
   color: var(--primary);
@@ -649,7 +680,7 @@
 .column-body {
   font-size: 16px;
   line-height: 1.6;
-  color: var(--on-surface-variant);
+  color: #e2e8f0;
 }
 
 .scroll-indicator {
@@ -667,7 +698,7 @@
 .mouse {
   width: 24px;
   height: 36px;
-  border: 2px solid var(--on-surface-variant);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -677,9 +708,13 @@
 .wheel {
   width: 4px;
   height: 8px;
-  background: var(--on-surface-variant);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 2px;
   animation: scrollWheel 1.5s ease-in-out infinite;
+}
+
+.scroll-text {
+  color: #e2e8f0;
 }
 
 @keyframes scrollWheel {
