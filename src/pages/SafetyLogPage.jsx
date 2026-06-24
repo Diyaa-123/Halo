@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './PageLayout.css';
+import { useToast } from '../components/layout/ToastContext';
 
 export default function SafetyLogPage() {
   const events = [
@@ -10,6 +11,7 @@ export default function SafetyLogPage() {
   ];
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   return (
     <div className="page-layout">
@@ -21,7 +23,7 @@ export default function SafetyLogPage() {
             <p className="page-layout__subtitle">Identity-independent alerts for the entire household</p>
           </div>
         </div>
-        <button className="btn btn-outline">Export Log</button>
+        <button className="btn btn-outline" onClick={() => toast('Exporting Safety Log to CSV...', 'success')}>Export Log</button>
       </div>
 
       <div className="page-layout__content">
@@ -65,7 +67,7 @@ export default function SafetyLogPage() {
                 <div className="badge" style={{ background: 'var(--surface)', border: '1px solid var(--border-muted)' }}>
                   {ev.status}
                 </div>
-                <button className="btn-icon" style={{ marginLeft: 16 }}><span className="material-icons icon-sm">more_vert</span></button>
+                <button className="btn-icon" style={{ marginLeft: 16 }} onClick={() => toast(`Opening details for ${ev.type}`, 'info')}><span className="material-icons icon-sm">more_vert</span></button>
               </div>
             ))}
           </div>

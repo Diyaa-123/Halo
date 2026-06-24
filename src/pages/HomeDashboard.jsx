@@ -25,15 +25,15 @@ export default function HomeDashboard() {
       </div>
 
       <div className="home-dashboard" style={{ flex: 1, minHeight: 0 }}>
-        <div className="home-col">
+        <div className="home-col animate-slide-up" style={{ animationDelay: '0s' }}>
           <ProfileColumn isNightMode={isNightMode} />
         </div>
         
-        <div className="home-col" style={{ paddingBottom: 0 }}>
+        <div className="home-col animate-slide-up" style={{ paddingBottom: 0, animationDelay: '0.1s' }}>
           <TwinColumn isNightMode={isNightMode} />
         </div>
         
-        <div className="home-col">
+        <div className="home-col animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <InsightsColumn isNightMode={isNightMode} />
         </div>
       </div>

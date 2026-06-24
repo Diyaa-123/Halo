@@ -31,6 +31,7 @@ function DashboardLayout({ activeSidebar, setActiveSidebar }) {
   const location = useLocation();
 
   useEffect(() => {
+    document.body.style.cursor = 'auto'; // Enforce default cursor
     const sidebarByPath = {
       '/dashboard': 'family',
       '/clinical': 'twin',
@@ -80,21 +81,25 @@ import LoginPage from './pages/LoginPage';
 import MissionPage from './pages/MissionPage';
 import TechnologyPage from './pages/TechnologyPage';
 
+import { ToastProvider } from './components/layout/ToastContext';
+
 export default function App() {
   const [activeSidebar, setActiveSidebar] = useState('family');
 
   return (
-    <BrowserRouter>
-      <div className="ambient-blob-2" />
-      <div className="app">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/mission" element={<MissionPage />} />
-          <Route path="/technology" element={<TechnologyPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/*" element={<DashboardLayout activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <ToastProvider>
+      <BrowserRouter>
+        <div className="ambient-blob-2" />
+        <div className="app">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/mission" element={<MissionPage />} />
+            <Route path="/technology" element={<TechnologyPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/*" element={<DashboardLayout activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </ToastProvider>
   );
 }

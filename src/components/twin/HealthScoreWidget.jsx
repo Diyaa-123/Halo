@@ -10,52 +10,43 @@ const getScoreConfig = (score) => {
 
 export default function HealthScoreWidget({ score = 87, status = 'stable' }) {
   const config = getScoreConfig(score);
-  const circumference = 2 * Math.PI * 36;
+  const circumference = 2 * Math.PI * 28; // Smaller radius
   const dash = circumference * (score / 100);
 
   return (
-    <div className="health-score-widget">
-      <div className="health-score-widget__label">PATIENT HEALTH SCORE</div>
+    <div className="health-score-widget glass-card">
+      <div className="health-score-widget__header">
+        <span className="material-icons icon-sm" style={{ color: config.color }}>monitor_heart</span>
+        <span className="health-score-widget__label">HEALTH SCORE</span>
+      </div>
+      
       <div className="health-score-widget__gauge-row">
         <div className="health-score-widget__gauge">
-          <svg viewBox="0 0 80 80" width="80" height="80">
+          <svg viewBox="0 0 64 64" width="64" height="64">
             {/* Background track */}
-            <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
+            <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="4" />
             {/* Colored progress */}
             <circle
-              cx="40" cy="40" r="36"
+              cx="32" cy="32" r="28"
               fill="none"
               stroke={config.ring}
-              strokeWidth="6"
+              strokeWidth="4"
               strokeLinecap="round"
               strokeDasharray={`${dash} ${circumference}`}
-              transform="rotate(-90 40 40)"
-              style={{ filter: `drop-shadow(0 0 8px ${config.ring}80)`, transition: 'stroke-dasharray 1s ease' }}
+              transform="rotate(-90 32 32)"
+              style={{ filter: `drop-shadow(0 0 6px ${config.ring}80)`, transition: 'stroke-dasharray 1s ease' }}
             />
           </svg>
           <div className="health-score-widget__center">
             <span className="health-score-widget__value" style={{ color: config.color }}>{score}</span>
-            <span className="health-score-widget__total">/100</span>
           </div>
         </div>
+        
         <div className="health-score-widget__meta">
           <span className="health-score-widget__status" style={{ color: config.color }}>
             {config.label}
           </span>
-          <div className="health-score-widget__categories">
-            {[
-              { range: '95–100', label: 'Excellent', color: '#22C55E' },
-              { range: '80–94', label: 'Stable', color: '#3B82F6' },
-              { range: '60–79', label: 'Attention', color: '#F59E0B' },
-              { range: '<60', label: 'Critical', color: '#EF4444' },
-            ].map(cat => (
-              <div key={cat.range} className="health-score-widget__category">
-                <span className="health-score-widget__cat-dot" style={{ background: cat.color }} />
-                <span className="health-score-widget__cat-range">{cat.range}</span>
-                <span className="health-score-widget__cat-label" style={{ color: cat.color }}>{cat.label}</span>
-              </div>
-            ))}
-          </div>
+          <span className="health-score-widget__trend">Stable Trend</span>
         </div>
       </div>
     </div>

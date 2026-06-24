@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './PageLayout.css';
+import { useToast } from '../components/layout/ToastContext';
 
 const agitationLevels = [
   { level: 1, label: 'Restlessness', color: '#adc6ff', icon: 'swap_vert', description: 'Minor movement variations. Patient adjusting position frequently.' },
@@ -20,6 +21,7 @@ const timelinePoints = [
 ];
 
 export default function AgitationModule() {
+  const toast = useToast();
   const [currentLevel, setCurrentLevel] = useState(2);
 
   return (
@@ -129,11 +131,11 @@ export default function AgitationModule() {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button className="btn btn-primary btn-sm" style={{ flex: 1 }}>
+              <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={() => toast('Caregiver dispatched to patient location...', 'success')}>
                 <span className="material-icons icon-sm">person</span>
                 Dispatch Caregiver
               </button>
-              <button className="btn btn-danger btn-sm" style={{ flex: 1 }}>
+              <button className="btn btn-danger btn-sm" style={{ flex: 1 }} onClick={() => toast('Escalating agitation alert to senior staff...', 'error')}>
                 <span className="material-icons icon-sm">priority_high</span>
                 Escalate
               </button>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useToast } from '../layout/ToastContext';
 
 export default function FeatureOverlay({ feature }) {
+  const toast = useToast();
   const [mounted, setMounted] = useState(false);
   const [activeFeature, setActiveFeature] = useState(null);
 
@@ -28,7 +30,17 @@ export default function FeatureOverlay({ feature }) {
     <div className={`feature-overlay ${mounted ? 'active' : ''}`}>
       {/* Cinematic Backgrounds */}
       <div className="fo-bg"></div>
+      
+      {/* Fake Broken Card Halves */}
+      <div className="fo-card-half left"></div>
+      <div className="fo-card-half right"></div>
+      
       <div className="fo-noise"></div>
+      
+      {/* Smoke Tunnel Effect */}
+      <div className="fo-smoke-ring ring-1"></div>
+      <div className="fo-smoke-ring ring-2"></div>
+      <div className="fo-smoke-ring ring-3"></div>
       <div className="fo-tunnel"></div>
 
       <div className="fo-layout">
@@ -49,12 +61,12 @@ export default function FeatureOverlay({ feature }) {
           </div>
 
           <div className="fo-links">
-            <a href="#" className="fo-link">CLINICAL_CASE_STUDY</a>
-            <a href="#" className="fo-link">PROTOCOL_LINK</a>
+            <a href="#" className="fo-link" onClick={(e) => { e.preventDefault(); toast('Opening Clinical Case Study PDF...', 'info'); }}>CLINICAL_CASE_STUDY</a>
+            <a href="#" className="fo-link" onClick={(e) => { e.preventDefault(); toast('Loading Protocol Guidelines...', 'info'); }}>PROTOCOL_LINK</a>
             <div className="fo-close-hint">&lt;- SCROLL TO CLOSE</div>
           </div>
           
-          <button className="fo-ask-btn">ASK SYSTEM ABOUT THIS...</button>
+          <button className="fo-ask-btn" onClick={() => toast('Initializing system query interface...', 'info')}>ASK SYSTEM ABOUT THIS...</button>
         </div>
 
         {/* Right Side: Chamfered Video Portal */}

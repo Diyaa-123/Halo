@@ -2,30 +2,46 @@
 
 .landing-page {
   position: relative;
-  width: 100vw;
+  width: 100%;
+  overflow-x: hidden;
   cursor: none;
   font-family: 'Space Mono', monospace;
   color: var(--on-surface);
-  background: 
-    radial-gradient(circle at 15% 10%, #e0f2fe 0%, transparent 40%),
-    radial-gradient(circle at 85% 20%, #dbeafe 0%, transparent 40%),
-    radial-gradient(circle at 50% 80%, #ccfbf1 0%, transparent 50%),
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   isolation: isolate;
 }
 
-.landing-page::after {
+/* Background layer fixed to viewport with dynamic animated mesh gradient */
+.landing-page::before {
   content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.04;
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: -1;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 20% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(79, 70, 229, 0.06) 0%, transparent 40%),
+    linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 50%, #f8fafc 100%);
   pointer-events: none;
-  z-index: 100;
-  mix-blend-mode: multiply;
+  animation: dynamicMeshBg 25s ease-in-out infinite;
 }
 
-.landing-page a,
+@keyframes dynamicMeshBg {
+  0% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  33% {
+    transform: rotate(2deg) translate(-2%, 2%);
+  }
+  66% {
+    transform: rotate(-1deg) translate(2%, -1%);
+  }
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+}
 .landing-page button {
   cursor: none;
 }
@@ -63,14 +79,17 @@
   pointer-events: auto;
 }
 
-.landing-wordmark__mark {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 32% 28%, #ffffff, transparent 14%),
-    linear-gradient(135deg, #1a56db, #1d4ed8 48%, #22c55e);
-  box-shadow: 0 0 26px rgba(26, 86, 219, 0.32);
+.nav-logo-image {
+  height: 90px;
+  width: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(26, 86, 219, 0.22);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.landing-wordmark:hover .nav-logo-image {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(26, 86, 219, 0.25);
 }
 
 .landing-nav-links {
@@ -83,9 +102,10 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   pointer-events: auto;
+  transform: translateZ(0);
 }
 
 .landing-nav-link {
@@ -125,11 +145,13 @@
     0 24px 64px rgba(15, 23, 42, 0.08),  /* Deep soft shadow */
     0 12px 24px rgba(15, 23, 42, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 1.0);
-  backdrop-filter: blur(24px) saturate(110%);
-  -webkit-backdrop-filter: blur(24px) saturate(110%);
+  backdrop-filter: blur(12px) saturate(110%);
+  -webkit-backdrop-filter: blur(12px) saturate(110%);
   overflow: hidden;
   pointer-events: auto;
   user-select: text;
+  /* CRITICAL FIX: Add hardware acceleration hint to prevent paint flashing */
+  transform: translateZ(0);
 }
 
 .helix-card::before {
@@ -503,13 +525,45 @@
   gap: 20px;
 }
 
-.loading-logo {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 32px;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin: 0;
+.loading-logo-wrapper {
+  perspective: 1000px;
+  margin-bottom: 32px;
+}
+
+.loading-logo-image {
+  width: 260px;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 
+    0 12px 32px rgba(26, 86, 219, 0.15),
+    0 4px 12px rgba(26, 86, 219, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  animation: logoEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards, logoPulse 3s ease-in-out infinite 1.2s;
+  transform-style: preserve-3d;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+}
+
+@keyframes logoEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes logoPulse {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 
+      0 12px 32px rgba(26, 86, 219, 0.15),
+      0 4px 12px rgba(26, 86, 219, 0.1);
+  }
+  50% {
+    transform: scale(1.02) translateY(-4px);
+    box-shadow: 
+      0 24px 48px rgba(26, 86, 219, 0.25),
+      0 8px 24px rgba(26, 86, 219, 0.15);
+  }
 }
 
 .loading-bar-container {
@@ -719,32 +773,95 @@
   padding-top: 32px;
 }
 
-/* --- Feature Overlay (Smoke & Ash Cinematic Transition) --- */
+/* --- Feature Overlay (Smoke & Ash Cinematic) --- */
+/* 1. Base Overlay Container */
 .feature-overlay {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  pointer-events: none;
-  overflow: hidden;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  overflow: hidden; /* Ensure nothing breaks the bounds */
+  /* Lenis unmounting delay handled in React */
 }
-
 .feature-overlay.active {
-  pointer-events: auto;
+  pointer-events: all;
 }
 
-/* 1. The Deep Dark Background */
+/* 1.1 Expanding Dream Background */
 .fo-bg {
   position: absolute;
-  inset: 0;
-  background: #05080c; /* extremely dark charcoal */
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  margin-top: -50vh;
+  margin-left: -50vw;
+  background: #020617; /* Very dark slate */
   opacity: 0;
-  transition: opacity 2.5s ease-in-out;
+  /* Starts exactly the size of the 3D card */
+  transform: scaleY(0.3) scaleX(0.14);
+  border-radius: 20px;
+  transition: transform 2.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease, border-radius 2.5s ease;
+  will-change: transform, opacity, border-radius;
 }
 .feature-overlay.active .fo-bg {
   opacity: 1;
+  transform: scaleY(1) scaleX(1);
+  border-radius: 0;
+}
+
+/* 1.2 Fake Broken Card Halves */
+.fo-card-half {
+  position: absolute;
+  top: 50%;
+  width: 14vw; /* Approx width of 3D card */
+  height: 30vh; /* Approx height of 3D card */
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(30, 41, 59, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  z-index: 20;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.fo-card-half.left {
+  left: 50%;
+  margin-left: -14vw;
+  border-right: none;
+  border-radius: 20px 0 0 20px;
+  transform: translateY(-50%) translateX(0);
+}
+.fo-card-half.right {
+  left: 50%;
+  border-left: none;
+  border-radius: 0 20px 20px 0;
+  transform: translateY(-50%) translateX(0);
+}
+
+.feature-overlay.active .fo-card-half {
+  /* Instantly visible to cover the 3D card */
+  opacity: 1; 
+  transition: opacity 0.1s, transform 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-overlay.active .fo-card-half.left {
+  /* Fly apart left */
+  transform: translateY(-50%) translateX(-60vw) rotate(-25deg) scale(1.5);
+  opacity: 0;
+  transition: opacity 2s ease 0.5s, transform 3.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.feature-overlay.active .fo-card-half.right {
+  /* Fly apart right */
+  transform: translateY(-50%) translateX(60vw) rotate(25deg) scale(1.5);
+  opacity: 0;
+  transition: opacity 2s ease 0.5s, transform 3.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* 2. Static Noise/Ash Overlay */
@@ -761,7 +878,69 @@
   opacity: 0.2; /* Subtle gritty ash texture */
 }
 
-/* 3. The Tunnel Lens Distortion */
+/* 3. The Tunnel & Smoke Effects */
+.fo-smoke-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150vmax;
+  height: 150vmax;
+  margin-top: -75vmax;
+  margin-left: -75vmax;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0;
+  transform: scale(0.1) rotate(0deg);
+  /* Fast exit transition (smoke dissipates quickly) */
+  transition: transform 2.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease;
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform, opacity;
+}
+
+.ring-1 { 
+  transform-origin: 48% 52%; 
+  background: radial-gradient(circle at center, transparent 35%, rgba(30, 41, 59, 0.6) 50%, #020617 75%); 
+}
+.ring-2 { 
+  transform-origin: 52% 48%; 
+  background: radial-gradient(circle at center, transparent 40%, rgba(15, 23, 42, 0.8) 55%, #020617 80%); 
+}
+.ring-3 { 
+  transform-origin: 50% 50%; 
+  background: radial-gradient(circle at center, transparent 30%, rgba(2, 6, 23, 0.95) 60%, #000 85%); 
+  filter: blur(60px); 
+}
+
+.feature-overlay.active .ring-1 {
+  opacity: 1;
+  transform: scale(1) rotate(60deg);
+  animation: smokeRotate1 30s linear infinite;
+  animation-delay: 2.5s;
+}
+.feature-overlay.active .ring-2 {
+  opacity: 1;
+  transform: scale(1.1) rotate(-45deg);
+  animation: smokeRotate2 35s linear infinite;
+  animation-delay: 2.5s;
+}
+.feature-overlay.active .ring-3 {
+  opacity: 1;
+  transform: scale(1.2) rotate(30deg);
+  animation: smokeRotate3 40s linear infinite;
+  animation-delay: 2.5s;
+}
+
+@keyframes smokeRotate1 {
+  100% { transform: scale(1) rotate(420deg); }
+}
+@keyframes smokeRotate2 {
+  100% { transform: scale(1.1) rotate(-405deg); }
+}
+@keyframes smokeRotate3 {
+  100% { transform: scale(1.2) rotate(390deg); }
+}
+
 .fo-tunnel {
   position: absolute;
   top: 50%;
@@ -770,19 +949,20 @@
   height: 150vmax;
   transform: translate(-50%, -50%) scale(0.5);
   border-radius: 50%;
-  background: radial-gradient(circle at center, transparent 0%, rgba(5, 8, 12, 0.4) 30%, rgba(5, 8, 12, 1) 70%);
+  background: radial-gradient(circle at center, transparent 0%, rgba(5, 8, 12, 0.2) 20%, rgba(5, 8, 12, 0.8) 60%);
   backdrop-filter: blur(0px); 
   -webkit-backdrop-filter: blur(0px);
   opacity: 0;
   /* Cinematic exit transition */
   transition: transform 3.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2.5s ease, backdrop-filter 2.5s ease;
   will-change: transform, opacity, backdrop-filter;
+  z-index: 3;
 }
 .feature-overlay.active .fo-tunnel {
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  backdrop-filter: blur(24px); /* Intensely blurs the 3D scene */
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(12px); /* Lowered blur slightly so smoke is visible behind it */
+  -webkit-backdrop-filter: blur(12px);
   /* Enter transition */
   transition: transform 3.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease, backdrop-filter 3s ease;
 }

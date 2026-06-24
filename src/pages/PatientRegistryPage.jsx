@@ -1,5 +1,6 @@
 import React from 'react';
 import './PageLayout.css';
+import { useToast } from '../components/layout/ToastContext';
 
 const patients = [
   { id: 1, name: 'Aarav Mehta', age: 78, room: 'B-204', score: 82, status: 'stable', condition: 'COPD, Hypertension', bed: 'BED 04', lastAlert: '8 min ago', alertType: 'Respiratory Distress' },
@@ -13,6 +14,7 @@ const patients = [
 const statusColor = { stable: '#4edea3', warning: '#F59E0B', critical: '#EF4444' };
 
 export default function PatientRegistryPage() {
+  const toast = useToast();
   return (
     <div className="page-layout">
       <div className="page-layout__header">
@@ -28,7 +30,7 @@ export default function PatientRegistryPage() {
             <span className="material-icons icon-sm" style={{ color: 'var(--outline)' }}>search</span>
             <input placeholder="Search patients..." style={{ background: 'transparent', border: 'none', outline: 'none', color: 'var(--on-surface)', fontFamily: 'var(--font-family)', fontSize: 12, width: 160 }} />
           </div>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={() => toast('Opening Patient Enrollment form...', 'info')}>
             <span className="material-icons icon-sm">add</span>
             Add Patient
           </button>
@@ -116,13 +118,13 @@ export default function PatientRegistryPage() {
                   </td>
                   <td style={{ padding: '12px 14px' }}>
                     <div style={{ display: 'flex', gap: 6 }}>
-                      <button className="btn-icon" title="View Twin" style={{ width: 28, height: 28 }}>
+                      <button className="btn-icon" title="View Twin" style={{ width: 28, height: 28 }} onClick={(e) => { e.stopPropagation(); toast(`Loading Digital Twin for ${p.name}...`, 'info'); }}>
                         <span className="material-icons" style={{ fontSize: 14 }}>view_in_ar</span>
                       </button>
-                      <button className="btn-icon" title="Alerts" style={{ width: 28, height: 28 }}>
+                      <button className="btn-icon" title="Alerts" style={{ width: 28, height: 28 }} onClick={(e) => { e.stopPropagation(); toast(`Viewing alerts for ${p.name}...`, 'info'); }}>
                         <span className="material-icons" style={{ fontSize: 14 }}>notifications</span>
                       </button>
-                      <button className="btn-icon" title="Report" style={{ width: 28, height: 28 }}>
+                      <button className="btn-icon" title="Report" style={{ width: 28, height: 28 }} onClick={(e) => { e.stopPropagation(); toast(`Generating report for ${p.name}...`, 'success'); }}>
                         <span className="material-icons" style={{ fontSize: 14 }}>description</span>
                       </button>
                     </div>

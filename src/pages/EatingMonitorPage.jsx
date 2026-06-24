@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './PageLayout.css';
+import { useToast } from '../components/layout/ToastContext';
 
 const weekMeals = [
   { day: 'Mon', meals: 3, duration: 28, missed: 0, score: 92 },
@@ -13,6 +14,7 @@ const weekMeals = [
 
 export default function EatingMonitorPage() {
   const [selectedDay, setSelectedDay] = useState(null);
+  const toast = useToast();
 
   return (
     <div className="page-layout">
@@ -139,8 +141,8 @@ export default function EatingMonitorPage() {
               </p>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button className="btn btn-primary btn-sm" style={{ flex: 1 }}>Set Meal Reminder</button>
-              <button className="btn btn-ghost btn-sm" style={{ flex: 1 }}>View History</button>
+              <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={() => toast('Setting automated meal reminder...', 'success')}>Set Meal Reminder</button>
+              <button className="btn btn-ghost btn-sm" style={{ flex: 1 }} onClick={() => toast('Fetching meal history...', 'info')}>View History</button>
             </div>
           </div>
         </div>

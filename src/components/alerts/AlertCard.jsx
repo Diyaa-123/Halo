@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AlertCard.css';
+import { useToast } from '../layout/ToastContext';
 
 const priorityConfig = {
   1: { color: '#EF4444', label: 'P1', icon: 'emergency' },
@@ -14,6 +15,7 @@ const statusConfig = {
 };
 
 export default function AlertCard({ alert, onAcknowledge }) {
+  const toast = useToast();
   const [expanded, setExpanded] = useState(alert.priority === 1);
   const pc = priorityConfig[alert.priority] || priorityConfig[3];
   const sc = statusConfig[alert.status] || statusConfig.info;
@@ -73,15 +75,15 @@ export default function AlertCard({ alert, onAcknowledge }) {
               <span className="material-icons icon-sm">check</span>
               Acknowledge
             </button>
-            <button className="btn btn-ghost btn-sm">
+            <button className="btn btn-ghost btn-sm" onClick={() => toast('Assigning alert to available staff...', 'info')}>
               <span className="material-icons icon-sm">person_add</span>
               Assign
             </button>
-            <button className="btn btn-danger btn-sm">
+            <button className="btn btn-danger btn-sm" onClick={() => toast('Escalating alert priority...', 'error')}>
               <span className="material-icons icon-sm">priority_high</span>
               Escalate
             </button>
-            <button className="btn btn-ghost btn-sm">
+            <button className="btn btn-ghost btn-sm" onClick={() => toast('Opening Twin View for alert context...', 'info')}>
               <span className="material-icons icon-sm">view_in_ar</span>
               Twin
             </button>

@@ -12,15 +12,19 @@ function CameraRig() {
   useFrame(() => {
     const targetX = 0;
     
-    const heroHeight = window.innerHeight;
-    const heroProgress = Math.min(1, Math.max(0, window.scrollY / heroHeight));
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
     
-    // When heroProgress is 0 (at top), targetY is 4.0 (camera is high, pushing spine off-screen bottom).
+    // Sync hero height dynamically to perfectly match the CSS 100vh
+    const heroHeight = vh; 
+    const heroProgress = Math.min(1, Math.max(0, scrollY / heroHeight));
+    
+    // When heroProgress is 0 (at top), targetY is 3.8 (camera is high, keeping spine off-screen initially).
     // When heroProgress is 1 (past hero), targetY is 0 (camera is centered).
-    const targetY = (1 - heroProgress) * 4.0;
+    const targetY = (1 - heroProgress) * 3.8;
     
-    const maxCardsScroll = Math.max(1, document.body.scrollHeight - window.innerHeight - heroHeight);
-    const activeCardsScroll = Math.max(0, window.scrollY - heroHeight);
+    const maxCardsScroll = Math.max(1, (vh * 6) - heroHeight);
+    const activeCardsScroll = Math.max(0, scrollY - heroHeight);
     const scrollProgress = Math.min(1, activeCardsScroll / maxCardsScroll);
     
     const targetZ = 2.5 + Math.sin(scrollProgress * Math.PI) * 0.28;
@@ -66,7 +70,7 @@ export default function ThreeScene({ cards, onCardClick }) {
     <div className="canvas-container">
       <Canvas 
         camera={{ position: [0, 0, 2.5], fov: 45, near: 0.1, far: 100 }}
-        dpr={[1, 1.5]} // CRITICAL FIX: Clamps pixel ratio to prevent 4k rendering lag on Retina displays
+        dpr={1} /* CRITICAL FIX: Clamps pixel ratio to strictly 1.0 to guarantee 60fps even on 4K/Retina displays */
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
       >
         <scene background={null} />

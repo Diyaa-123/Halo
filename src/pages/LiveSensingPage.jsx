@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './PageLayout.css';
 import './LiveSensingPage.css';
+import { useToast } from '../components/layout/ToastContext';
 
 /* ─────────────────────────────────────────
    Animated CSI Waveform (Canvas)
@@ -278,6 +279,7 @@ const VITALS = [
 ];
 
 export default function LiveSensingPage() {
+  const toast = useToast();
   const [mode,       setMode]      = useState('night');
   const [showRaw,    setShowRaw]   = useState(false);
   const [breathRate, setBreathRate] = useState(14.0);
@@ -489,7 +491,9 @@ export default function LiveSensingPage() {
                   Phase-acceleration threshold exceeded. Resident A. No motion for 40s post-event.
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <button style={{
+                  <button 
+                    onClick={() => toast('Paging family members via SMS and Push...', 'success')}
+                    style={{
                     flex: 1, padding: '8px 12px', background: 'white', border: '1px solid #FECACA',
                     borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     gap: 6, fontSize: 12, fontWeight: 600, color: '#DC2626',
@@ -497,7 +501,9 @@ export default function LiveSensingPage() {
                     <span className="material-icons" style={{ fontSize: 14 }}>group</span>
                     Alert family ↗
                   </button>
-                  <button style={{
+                  <button 
+                    onClick={() => toast('Paging nursing staff on-call...', 'success')}
+                    style={{
                     flex: 1, padding: '8px 12px', background: 'white', border: '1px solid #FECACA',
                     borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     gap: 6, fontSize: 12, fontWeight: 600, color: '#DC2626',

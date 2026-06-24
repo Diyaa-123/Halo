@@ -10,15 +10,13 @@ function LoadedSpine() {
   const groupRef = useRef();
 
   const spineGroup = useMemo(() => {
-    const material = new THREE.MeshPhysicalMaterial({
+    const material = new THREE.MeshStandardMaterial({
       color: '#0284c7',        // Deep Medical Blue (Sky 600)
-      metalness: 0.1,          // Slight reflection
-      roughness: 0.2,          // Smooth frosted interior
+      metalness: 0.2,          // Slight reflection
+      roughness: 0.15,         // Smooth frosted interior
       transparent: true,       // Use standard alpha blending instead of expensive transmission
-      opacity: 0.85,           // Mimic glass volume
-      clearcoat: 1.0,          // Glossy exterior
-      clearcoatRoughness: 0.1,
-      envMapIntensity: 1.5     // High environment reflection for glass feel
+      opacity: 0.75,           // Mimic glass volume
+      envMapIntensity: 1.2     // High environment reflection for glass feel
     });
 
     const mesh = new THREE.Mesh(geometry, material);
@@ -53,9 +51,13 @@ function LoadedSpine() {
   useFrame((state) => {
     if (!groupRef.current) return;
     
-    const heroHeight = window.innerHeight;
-    const maxCardsScroll = Math.max(1, document.body.scrollHeight - window.innerHeight - heroHeight);
-    const activeCardsScroll = Math.max(0, window.scrollY - heroHeight);
+    // Instead of reading DOM 60x a sec, use global scrollY which is cheap,
+    // or just calculate progress roughly without forcing layout.
+    // Assuming 100vh hero and 6 cards = roughly 600vh scroll height
+    const scrollY = window.scrollY;
+    // Approximating dimensions to avoid layout thrashing
+    const activeCardsScroll = Math.max(0, scrollY - 900);
+    const maxCardsScroll = 900 * 6; // Approx
     const clampedProgress = Math.max(0, Math.min(1, activeCardsScroll / maxCardsScroll));
     
     const totalCards = 6;

@@ -6,7 +6,7 @@ export default function BiometricProfilePage() {
     <div className="page-layout">
       <div className="page-layout__header">
         <div className="page-layout__title-group">
-          <span className="material-icons icon-lg" style={{ color: 'var(--primary)' }}>health_metrics</span>
+          <span className="material-icons icon-lg" style={{ color: 'var(--primary)' }}>monitor_heart</span>
           <div>
             <h1 className="page-layout__title">Biometric Profile</h1>
             <p className="page-layout__subtitle">Learned baseline distributions for Dad (Arun) — Enrolled 14 days ago</p>

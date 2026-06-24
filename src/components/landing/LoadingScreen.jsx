@@ -20,7 +20,13 @@ export default function LoadingScreen({ onLoaded }) {
   return (
     <div className={`loading-screen ${faded ? 'fade-out' : ''}`}>
       <div className="loading-content">
-        <h1 className="loading-logo">SilentSense</h1>
+        <div className="loading-logo-wrapper">
+          <img 
+            src="/assets/Logo/SilentSense Logo.jpeg" 
+            alt="SilentSense" 
+            className="loading-logo-image" 
+          />
+        </div>
         <div className="loading-bar-container">
           <div className="loading-bar" style={{ width: `${progress}%` }} />
         </div>

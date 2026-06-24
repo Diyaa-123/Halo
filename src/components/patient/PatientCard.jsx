@@ -1,7 +1,9 @@
 import React from 'react';
 import './PatientCard.css';
+import { useToast } from '../layout/ToastContext';
 
 export default function PatientCard({ patient }) {
+  const toast = useToast();
   const p = patient || {
     name: 'Aarav Mehta',
     age: 78,
@@ -113,7 +115,7 @@ export default function PatientCard({ patient }) {
           { icon: 'medication', label: 'Meds' },
           { icon: 'emergency', label: 'Emergency' },
         ].map(a => (
-          <button key={a.label} className="patient-card__action-btn" title={a.label}>
+          <button key={a.label} className="patient-card__action-btn" title={a.label} onClick={() => toast(`Opening ${a.label} for ${p.name}...`, 'info')}>
             <span className="material-icons icon-sm">{a.icon}</span>
             <span>{a.label}</span>
           </button>

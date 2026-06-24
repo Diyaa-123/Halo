@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './PageLayout.css';
+import { useToast } from '../components/layout/ToastContext';
 
 export default function ClinicalReportPage() {
+  const toast = useToast();
   const [generating, setGenerating] = useState(false);
   const [generated, setGenerated] = useState(true);
 
@@ -26,7 +28,7 @@ export default function ClinicalReportPage() {
             <span className="material-icons icon-sm">{generating ? 'hourglass_empty' : 'refresh'}</span>
             {generating ? 'Generating...' : 'Regenerate'}
           </button>
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" onClick={() => toast('Exporting Report as PDF...', 'success')}>
             <span className="material-icons icon-sm">picture_as_pdf</span>
             Export PDF
           </button>
@@ -143,7 +145,7 @@ export default function ClinicalReportPage() {
                 { icon: 'share', label: 'Share', cls: 'btn-ghost' },
                 { icon: 'send', label: 'Send to EMR', cls: 'btn-secondary' },
               ].map(a => (
-                <button key={a.label} className={`btn ${a.cls}`}>
+                <button key={a.label} className={`btn ${a.cls}`} onClick={() => toast(`${a.label} action triggered...`, 'info')}>
                   <span className="material-icons icon-sm">{a.icon}</span>
                   {a.label}
                 </button>

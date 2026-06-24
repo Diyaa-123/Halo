@@ -1,7 +1,9 @@
 import React from 'react';
 import './ProfileColumn.css';
+import { useToast } from '../layout/ToastContext';
 
 export default function ProfileColumn({ isNightMode = true }) {
+  const toast = useToast();
   const resident = {
     name: 'Mr. Raghav Iyer',
     title: 'Resident Profile',
@@ -103,10 +105,10 @@ export default function ProfileColumn({ isNightMode = true }) {
 
         {/* Actions */}
         <div className="profile-actions">
-          <button className="btn-icon">
+          <button className="btn-icon" onClick={() => toast('Opening Settings panel...', 'info')}>
             <span className="material-icons">settings</span>
           </button>
-          <button className="btn btn-primary" style={{ flex: 1 }}>
+          <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => toast('Loading Daily Summary...', 'info')}>
             <span className="material-icons icon-sm">insights</span>
             View Daily Summary
           </button>

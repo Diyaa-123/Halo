@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HealthScoreWidget from './HealthScoreWidget';
 import BodyRegionPin from './BodyRegionPin';
+import { useToast } from '../layout/ToastContext';
 import './DigitalTwin.css';
 
 const bodyRegions = [
@@ -21,7 +22,8 @@ const stateConfigs = {
   stable: { bodyColor: '#adc6ff', glowColor: '#adc6ff', label: 'Stable', animClass: 'twin--stable' },
 };
 
-export default function DigitalTwin({ patientState = 'stable', healthScore = 82 }) {
+export default function DigitalTwin({ patientState = 'stable', setPatientState, healthScore = 82 }) {
+  const toast = useToast();
   const [activePin, setActivePin] = useState(null);
   const [rotation, setRotation] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -47,12 +49,36 @@ export default function DigitalTwin({ patientState = 'stable', healthScore = 82 
 
   return (
     <div className={`digital-twin ${stateConf.animClass} ${isFullscreen ? 'digital-twin--fullscreen' : ''}`}>
-      {/* Health Score Widget */}
-      <div className="digital-twin__score">
+      {/* Top Overlay Container */}
+      <div className="digital-twin__top-overlay">
+        {/* Top Left: Health Score Widget */}
         <HealthScoreWidget score={healthScore} status={patientState} />
+
+        {/* Top Right: Simulate State Controls */}
+        {setPatientState && (
+          <div className="digital-twin__state-controls glass-card">
+            <span className="digital-twin__controls-label">Simulate:</span>
+            {[
+              { key: 'healthy', label: 'Healthy', color: '#22C55E' },
+              { key: 'stable', label: 'Stable', color: '#3B82F6' },
+              { key: 'warning', label: 'Warning', color: '#F59E0B' },
+              { key: 'respiratory_distress', label: 'Distress', color: '#EF4444' },
+            ].map(s => (
+              <button
+                key={s.key}
+                className={`digital-twin__state-btn ${patientState === s.key ? 'active' : ''}`}
+                style={{ '--btn-color': s.color }}
+                onClick={() => setPatientState(s.key)}
+              >
+                <span className="digital-twin__state-btn-dot" style={{ background: s.color }} />
+                {s.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* State Status Banner */}
+      {/* State Status Banner - Positioned below the twin controls or absolutely */}
       <div className={`digital-twin__state-banner ${patientState === 'respiratory_distress' ? 'digital-twin__state-banner--critical' : ''}`}>
         <span className="digital-twin__state-dot" style={{ background: stateConf.bodyColor }} />
         <span style={{ color: stateConf.bodyColor }}>{stateConf.label}</span>
@@ -66,7 +92,7 @@ export default function DigitalTwin({ patientState = 'stable', healthScore = 82 
         {/* Holographic Platform */}
         <div className="digital-twin__platform" />
 
-        {/* Human Figure — CSS Art Representation */}
+        {/* Sleek Minimalist Human Figure */}
         <div
           className={`digital-twin__figure ${stateConf.animClass}`}
           style={{
@@ -75,57 +101,39 @@ export default function DigitalTwin({ patientState = 'stable', healthScore = 82 
             '--glow-color': stateConf.glowColor,
           }}
         >
-          {/* Body SVG */}
-          <svg className="digital-twin__body-svg" viewBox="0 0 140 360" xmlns="http://www.w3.org/2000/svg">
+          {/* Detailed Hologram Silhouette SVG */}
+          <svg className="digital-twin__body-svg" viewBox="0 0 200 450" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <radialGradient id="bodyGrad" cx="50%" cy="40%" r="60%">
-                <stop offset="0%" stopColor={stateConf.bodyColor} stopOpacity="0.6" />
-                <stop offset="100%" stopColor={stateConf.bodyColor} stopOpacity="0.15" />
-              </radialGradient>
-              <filter id="bodyGlow">
-                <feGaussianBlur stdDeviation="4" result="blur" />
+              <linearGradient id="holoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor={stateConf.bodyColor} stopOpacity="0.8" />
+                <stop offset="50%" stopColor={stateConf.bodyColor} stopOpacity="0.3" />
+                <stop offset="100%" stopColor={stateConf.bodyColor} stopOpacity="0.8" />
+              </linearGradient>
+              <filter id="holoGlow">
+                <feGaussianBlur stdDeviation="3" result="blur" />
                 <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
             </defs>
-            {/* Head */}
-            <ellipse cx="70" cy="30" rx="22" ry="26" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1.5" filter="url(#bodyGlow)" />
-            {/* Neck */}
-            <rect x="62" y="54" width="16" height="14" rx="4" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1" />
-            {/* Torso */}
-            <path d="M35 68 Q30 80 30 120 Q30 140 35 145 L105 145 Q110 140 110 120 Q110 80 105 68 Z" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1.5" />
-            {/* Left Arm */}
-            <path d="M35 72 Q20 90 18 130 Q17 145 22 155" stroke={stateConf.bodyColor} strokeWidth="10" fill="none" strokeLinecap="round" opacity="0.7" />
-            {/* Right Arm */}
-            <path d="M105 72 Q120 90 122 130 Q123 145 118 155" stroke={stateConf.bodyColor} strokeWidth="10" fill="none" strokeLinecap="round" opacity="0.7" />
-            {/* Left Hand */}
-            <ellipse cx="21" cy="160" rx="8" ry="10" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1" />
-            {/* Right Hand */}
-            <ellipse cx="119" cy="160" rx="8" ry="10" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1" />
-            {/* Pelvis */}
-            <path d="M35 145 Q30 160 32 170 L108 170 Q110 160 105 145 Z" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1" />
-            {/* Left Leg */}
-            <path d="M52 170 Q48 210 46 260 Q45 290 48 310" stroke={stateConf.bodyColor} strokeWidth="14" fill="none" strokeLinecap="round" opacity="0.7" />
-            {/* Right Leg */}
-            <path d="M88 170 Q92 210 94 260 Q95 290 92 310" stroke={stateConf.bodyColor} strokeWidth="14" fill="none" strokeLinecap="round" opacity="0.7" />
-            {/* Left Foot */}
-            <ellipse cx="48" cy="318" rx="10" ry="14" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1" />
-            {/* Right Foot */}
-            <ellipse cx="92" cy="318" rx="10" ry="14" fill="url(#bodyGrad)" stroke={stateConf.bodyColor} strokeWidth="1" />
+            {/* Minimalist Tech Outline */}
+            <path 
+              d="M100 20 C112 20 120 30 120 45 C120 60 110 70 100 70 C90 70 80 60 80 45 C80 30 88 20 100 20 Z
+                 M100 75 C120 75 140 80 150 90 L165 180 L145 185 L135 120 L135 230 L115 420 L95 420 L95 240 L85 420 L65 420 L85 230 L85 120 L75 185 L55 180 L70 90 C80 80 100 75 100 75 Z"
+              fill="none" 
+              stroke="url(#holoGrad)" 
+              strokeWidth="2.5" 
+              filter="url(#holoGlow)"
+              strokeLinejoin="round"
+            />
+            {/* Mesh Lines Overlay for 3D feel */}
+            <path d="M85 120 Q100 135 135 120 M85 150 Q100 165 135 150 M85 180 Q100 195 135 180 M90 210 Q100 220 130 210" fill="none" stroke={stateConf.bodyColor} strokeOpacity="0.2" strokeWidth="1" />
+            <path d="M110 75 L110 220 M90 75 L90 220" fill="none" stroke={stateConf.bodyColor} strokeOpacity="0.2" strokeWidth="1" />
+            
+            {/* Core Energy Line */}
+            <line x1="100" y1="80" x2="100" y2="230" stroke={stateConf.bodyColor} strokeWidth="4" opacity="0.4" filter="url(#holoGlow)" />
 
-            {/* Heartbeat line on chest */}
-            {patientState !== 'respiratory_distress' && (
-              <polyline
-                points="40,108 50,108 55,95 60,120 65,102 70,108 90,108 95,100 100,115"
-                fill="none"
-                stroke={stateConf.bodyColor}
-                strokeWidth="1.5"
-                opacity="0.6"
-                strokeLinecap="round"
-              />
-            )}
             {/* Respiratory distress: red chest glow */}
             {patientState === 'respiratory_distress' && (
-              <ellipse cx="70" cy="108" rx="28" ry="20" fill="rgba(239,68,68,0.2)" className="twin__chest-pulse" />
+              <ellipse cx="100" cy="120" rx="35" ry="25" fill="rgba(239,68,68,0.3)" className="twin__chest-pulse" filter="url(#holoGlow)" />
             )}
           </svg>
         </div>
@@ -143,37 +151,40 @@ export default function DigitalTwin({ patientState = 'stable', healthScore = 82 
 
       {/* Controls */}
       <div className="digital-twin__controls">
-        <button className="btn-icon twin-ctrl" title="Zoom In" onClick={() => setZoom(z => Math.min(z + 0.2, 2))}>
+        <button className="btn-icon twin-ctrl glass-card" title="Zoom In" onClick={() => setZoom(z => Math.min(z + 0.2, 2))}>
           <span className="material-icons icon-sm">zoom_in</span>
         </button>
-        <button className="btn-icon twin-ctrl" title="Zoom Out" onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))}>
+        <button className="btn-icon twin-ctrl glass-card" title="Zoom Out" onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))}>
           <span className="material-icons icon-sm">zoom_out</span>
         </button>
-        <button className="btn-icon twin-ctrl" title="Reset" onClick={() => { setZoom(1); setActivePin(null); }}>
+        <button className="btn-icon twin-ctrl glass-card" title="Reset" onClick={() => { setZoom(1); setActivePin(null); }}>
           <span className="material-icons icon-sm">refresh</span>
         </button>
-        <button className="btn-icon twin-ctrl" title="Fullscreen" onClick={() => setIsFullscreen(!isFullscreen)}>
+        <button className="btn-icon twin-ctrl glass-card" title="Fullscreen" onClick={() => setIsFullscreen(!isFullscreen)}>
           <span className="material-icons icon-sm">{isFullscreen ? 'fullscreen_exit' : 'fullscreen'}</span>
         </button>
-        <button className="btn-icon twin-ctrl" title="Layer Toggle">
+        <button className="btn-icon twin-ctrl glass-card" title="Layer Toggle" onClick={() => toast('Toggling skeleton and nervous system layers...', 'info')}>
           <span className="material-icons icon-sm">layers</span>
         </button>
       </div>
 
       {/* Telemetry footer */}
-      <div className="digital-twin__telemetry">
+      <div className="digital-twin__telemetry glass-card">
         <div className="telemetry-item">
           <span className="telemetry-label">SYNC</span>
           <span className="telemetry-value telemetry-value--green">ACTIVE</span>
         </div>
+        <div className="telemetry-divider" />
         <div className="telemetry-item">
           <span className="telemetry-label">LATENCY</span>
           <span className="telemetry-value">0.2ms</span>
         </div>
+        <div className="telemetry-divider" />
         <div className="telemetry-item">
           <span className="telemetry-label">SENSOR LOAD</span>
           <span className="telemetry-value">42%</span>
         </div>
+        <div className="telemetry-divider" />
         <div className="telemetry-item">
           <span className="telemetry-label">TELEMETRY</span>
           <span className="telemetry-value telemetry-value--blue">ENCRYPTED</span>

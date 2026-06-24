@@ -1,86 +1,71 @@
 .body-pin {
   position: absolute;
   transform: translate(-50%, -50%);
-  cursor: pointer;
-  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  cursor: pointer;
+  z-index: 20;
 }
 
-.body-pin__ping {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid var(--pin-color, var(--primary));
-  animation: pulse-ring 1.5s ease-out infinite;
-  pointer-events: none;
-}
-
-.body-pin--critical .body-pin__ping {
-  animation-duration: 0.8s;
-}
-
-.body-pin__dot {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(var(--pin-color, 77, 142, 255), 0.15);
-  background-color: color-mix(in srgb, var(--pin-color, #4d8eff) 15%, transparent);
-  border: 2px solid var(--pin-color, #4d8eff);
+/* Core Dot */
+.body-pin__core {
+  position: relative;
+  width: 12px;
+  height: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
-  box-shadow: 0 0 10px var(--pin-color, #4d8eff);
 }
 
-.body-pin:hover .body-pin__dot,
-.body-pin--active .body-pin__dot {
-  background-color: color-mix(in srgb, var(--pin-color, #4d8eff) 30%, transparent);
-  transform: scale(1.2);
-}
-
-.body-pin__count {
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--pin-color, var(--primary));
-}
-
-.body-pin__stable-dot {
+.body-pin__center-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--pin-color, var(--primary));
+  background: var(--pin-color);
+  box-shadow: 0 0 8px var(--pin-color);
+  transition: all 0.3s ease;
 }
 
-.body-pin__label {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--pin-color, var(--primary));
-  white-space: nowrap;
-  background: rgba(11, 14, 20, 0.7);
-  padding: 1px 4px;
-  border-radius: 2px;
+.body-pin:hover .body-pin__center-dot,
+.body-pin--active .body-pin__center-dot {
+  transform: scale(1.5);
 }
 
-/* Tooltip */
+.body-pin__pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--pin-color);
+  opacity: 0.4;
+  animation: body-pin-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes body-pin-pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* Tooltip (Glass Card) */
 .body-pin__tooltip {
   position: absolute;
-  left: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--surface-container-high);
-  border: 1px solid var(--pin-color, var(--border-muted));
-  border-radius: var(--radius-lg);
-  padding: 10px 12px;
-  min-width: 190px;
-  box-shadow: var(--shadow-lg), 0 0 16px color-mix(in srgb, var(--pin-color, #4d8eff) 30%, transparent);
-  animation: slide-in-right 0.15s ease;
-  z-index: 100;
+  top: -10px;
+  left: 20px;
+  padding: 10px 14px;
+  min-width: 180px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-10px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 30;
+}
+
+.body-pin:hover .body-pin__tooltip,
+.body-pin--active .body-pin__tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }
 
 .body-pin__tooltip-header {
@@ -89,12 +74,12 @@
   gap: 6px;
   margin-bottom: 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--border-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .body-pin__tooltip-title {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--on-surface);
 }
@@ -103,28 +88,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  font-size: 10px;
 }
 
 .body-pin__tooltip-key {
-  font-size: 10px;
   color: var(--outline);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .body-pin__tooltip-val {
-  font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .body-pin__tooltip-rec {
   display: flex;
   align-items: flex-start;
-  gap: 5px;
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px solid var(--border-muted);
-  font-size: 10px;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  font-size: 9px;
   color: var(--on-surface-variant);
   line-height: 1.4;
 }

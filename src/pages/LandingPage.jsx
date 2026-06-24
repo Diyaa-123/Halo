@@ -40,9 +40,12 @@ export default function LandingPage() {
   }, [selectedFeature, lenis]);
 
   // Clean up global overflow styles
+  // Clean up global overflow styles to allow WINDOW scrolling for Lenis
   useEffect(() => {
     document.documentElement.style.overflow = 'auto';
+    document.documentElement.style.height = 'auto';
     document.body.style.overflow = 'auto';
+    document.body.style.height = 'auto';
     const root = document.getElementById('root');
     const appNode = document.querySelector('.app');
     
@@ -57,7 +60,9 @@ export default function LandingPage() {
     
     return () => {
       document.documentElement.style.overflow = '';
+      document.documentElement.style.height = '100%';
       document.body.style.overflow = 'hidden';
+      document.body.style.height = '100%';
       if (root) {
         root.style.overflow = 'hidden';
         root.style.height = '100vh';
@@ -89,7 +94,7 @@ export default function LandingPage() {
               <HeroSection />
             </div>
 
-            <div style={{ height: `${(landingCards.length - 1) * 100}vh`, pointerEvents: 'none' }} />
+            <div style={{ height: `${landingCards.length * 100}vh`, pointerEvents: 'none' }} />
             
             <div style={{ pointerEvents: 'auto', position: 'relative', zIndex: 20 }}>
               <FooterSection />

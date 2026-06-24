@@ -58,6 +58,7 @@ export default function CustomCursor() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
       cancelAnimationFrame(requestRef);
+      document.body.style.cursor = 'auto';
     };
   }, []);
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import './PageLayout.css';
 import './WeeklyReportPage.css';
+import { useToast } from '../components/layout/ToastContext';
 
 const sleepScores = [81, 79, 74, 73, 80, 84, 82];
 const sleepNights = [
@@ -66,6 +67,7 @@ function Sparkline({ data }) {
 }
 
 export default function WeeklyReportPage() {
+  const toast = useToast();
   const avgSleep = (sleepScores.reduce((sum, value) => sum + value, 0) / sleepScores.length).toFixed(0);
   const belowBaseline = sleepScores.filter(score => score < 78).length;
   const attributionHighConfidence = 73;
@@ -86,7 +88,7 @@ export default function WeeklyReportPage() {
             <p className="page-layout__subtitle">Family-friendly overview for Mr. Raghav Iyer · Week of June 15</p>
           </div>
         </div>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={() => toast('Generating Weekly Report PDF...', 'success')}>
           <span className="material-icons icon-sm">download</span>
           Download PDF
         </button>

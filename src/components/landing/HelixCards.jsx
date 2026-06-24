@@ -19,7 +19,13 @@ function CardGroup({ card, index, maxIndex, totalCards, onCardClick }) {
       video.loop = true;
       video.muted = true;
       video.playsInline = true;
-      video.load(); // Force load
+      // Preload all videos so they are instantly ready when scrolled into view
+      video.preload = 'auto';
+      // Only autoplay the first one to guarantee initial display
+      if (index === 0) {
+        video.autoplay = true;
+      }
+      video.load(); 
       
       const texture = new THREE.VideoTexture(video);
       texture.minFilter = THREE.LinearFilter;
@@ -39,15 +45,19 @@ function CardGroup({ card, index, maxIndex, totalCards, onCardClick }) {
     }
   }, [card.videoSrc]);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (!groupRef.current) return;
     
-    const heroHeight = window.innerHeight;
-    const maxCardsScroll = Math.max(1, document.body.scrollHeight - window.innerHeight - heroHeight);
-    const activeCardsScroll = Math.max(0, window.scrollY - heroHeight);
-    const clampedProgress = Math.max(0, Math.min(1, activeCardsScroll / maxCardsScroll));
+    // STRICTLY native window scroll-driven rotation
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
     
-    const scrollProgress = clampedProgress * totalCards;
+    // Hero section is exactly 100vh.
+    const startScroll = vh;
+    const cardScroll = Math.max(0, scrollY - startScroll);
+    
+    // Each card takes exactly 100vh to fully rotate through, syncing perfectly with the 100vh spacer divs
+    const scrollProgress = cardScroll / vh;
     
     const delta = index - scrollProgress;
     
@@ -85,14 +95,26 @@ function CardGroup({ card, index, maxIndex, totalCards, onCardClick }) {
 
     // Video Playback & Fading Logic
     if (videoEl && videoMaterialRef.current) {
-      // Play and fade in if the card is in the center
-      if (distance < 0.35) {
-        if (videoEl.paused) videoEl.play().catch(() => {});
-        videoMaterialRef.current.opacity = THREE.MathUtils.lerp(videoMaterialRef.current.opacity, 0.85, 0.05);
+      // Play and fade in earlier so cards never look empty when rotating in
+      if (distance < 0.75) {
+        if (videoEl.paused && !videoEl.playAttempted) {
+          videoEl.playAttempted = true;
+          const playPromise = videoEl.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              videoEl.playAttempted = false;
+            }).catch(() => {
+              videoEl.playAttempted = false;
+            });
+          }
+        }
+        // Fade in 5x faster (0.25) so it's instantly visible
+        videoMaterialRef.current.opacity = THREE.MathUtils.lerp(videoMaterialRef.current.opacity, 0.85, 0.25);
       } else {
         // Pause and fade out if the card scrolls away
         if (!videoEl.paused) videoEl.pause();
-        videoMaterialRef.current.opacity = THREE.MathUtils.lerp(videoMaterialRef.current.opacity, 0.0, 0.1);
+        // Slowed down fade-out (changed from 0.1 to 0.02)
+        videoMaterialRef.current.opacity = THREE.MathUtils.lerp(videoMaterialRef.current.opacity, 0.0, 0.02);
       }
     }
   });
@@ -128,8 +150,6 @@ function CardGroup({ card, index, maxIndex, totalCards, onCardClick }) {
           roughness={0.12}
           transparent={true} // Replaced heavy transmission with lightweight transparency
           opacity={0.4}
-          clearcoat={1.0}
-          clearcoatRoughness={0.1}
           envMapIntensity={1.0}
         />
       </RoundedBox>

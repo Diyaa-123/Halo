@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--background);
+  background-color: transparent; /* Let global animated background show through */
 }
 
 .app__content {
@@ -13,13 +13,15 @@
   flex: 1;
   overflow: hidden; /* Prevent body scroll, let columns handle it */
   min-height: 0;
+  scroll-behavior: auto;
 }
 
 .app__main {
   flex: 1;
-  display: flex;
-  overflow: hidden;
-  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* CRITICAL FIX: Must be 'auto' for Lenis smooth scroll to work. 'smooth' causes massive lag. */
+  scroll-behavior: auto;
   min-height: 0;
 }
 
@@ -42,6 +44,7 @@
   min-height: 0;
   overflow-y: auto;
   padding-bottom: 24px;
+  scroll-behavior: auto;
 }
 
 .home-col::-webkit-scrollbar {

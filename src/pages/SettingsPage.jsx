@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './PageLayout.css';
 import './SettingsPage.css';
+import { useToast } from '../components/layout/ToastContext';
 
 const PRIVACY_ITEMS = [
   { name: 'WiFi CSI raw signal',             stored: false, desc: 'Processed on-device in real-time and discarded. Never persisted to disk.' },
@@ -12,6 +13,7 @@ const PRIVACY_ITEMS = [
 ];
 
 export default function SettingsPage() {
+  const toast = useToast();
   const [nightModeAuto,       setNightModeAuto]       = useState(true);
   const [nightStart,          setNightStart]           = useState('22:00');
   const [nightEnd,            setNightEnd]             = useState('07:00');
@@ -22,6 +24,7 @@ export default function SettingsPage() {
 
   const handleSave = () => {
     setSaved(true);
+    toast('Settings saved successfully.', 'success');
     setTimeout(() => setSaved(false), 2000);
   };
 
@@ -78,10 +81,10 @@ export default function SettingsPage() {
           ))}
 
           <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
-            <button className="btn btn-outline btn-sm">
+            <button className="btn btn-outline btn-sm" onClick={() => toast('Triggering profile recalibration sequence...', 'info')}>
               <span className="material-icons icon-sm">refresh</span> Trigger Re-enrolment
             </button>
-            <button className="btn btn-ghost btn-sm">
+            <button className="btn btn-ghost btn-sm" onClick={() => toast('Edit Profile module opening...', 'info')}>
               <span className="material-icons icon-sm">edit</span> Edit Profile
             </button>
           </div>
@@ -120,7 +123,7 @@ export default function SettingsPage() {
             </div>
           ))}
 
-          <button className="btn btn-outline btn-sm" style={{ marginTop: 14 }}>
+          <button className="btn btn-outline btn-sm" style={{ marginTop: 14 }} onClick={() => toast('Searching for unpaired sensors on network...', 'info')}>
             <span className="material-icons icon-sm">add</span> Pair New Sensor
           </button>
         </div>
@@ -151,11 +154,11 @@ export default function SettingsPage() {
                   ))}
                 </div>
               </div>
-              <button className="btn-icon"><span className="material-icons icon-sm">edit</span></button>
+              <button className="btn-icon" onClick={() => toast(`Editing contact ${c.name}...`, 'info')}><span className="material-icons icon-sm">edit</span></button>
             </div>
           ))}
 
-          <button className="btn btn-outline btn-sm" style={{ marginTop: 14 }}>
+          <button className="btn btn-outline btn-sm" style={{ marginTop: 14 }} onClick={() => toast('Add Contact dialog opening...', 'info')}>
             <span className="material-icons icon-sm">add</span> Add Contact
           </button>
         </div>

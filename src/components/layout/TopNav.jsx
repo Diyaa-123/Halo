@@ -1,19 +1,21 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './TopNav.css';
+import { useToast } from './ToastContext';
 
 const navItems = [
   { icon: 'dashboard',       label: 'Overview',           path: '/'            },
   { icon: 'sensors',         label: 'Live Sensing',        path: '/live'        },
   { icon: 'bedtime',         label: 'Sleep & Vitals',      path: '/sleep'       },
   { icon: 'directions_walk', label: 'Mobility & Fall Risk', path: '/mobility'  },
-  { icon: 'health_metrics',  label: 'Biometrics',          path: '/biometrics'  },
+  { icon: 'monitor_heart',   label: 'Biometrics',          path: '/biometrics'  },
   { icon: 'policy',          label: 'Attribution',         path: '/attribution' },
   { icon: 'warning',         label: 'Safety Log',          path: '/safety'      },
   { icon: 'summarize',       label: 'Reports',             path: '/report'      },
 ];
 
 export default function TopNav() {
+  const toast = useToast();
   const navigate  = useNavigate();
   const location  = useLocation();
 
@@ -55,7 +57,7 @@ export default function TopNav() {
             <span className="material-icons">settings</span>
           </button>
 
-          <button className="top-nav__icon-btn" style={{ position: 'relative' }}>
+          <button className="top-nav__icon-btn" style={{ position: 'relative' }} onClick={() => toast('Opening Notifications Panel...', 'info')}>
             <span className="material-icons">notifications_none</span>
             <span className="top-nav__notif-dot"></span>
           </button>

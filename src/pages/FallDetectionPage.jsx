@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './PageLayout.css';
 import './FallDetectionPage.css';
+import { useToast } from '../components/layout/ToastContext';
 
 const fallEvents = [
   { time: '14:41', location: 'Bathroom', riskScore: 92, confidence: '97%', responseTime: '2m 14s', status: 'resolved', note: 'Slip-like motion on wet floor' },
@@ -11,6 +12,7 @@ const fallEvents = [
 const workflow = ['Fall Detected', 'Nurse Alert', 'Acknowledged', 'Response Logged', 'Case Closed'];
 
 export default function FallDetectionPage() {
+  const toast = useToast();
   const [activeEvent, setActiveEvent] = useState(0);
   const [timelinePos, setTimelinePos] = useState(75);
   const ev = fallEvents[activeEvent];
@@ -177,11 +179,11 @@ export default function FallDetectionPage() {
                 Add bathroom grab bars, keep the floor dry, and expand night lighting coverage near the turning path. Continue observing bathroom entry within one hour of sleep onset.
               </p>
               <div className="fall-card__actions">
-                <button className="btn btn-primary btn-sm" style={{ flex: 1 }}>
+                <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={() => toast('Opening Care Plan Editor...', 'info')}>
                   <span className="material-icons icon-sm">assignment</span>
                   Create Care Plan
                 </button>
-                <button className="btn btn-outline btn-sm" style={{ flex: 1 }}>
+                <button className="btn btn-outline btn-sm" style={{ flex: 1 }} onClick={() => toast('Opening Sharing Options...', 'info')}>
                   <span className="material-icons icon-sm">share</span>
                   Share Report
                 </button>

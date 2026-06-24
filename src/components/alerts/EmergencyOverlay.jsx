@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './EmergencyOverlay.css';
+import { useToast } from '../layout/ToastContext';
 
 export default function EmergencyOverlay({ onDismiss, event = 'Respiratory Distress', bed = 'BED 04' }) {
+  const toast = useToast();
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
@@ -46,19 +48,19 @@ export default function EmergencyOverlay({ onDismiss, event = 'Respiratory Distr
 
         {/* Action Buttons */}
         <div className="emergency-overlay__actions">
-          <button className="emergency-overlay__action emergency-overlay__action--red">
+          <button className="emergency-overlay__action emergency-overlay__action--red" onClick={() => toast('Paging nursing staff to location...', 'success')}>
             <span className="material-icons">call</span>
             Call Nurse
           </button>
-          <button className="emergency-overlay__action emergency-overlay__action--blue">
+          <button className="emergency-overlay__action emergency-overlay__action--blue" onClick={() => toast('Initiating call to emergency contact...', 'info')}>
             <span className="material-icons">family_restroom</span>
             Call Family
           </button>
-          <button className="emergency-overlay__action emergency-overlay__action--red">
+          <button className="emergency-overlay__action emergency-overlay__action--red" onClick={() => toast('Escalating to Emergency Medical Services...', 'error')}>
             <span className="material-icons">local_hospital</span>
             Escalate EMS
           </button>
-          <button className="emergency-overlay__action emergency-overlay__action--outline">
+          <button className="emergency-overlay__action emergency-overlay__action--outline" onClick={() => toast('Opening Incident Timeline...', 'info')}>
             <span className="material-icons">timeline</span>
             View Timeline
           </button>
