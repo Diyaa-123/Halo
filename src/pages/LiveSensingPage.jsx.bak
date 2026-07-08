@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import LiveSensing3DMap from '../components/home/LiveSensing3DMap';
 import './PageLayout.css';
 import './LiveSensingPage.css';
 import { useToast } from '../components/layout/ToastContext';
@@ -220,6 +219,141 @@ function deriveAlerts(sensing) {
   return alerts;
 }
 
+function FloorPlan({ mode, sensing }) {
+  const isNight = mode === 'night';
+  const bedroomColor = isNight ? '#6f6be8' : '#7a75f0';
+  const livingColor = '#f59e0b';
+  const residentColor = '#7a75f0';
+  const scanColor = isNight ? 'rgba(111,107,232,0.22)' : 'rgba(122,117,240,0.18)';
+  const roomFill = isNight ? 'rgba(111,107,232,0.08)' : 'rgba(122,117,240,0.07)';
+
+  const isLive = sensing?.isConnected;
+  const presence = isLive ? sensing.presence : null;
+  const confidence = isLive && sensing.confidence != null ? Math.round(sensing.confidence * 100) : null;
+  const br = isLive && sensing.breathingRate != null ? sensing.breathingRate.toFixed(1) : null;
+  const motion = isLive ? sensing.motionLevel : 'offline';
+  const occupantsCount = isLive ? sensing.estimatedPersons : null;
+
+  return (
+    <svg viewBox="0 0 960 650" className="floor-plan-svg floor-plan-svg--realtime" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="realtimeFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor={isNight ? '#f6f4ff' : '#fffdf8'} />
+          <stop offset="100%" stopColor={isNight ? '#fcfbff' : '#fbfaf5'} />
+        </linearGradient>
+        <linearGradient id="bedroomFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor={roomFill} />
+          <stop offset="100%" stopColor="rgba(111,107,232,0.02)" />
+        </linearGradient>
+        <linearGradient id="livingFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="rgba(245,158,11,0.09)" />
+          <stop offset="100%" stopColor="rgba(245,158,11,0.03)" />
+        </linearGradient>
+        <radialGradient id="residentGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(122,117,240,0.62)" />
+          <stop offset="100%" stopColor="rgba(122,117,240,0)" />
+        </radialGradient>
+        <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="8" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <rect x="24" y="20" width="912" height="584" rx="22" fill="url(#realtimeFrame)" stroke="rgba(42,46,60,0.22)" strokeWidth="1.8" />
+      <rect x="38" y="34" width="884" height="556" rx="18" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.55)" strokeWidth="1" />
+      <rect x="24" y="20" width="430" height="330" rx="18" fill="url(#bedroomFill)" stroke={bedroomColor} strokeWidth="2.6" />
+      <rect x="454" y="20" width="482" height="330" rx="18" fill="url(#livingFill)" stroke={livingColor} strokeWidth="2.6" strokeDasharray="9 7" />
+      <rect x="24" y="350" width="300" height="254" rx="18" fill="rgba(255,255,255,0.32)" stroke="rgba(140,145,164,0.55)" strokeWidth="1.7" />
+      <rect x="324" y="350" width="300" height="254" rx="18" fill="rgba(255,255,255,0.32)" stroke="rgba(140,145,164,0.55)" strokeWidth="1.7" />
+      <rect x="624" y="350" width="292" height="254" rx="18" fill="rgba(255,255,255,0.32)" stroke="rgba(140,145,164,0.55)" strokeWidth="1.7" />
+
+      <line x1="454" y1="20" x2="454" y2="350" stroke="rgba(245,158,11,0.65)" strokeWidth="2.2" strokeDasharray="9 7" />
+      <line x1="24" y1="350" x2="916" y2="350" stroke="rgba(140,145,164,0.42)" strokeWidth="1.8" />
+      <line x1="324" y1="350" x2="324" y2="604" stroke="rgba(140,145,164,0.38)" strokeWidth="1.5" />
+      <line x1="624" y1="350" x2="624" y2="604" stroke="rgba(140,145,164,0.38)" strokeWidth="1.5" />
+
+      <text x="239" y="58" textAnchor="middle" fontSize="22" fill={bedroomColor} fontWeight="800" letterSpacing="1.2">BEDROOM</text>
+      <text x="239" y="82" textAnchor="middle" fontSize="11" fill="rgba(95,91,123,0.92)" fontWeight="600">target zone</text>
+      <text x="239" y="104" textAnchor="middle" fontSize="10" fill="rgba(95,91,123,0.72)" fontWeight="500">live occupancy and physiology</text>
+      <text x="695" y="58" textAnchor="middle" fontSize="22" fill="#9a6a1f" fontWeight="800" letterSpacing="1.2">LIVING ROOM</text>
+      <text x="695" y="82" textAnchor="middle" fontSize="11" fill="rgba(144,99,18,0.95)" fontWeight="600">occupancy sensor</text>
+      <text x="695" y="104" textAnchor="middle" fontSize="10" fill="rgba(144,99,18,0.74)" fontWeight="500">no identity</text>
+
+      <text x="170" y="388" textAnchor="middle" fontSize="15" fill="rgba(106,109,124,0.9)" fontWeight="800" letterSpacing="1">BATHROOM</text>
+      <text x="170" y="409" textAnchor="middle" fontSize="11" fill="rgba(118,122,136,0.9)">live zone map</text>
+      <text x="474" y="388" textAnchor="middle" fontSize="15" fill="rgba(106,109,124,0.9)" fontWeight="800" letterSpacing="1">KITCHEN</text>
+      <text x="474" y="409" textAnchor="middle" fontSize="11" fill="rgba(118,122,136,0.9)">live zone map</text>
+      <text x="770" y="388" textAnchor="middle" fontSize="15" fill="rgba(106,109,124,0.9)" fontWeight="800" letterSpacing="1">HALLWAY</text>
+      <text x="770" y="409" textAnchor="middle" fontSize="11" fill="rgba(118,122,136,0.9)">live zone map</text>
+
+      <rect x="30" y="90" width="20" height="24" rx="6" fill="#5b52cf" />
+      <text x="40" y="107" textAnchor="middle" fontSize="11" fill="#fff" fontWeight="800">TX</text>
+      <rect x="436" y="90" width="20" height="24" rx="6" fill="#5b52cf" />
+      <text x="446" y="107" textAnchor="middle" fontSize="11" fill="#fff" fontWeight="800">RX</text>
+      <line x1="50" y1="102" x2="436" y2="102" stroke="rgba(91,82,207,0.32)" strokeWidth="2" strokeDasharray="6 6" />
+      <text x="240" y="116" textAnchor="middle" fontSize="10" fill="rgba(108,114,255,0.92)" fontWeight="600" letterSpacing="0.04em">CSI sensing link · live feed</text>
+
+      {presence === true ? (
+        <g style={{ opacity: 1, transition: 'opacity 0.5s' }}>
+          <circle cx="239" cy="184" r="30" fill="none" stroke={bedroomColor} strokeWidth="1.8" opacity="0.32">
+            <animate attributeName="r" values="28;34;28" dur="3.2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.32;0.12;0.32" dur="3.2s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="239" cy="184" r="18" fill="url(#residentGlow)" opacity="0.36" />
+          <circle cx="239" cy="184" r="10" fill="rgba(255,255,255,0.95)" stroke={bedroomColor} strokeWidth="2" />
+          <circle cx="239" cy="184" r="3.8" fill={residentColor} filter="url(#softGlow)" />
+          <circle cx="239" cy="184" r="44" fill="none" stroke={scanColor} strokeWidth="1.1" strokeDasharray="7 10" opacity="0.48">
+            <animate attributeName="stroke-dashoffset" from="0" to="120" dur="9s" repeatCount="indefinite" />
+          </circle>
+          <text x="239" y="228" textAnchor="middle" fontSize="15" fill={bedroomColor} fontWeight="800">
+            {confidence == null ? 'Confidence unavailable' : `${confidence}% confidence`}
+          </text>
+          <rect x="199" y="242" width="80" height="24" rx="8" fill="rgba(122,117,240,0.10)" />
+          <text x="239" y="258" textAnchor="middle" fontSize="12" fill="#5f56c3" fontWeight="700">
+            {br == null ? 'No vitals' : `${br} brpm`}
+          </text>
+          <text x="239" y="278" textAnchor="middle" fontSize="11" fill="rgba(95,91,123,0.88)" fontWeight="500">
+            primary occupant · {motion}
+          </text>
+        </g>
+      ) : presence === false ? (
+        <g opacity="0.5">
+          <text x="239" y="184" textAnchor="middle" fontSize="14" fill="rgba(95,91,123,0.6)" fontWeight="700">ZONE EMPTY</text>
+        </g>
+      ) : (
+        <g opacity="0.55">
+          <text x="239" y="184" textAnchor="middle" fontSize="14" fill="rgba(95,91,123,0.6)" fontWeight="700">FEED OFFLINE</text>
+        </g>
+      )}
+
+      <circle cx="685" cy="156" r="10" fill="rgba(245,158,11,0.18)" stroke={livingColor} strokeWidth="3" />
+      <circle cx="685" cy="156" r="4.5" fill={livingColor} />
+      <text x="685" y="182" textAnchor="middle" fontSize="14" fill="#8d5b08" fontWeight="700">occupancy only</text>
+      <circle cx="646" cy="220" r="12" fill="none" stroke="rgba(140,145,164,0.55)" strokeWidth="1.6" strokeDasharray="4 5" />
+      <text x="646" y="225" textAnchor="middle" fontSize="15" fill="rgba(140,145,164,0.7)" fontWeight="700">?</text>
+      <circle cx="725" cy="214" r="12" fill="none" stroke="rgba(140,145,164,0.55)" strokeWidth="1.6" strokeDasharray="4 5" />
+      <text x="725" y="219" textAnchor="middle" fontSize="15" fill="rgba(140,145,164,0.7)" fontWeight="700">?</text>
+      <circle cx="722" cy="152" r="52" fill="none" stroke="rgba(245,158,11,0.16)" strokeWidth="1.2" />
+      <circle cx="685" cy="156" r="38" fill="none" stroke="rgba(245,158,11,0.12)" strokeWidth="1.2" strokeDasharray="4 6" />
+      <text x="685" y="286" textAnchor="middle" fontSize="15" fill={livingColor} fontWeight="700">
+        {occupantsCount == null ? 'waiting for live occupancy' : occupantsCount > 0 ? `${occupantsCount} detected · monitoring` : 'no motion detected'}
+      </text>
+
+      <circle cx="170" cy="510" r="10" fill="rgba(140,145,164,0.13)" stroke="rgba(140,145,164,0.72)" strokeWidth="2" />
+      <circle cx="474" cy="510" r="10" fill="rgba(140,145,164,0.13)" stroke="rgba(140,145,164,0.72)" strokeWidth="2" />
+      <circle cx="770" cy="510" r="10" fill="rgba(140,145,164,0.13)" stroke="rgba(140,145,164,0.72)" strokeWidth="2" />
+      <circle cx="170" cy="510" r="3.5" fill="rgba(140,145,164,0.78)" />
+      <circle cx="474" cy="510" r="3.5" fill="rgba(140,145,164,0.78)" />
+      <circle cx="770" cy="510" r="3.5" fill="rgba(140,145,164,0.78)" />
+
+      <path d="M96 128 C164 112 228 112 300 128" fill="none" stroke="rgba(122,117,240,0.10)" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 9" />
+      <path d="M592 138 C656 122 720 122 800 140" fill="none" stroke="rgba(245,158,11,0.10)" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 9" />
+    </svg>
+  );
+}
 
 export default function LiveSensingPage() {
   const toast = useToast();
@@ -311,18 +445,17 @@ export default function LiveSensingPage() {
                 </span>
               </div>
 
-              <div className="live-floor-card__stage" style={{ position: 'relative', flex: 1, minHeight: '570px' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-                  <LiveSensing3DMap mode={mode} sensing={sensing} />
-                </div>
+              <div className="live-floor-card__stage">
+                <FloorPlan mode={mode} sensing={sensing} />
               </div>
 
               <div className="live-floor-card__legend">
                 {[
-                  { color: '#60a5fa', label: 'Room Blueprint' },
-                  { color: '#3b82f6', label: 'Occupancy Heatmap' },
-                  { color: '#818cf8', label: 'Live Resident' },
-                  { color: '#f59e0b', label: 'Motion Activity' },
+                  { color: '#5b52cf', label: 'TX / RX node pair' },
+                  { color: '#6e6af1', label: 'CSI sensing link' },
+                  { color: '#7a75f0', label: 'Target occupant' },
+                  { color: '#8d8a84', label: 'Shared-space occupant' },
+                  { color: '#f59e0b', label: 'Monitoring paused' },
                 ].map(({ color, label }) => (
                   <div key={label} className="live-floor-card__legend-item">
                     <span style={{ width: 11, height: 11, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
