@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import LeftSidebar from '../components/layout/LeftSidebar';
 import RightPanel from '../components/layout/RightPanel';
 import DigitalTwin from '../components/twin/DigitalTwin';
 import EmergencyOverlay from '../components/alerts/EmergencyOverlay';
+import { useSensing } from '../hooks/SensingContext';
 import './ClinicalDashboard.css';
 
-const patientData = {
-  name: 'Aarav Mehta',
-  age: 78,
-  gender: 'Male',
-  room: 'B-204',
-  healthScore: 82,
-  status: 'stable',
-  insuranceId: 'XY-2025-3487',
-  diagnosis: 'COPD, Hypertension',
-  admitDate: 'Oct 14, 2025',
-  physician: 'Dr. Priya Sharma',
-  ward: 'Geriatric Care',
-  bloodType: 'B+',
-};
-
 export default function ClinicalDashboard({ showEmergency, onEmergencyDismiss }) {
-  const [patientState, setPatientState] = useState('stable');
+  const sensing = useSensing();
+  const [patientState, setPatientState] = useState('offline');
+
+  const patientData = useMemo(() => ({
+    name: sensing.isConnected ? 'Live Target' : 'No Live Target',
+    age: '--',
+    gender: '--',
+    room: sensing.isConnected ? 'Live Zone' : 'Offline',
+    healthScore: sensing.confidence != null ? Math.round(sensing.confidence * 100) : 0,
+    status: sensing.isConnected ? (sensing.presence ? 'present' : 'away') : 'offline',
+    insuranceId: '--',
+    diagnosis: sensing.streamMessage || 'Backend-provided live sensing only',
+    admitDate: '--',
+    physician: '--',
+    ward: 'SilentSense',
+    bloodType: '--',
+  }), [sensing]);
+
+  const liveState = sensing.isConnected
+    ? (sensing.motionLevel === 'active' ? 'active' : sensing.presence ? 'stable' : 'away')
+    : 'offline';
+
+  useEffect(() => {
+    setPatientState(liveState);
+  }, [liveState]);
 
   return (
     <div className="clinical-dashboard">
@@ -31,9 +41,9 @@ export default function ClinicalDashboard({ showEmergency, onEmergencyDismiss })
       {/* Center Hero — Digital Twin — 48% */}
       <main className="clinical-dashboard__center">
         <DigitalTwin 
-          patientState={patientState} 
+          patientState={liveState}
           setPatientState={setPatientState}
-          healthScore={patientData.healthScore} 
+          healthScore={patientData.healthScore}
         />
       </main>
 

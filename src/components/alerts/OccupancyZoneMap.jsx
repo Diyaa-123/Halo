@@ -1,22 +1,27 @@
 import React from 'react';
+import { useSensing } from '../../hooks/SensingContext';
 import './OccupancyZoneMap.css';
 
-const zones = [
-  { id: 'bedroom', label: 'Bedroom', x: 10, y: 10, w: 44, h: 36, current: true, time: '2h 14m' },
-  { id: 'bathroom', label: 'Bathroom', x: 58, y: 10, w: 32, h: 20, current: false, time: '12m' },
-  { id: 'living', label: 'Living Room', x: 10, y: 50, w: 44, h: 30, current: false, time: '45m' },
-  { id: 'kitchen', label: 'Kitchen', x: 58, y: 34, w: 32, h: 24, current: false, time: '18m' },
-  { id: 'corridor', label: 'Corridor', x: 56, y: 8, w: 4, h: 52, current: false, time: '5m' },
-  { id: 'dining', label: 'Dining', x: 58, y: 62, w: 32, h: 18, current: false, restricted: true, time: '0m' },
-];
-
-const heatPositions = [
-  { x: 32, y: 28, r: 18, opacity: 0.6 },
-  { x: 32, y: 65, r: 10, opacity: 0.3 },
-  { x: 74, y: 20, r: 8, opacity: 0.2 },
-];
-
 export default function OccupancyZoneMap() {
+  const sensing = useSensing();
+  const isLive = sensing?.isConnected;
+  const presence = isLive ? sensing.presence : null;
+  const occupantsCount = isLive ? sensing.estimatedPersons : null;
+
+  // Derive current zone
+  const currentZone = !isLive ? 'offline' : presence ? 'bedroom' : (occupantsCount > 0 ? 'living' : 'away');
+
+  const zones = [
+    { id: 'bedroom', label: 'Bedroom', x: 10, y: 10, w: 44, h: 36, current: currentZone === 'bedroom', time: presence ? '2h 14m' : '0m' },
+    { id: 'bathroom', label: 'Bathroom', x: 58, y: 10, w: 32, h: 20, current: currentZone === 'bathroom', time: '12m' },
+    { id: 'living', label: 'Living Room', x: 10, y: 50, w: 44, h: 30, current: currentZone === 'living', time: !presence && occupantsCount > 0 ? '5m' : '45m' },
+    { id: 'kitchen', label: 'Kitchen', x: 58, y: 34, w: 32, h: 24, current: currentZone === 'kitchen', time: '18m' },
+    { id: 'corridor', label: 'Corridor', x: 56, y: 8, w: 4, h: 52, current: currentZone === 'corridor', time: '5m' },
+    { id: 'dining', label: 'Dining', x: 58, y: 62, w: 32, h: 18, current: currentZone === 'dining', restricted: true, time: '0m' },
+  ];
+
+  const currentX = currentZone === 'bedroom' ? 32 : (currentZone === 'living' ? 32 : null);
+  const currentY = currentZone === 'bedroom' ? 28 : (currentZone === 'living' ? 65 : null);
   return (
     <div className="zone-map">
       <div className="zone-map__header">
@@ -39,7 +44,11 @@ export default function OccupancyZoneMap() {
       <div className="zone-map__canvas">
         <svg viewBox="0 0 100 90" className="zone-map__svg">
           {/* Heatmap blobs */}
-          {heatPositions.map((h, i) => (
+          {[
+            { x: 32, y: 28, r: 18, opacity: presence ? 0.6 : 0.1 },
+            { x: 32, y: 65, r: 10, opacity: occupantsCount > 0 ? 0.4 : 0.1 },
+            { x: 74, y: 20, r: 8, opacity: 0.1 },
+          ].map((h, i) => (
             <circle key={i} cx={h.x} cy={h.y} r={h.r}
               fill="rgba(245, 158, 11, 0.15)"
               style={{ filter: 'blur(4px)', opacity: h.opacity }}
@@ -78,11 +87,15 @@ export default function OccupancyZoneMap() {
           ))}
 
           {/* Current Position indicator */}
-          <circle cx="32" cy="28" r="2.5" fill="#adc6ff" opacity="0.9">
-            <animate attributeName="r" from="2" to="4" dur="1.5s" repeatCount="indefinite" />
-            <animate attributeName="opacity" from="0.9" to="0.2" dur="1.5s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="32" cy="28" r="1.5" fill="#4d8eff" />
+          {currentX !== null && currentY !== null && (
+            <g>
+              <circle cx={currentX} cy={currentY} r="2.5" fill="#adc6ff" opacity="0.9">
+                <animate attributeName="r" from="2" to="4" dur="1.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.9" to="0.2" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+              <circle cx={currentX} cy={currentY} r="1.5" fill="#4d8eff" />
+            </g>
+          )}
 
           {/* Path history dotted */}
           <polyline
@@ -99,15 +112,19 @@ export default function OccupancyZoneMap() {
       <div className="zone-map__stats">
         <div className="zone-map__stat">
           <span className="zone-map__stat-label">Current Zone</span>
-          <span className="zone-map__stat-value" style={{ color: 'var(--primary)' }}>Bedroom</span>
+          <span className="zone-map__stat-value" style={{ color: 'var(--primary)' }}>
+            {currentZone === 'bedroom' ? 'Bedroom' : (currentZone === 'living' ? 'Living Room' : currentZone === 'offline' ? 'Offline' : 'Away')}
+          </span>
         </div>
         <div className="zone-map__stat">
           <span className="zone-map__stat-label">Time In Zone</span>
-          <span className="zone-map__stat-value">2h 14m</span>
+          <span className="zone-map__stat-value">{presence ? 'Live' : isLive ? '0m' : '--'}</span>
         </div>
         <div className="zone-map__stat">
           <span className="zone-map__stat-label">Wandering</span>
-          <span className="zone-map__stat-value" style={{ color: 'var(--secondary)' }}>None</span>
+          <span className="zone-map__stat-value" style={{ color: 'var(--secondary)' }}>
+            {!isLive ? '--' : !presence && occupantsCount > 1 ? 'High Activity' : 'None'}
+          </span>
         </div>
       </div>
     </div>

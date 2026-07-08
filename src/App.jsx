@@ -82,24 +82,27 @@ import MissionPage from './pages/MissionPage';
 import TechnologyPage from './pages/TechnologyPage';
 
 import { ToastProvider } from './components/layout/ToastContext';
+import { SensingProvider } from './hooks/SensingContext';
 
 export default function App() {
   const [activeSidebar, setActiveSidebar] = useState('family');
 
   return (
     <ToastProvider>
-      <BrowserRouter>
-        <div className="ambient-blob-2" />
-        <div className="app">
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/mission" element={<MissionPage />} />
-            <Route path="/technology" element={<TechnologyPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/*" element={<DashboardLayout activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <SensingProvider>
+        <BrowserRouter>
+          <div className="ambient-blob-2" />
+          <div className="app">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/mission" element={<MissionPage />} />
+              <Route path="/technology" element={<TechnologyPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/*" element={<DashboardLayout activeSidebar={activeSidebar} setActiveSidebar={setActiveSidebar} />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </SensingProvider>
     </ToastProvider>
   );
 }

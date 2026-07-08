@@ -4,50 +4,41 @@ import { useToast } from '../components/layout/ToastContext';
 
 export default function DemoModePage() {
   const toast = useToast();
+
   return (
     <div className="page-layout">
       <div className="page-layout__header">
         <div className="page-layout__title-group">
           <span className="material-icons icon-lg" style={{ color: 'var(--primary)' }}>campaign</span>
           <div>
-            <h1 className="page-layout__title">Judge Demo Mode</h1>
-            <p className="page-layout__subtitle">Isolated environment to trigger events and playback datasets</p>
+            <h1 className="page-layout__title">Demo Mode Disabled</h1>
+            <p className="page-layout__subtitle">Live-only deployment mode keeps synthetic playback out of the dashboard</p>
           </div>
         </div>
-        <span className="badge badge-critical">INTERNAL DEMO</span>
+        <span className="badge badge-stable">LIVE ONLY</span>
       </div>
 
       <div className="page-layout__content">
-        <div className="glass-card" style={{ padding: 24, marginBottom: 24, borderTop: '4px solid var(--emergency-red)' }}>
-          <h3 className="section-label">Simulate Events (Real-time override)</h3>
-          <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
-            <button className="btn btn-primary" style={{ background: 'var(--emergency-red)', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)' }} onClick={() => toast('Simulating Phase-acceleration Fall Event...', 'error')}>
-              <span className="material-icons icon-sm">warning</span> Trigger Fall
+        <div className="glass-card" style={{ padding: 24, marginBottom: 24, borderTop: '4px solid var(--primary)' }}>
+          <h3 className="section-label">Simulation Controls Removed</h3>
+          <p style={{ fontSize: 13, color: 'var(--on-surface-variant)', lineHeight: 1.6 }}>
+            This page no longer injects pre-recorded CSI data or fake incidents into the pipeline. Use the live websocket feed or real backend data sources instead.
+          </p>
+          <div style={{ display: 'flex', gap: 12, marginTop: 16, flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" onClick={() => toast('Demo playback is disabled in live-only mode.', 'info')}>
+              <span className="material-icons icon-sm">lock</span> Playback Disabled
             </button>
-            <button className="btn btn-primary" style={{ background: 'var(--warning-amber)', boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)' }} onClick={() => toast('Simulating Breathing Cessation (Apnea)...', 'warning')}>
-              <span className="material-icons icon-sm">air</span> Trigger Apnea
-            </button>
-            <button className="btn btn-outline" onClick={() => toast('Simulating Restlessness/Wandering sequence...', 'info')}>
-              <span className="material-icons icon-sm">directions_run</span> Trigger Wandering
+            <button className="btn btn-outline" onClick={() => toast('Connect the backend websocket to enable live monitoring.', 'info')}>
+              <span className="material-icons icon-sm">wifi</span> Connect Feed
             </button>
           </div>
         </div>
 
         <div className="glass-card" style={{ padding: 24 }}>
-          <h3 className="section-label">Dataset Playback</h3>
-          <p style={{ fontSize: 13, color: 'var(--on-surface-variant)', marginBottom: 16 }}>
-            Inject pre-recorded CSI data directly into the inference pipeline for demonstration.
+          <h3 className="section-label">How to Test Safely</h3>
+          <p style={{ fontSize: 13, color: 'var(--on-surface-variant)', lineHeight: 1.6 }}>
+            If you need a non-production test path, use the backend&apos;s explicit `SS_ALLOW_SIMULATION=1` flag during local development. The dashboard itself will continue to show only live or unavailable states.
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 12, background: 'var(--surface-container-low)', borderRadius: 'var(--radius)' }}>
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Edinburgh Dataset - Normal Sleep (14 RPM)</span>
-              <button className="btn btn-outline btn-sm" onClick={() => toast('Injecting Edinburgh Normal Sleep dataset into pipeline...', 'info')}><span className="material-icons icon-sm">play_arrow</span> Play</button>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 12, background: 'var(--surface-container-low)', borderRadius: 'var(--radius)' }}>
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Edinburgh Dataset - Restlessness</span>
-              <button className="btn btn-outline btn-sm" onClick={() => toast('Injecting Edinburgh Restlessness dataset into pipeline...', 'info')}><span className="material-icons icon-sm">play_arrow</span> Play</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

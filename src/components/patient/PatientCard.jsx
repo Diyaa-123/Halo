@@ -5,18 +5,18 @@ import { useToast } from '../layout/ToastContext';
 export default function PatientCard({ patient }) {
   const toast = useToast();
   const p = patient || {
-    name: 'Aarav Mehta',
-    age: 78,
-    gender: 'Male',
-    room: 'B-204',
-    healthScore: 82,
-    status: 'stable',
-    insuranceId: 'XY-2025-3487',
-    diagnosis: 'COPD, Hypertension',
-    admitDate: 'Oct 14, 2025',
-    physician: 'Dr. Priya Sharma',
-    ward: 'Geriatric Care',
-    bloodType: 'B+',
+    name: 'Live Target',
+    age: '--',
+    gender: '--',
+    room: 'Live Zone',
+    healthScore: 0,
+    status: 'warning',
+    insuranceId: '--',
+    diagnosis: 'Backend data required',
+    admitDate: '--',
+    physician: '--',
+    ward: 'SilentSense',
+    bloodType: '--',
   };
 
   const statusColor = {

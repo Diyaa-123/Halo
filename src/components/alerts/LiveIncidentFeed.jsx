@@ -1,18 +1,55 @@
 import React from 'react';
 import './LiveIncidentFeed.css';
+import { useSensing } from '../../hooks/SensingContext';
 
-const incidents = [
-  { time: '14:22', event: 'Apnea Episode', bed: 'BED 04', status: 'resolved', color: '#4edea3' },
-  { time: '14:30', event: 'Bathroom Occupancy', bed: 'BED 12', status: 'normal', color: '#adc6ff' },
-  { time: '14:41', event: 'Fall Detected', bed: 'BED 09', status: 'critical', color: '#EF4444' },
-  { time: '14:55', event: 'Meal Skipped', bed: 'BED 07', status: 'warning', color: '#F59E0B' },
-  { time: '15:02', event: 'Agitation Detected', bed: 'BED 07', status: 'warning', color: '#F59E0B' },
-  { time: '15:14', event: 'Hydration Alert', bed: 'BED 09', status: 'warning', color: '#F59E0B' },
-  { time: '15:20', event: 'Vitals Normalized', bed: 'BED 04', status: 'resolved', color: '#4edea3' },
-  { time: '15:33', event: 'Respiratory Distress', bed: 'BED 04', status: 'critical', color: '#EF4444' },
-  { time: '15:40', event: 'Sleep Interruption', bed: 'BED 02', status: 'warning', color: '#F59E0B' },
-  { time: '15:47', event: 'Nurse Dispatched', bed: 'BED 04', status: 'normal', color: '#adc6ff' },
-];
+function buildIncidents(sensing) {
+  if (!sensing.isConnected) {
+    return [
+      { time: 'Now', event: 'Backend offline', bed: 'LIVE FEED', status: 'critical', color: '#EF4444' },
+    ];
+  }
+
+  const items = [];
+  items.push({
+    time: 'Now',
+    event: sensing.presence ? 'Occupant detected' : 'Room empty',
+    bed: 'LIVE ZONE',
+    status: sensing.presence ? 'resolved' : 'normal',
+    color: sensing.presence ? '#4edea3' : '#adc6ff',
+  });
+
+  if (sensing.breathingRate != null) {
+    items.push({
+      time: 'Now',
+      event: `Breathing ${sensing.breathingRate.toFixed(1)} brpm`,
+      bed: 'CSI STREAM',
+      status: sensing.breathingRate >= 12 && sensing.breathingRate <= 18 ? 'resolved' : 'warning',
+      color: sensing.breathingRate >= 12 && sensing.breathingRate <= 18 ? '#4edea3' : '#F59E0B',
+    });
+  }
+
+  if (sensing.motionLevel === 'active') {
+    items.push({
+      time: 'Now',
+      event: 'Motion active',
+      bed: 'CSI STREAM',
+      status: 'warning',
+      color: '#F59E0B',
+    });
+  }
+
+  if ((sensing.estimatedPersons ?? 0) > 1) {
+    items.push({
+      time: 'Now',
+      event: 'Multiple occupants',
+      bed: 'LIVE ZONE',
+      status: 'critical',
+      color: '#EF4444',
+    });
+  }
+
+  return items;
+}
 
 const statusIcons = {
   resolved: 'check_circle',
@@ -22,6 +59,9 @@ const statusIcons = {
 };
 
 export default function LiveIncidentFeed() {
+  const sensing = useSensing();
+  const incidents = buildIncidents(sensing);
+
   return (
     <div className="live-feed">
       <div className="live-feed__header">

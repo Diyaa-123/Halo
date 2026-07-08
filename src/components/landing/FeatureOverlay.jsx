@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useToast } from '../layout/ToastContext';
 
 export default function FeatureOverlay({ feature }) {
   const toast = useToast();
   const [mounted, setMounted] = useState(false);
   const [activeFeature, setActiveFeature] = useState(null);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     if (feature) {
       setActiveFeature(feature);
-      // Double rAF guarantees the DOM is painted with inactive state before applying 'active' class
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setMounted(true);
@@ -19,10 +19,30 @@ export default function FeatureOverlay({ feature }) {
       setMounted(false);
       const timer = setTimeout(() => {
         setActiveFeature(null);
-      }, 3500); // Increased to 3.5s to fully accommodate the cinematic exit
+      }, 3500);
       return () => clearTimeout(timer);
     }
   }, [feature]);
+
+  // Imperatively force video playback whenever the src changes.
+  // React declarative autoPlay is unreliable after re-renders — the browser
+  // treats it as a new load and may block autoplay without a .play() call.
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid || !activeFeature?.videoSrc) return;
+
+    vid.src = activeFeature.videoSrc;
+    vid.load();
+    const playPromise = vid.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay policy blocked — retry once after a short delay
+        setTimeout(() => {
+          vid.play().catch(() => {});
+        }, 300);
+      });
+    }
+  }, [activeFeature?.videoSrc]);
 
   if (!activeFeature) return null;
 
@@ -72,13 +92,16 @@ export default function FeatureOverlay({ feature }) {
         {/* Right Side: Chamfered Video Portal */}
         <div className="fo-video-col">
           <div className="fo-video-wrapper">
-            <video 
-              src={activeFeature.videoSrc} 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              className="fo-video" 
+            <video
+              ref={videoRef}
+              loop
+              muted
+              playsInline
+              className="fo-video"
+              onCanPlay={(e) => {
+                // Extra safety net: play as soon as data is ready
+                e.target.play().catch(() => {});
+              }}
             />
             {/* Subtle glassmorphism overlay on video to give it that "inside the card" feel */}
             <div className="fo-video-glass"></div>

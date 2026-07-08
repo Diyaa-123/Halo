@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import HealthScoreWidget from './HealthScoreWidget';
 import { useToast } from '../layout/ToastContext';
+import { useSensing } from '../../hooks/SensingContext';
 import './DigitalTwin.css';
 import { Canvas } from '@react-three/fiber';
 import HumanTwinModel from './HumanTwinModel';
@@ -25,53 +26,92 @@ const stateConfigs = {
 
 export default function DigitalTwin({ patientState = 'stable', setPatientState, healthScore = 82 }) {
   const toast = useToast();
+  const sensing = useSensing();
   const [activePin, setActivePin] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const stateConf = stateConfigs[patientState] || stateConfigs.stable;
 
+  // Derive patient state from live data when backend is connected
+  const effectiveState = sensing.isConnected
+    ? (sensing.breathingRate > 20 || (sensing.heartRate && sensing.heartRate > 95) ? 'respiratory_distress'
+      : sensing.breathingRate > 0 && sensing.breathingRate < 10 ? 'warning'
+      : 'stable')
+    : patientState;
+
+  const stateConf = stateConfigs[effectiveState] || stateConfigs.stable;
+
+  // Build live body regions from sensing data
+  const liveHr = sensing.heartRate ? `${Math.round(sensing.heartRate)} BPM` : '-- BPM';
+  const liveBr = sensing.breathingRate ? `${sensing.breathingRate.toFixed(1)} BPM` : '-- BPM';
+  const hrStatus = sensing.heartRate > 95 ? 'warning' : 'stable';
+  const brStatus = sensing.breathingRate > 20 ? 'critical' : (sensing.breathingRate > 0 && sensing.breathingRate < 10 ? 'warning' : 'stable');
+
+  const liveBodyRegions = bodyRegions.map(r => {
+    if (r.id === 'heart') return { ...r, status: hrStatus, details: { ...r.details, value: liveHr } };
+    if (r.id === 'lungs') return { ...r, status: brStatus, details: { ...r.details, value: liveBr, risk: brStatus === 'critical' ? 'High' : (brStatus === 'warning' ? 'Moderate' : 'Low') } };
+    return r;
+  });
+
+  const isSearching = sensing.isConnected
+    && !sensing.presence
+    && sensing.confidence < 0.45
+    && !sensing.heartRate
+    && !sensing.breathingRate;
 
   const handlePinClick = (regionId) => {
     setActivePin(activePin === regionId ? null : regionId);
   };
-
 
   return (
     <div className={`digital-twin ${stateConf.animClass} ${isFullscreen ? 'digital-twin--fullscreen' : ''}`}>
       {/* Top Overlay Container */}
       <div className="digital-twin__top-overlay">
         {/* Top Left: Health Score Widget */}
-        <HealthScoreWidget score={healthScore} status={patientState} />
+        <HealthScoreWidget score={healthScore} status={effectiveState} />
 
         {/* Top Right: Simulate State Controls */}
         {setPatientState && (
-          <div className="digital-twin__state-controls glass-card">
-            <span className="digital-twin__controls-label">Simulate:</span>
-            {[
-              { key: 'healthy', label: 'Healthy', color: '#22C55E' },
-              { key: 'stable', label: 'Stable', color: '#3B82F6' },
-              { key: 'warning', label: 'Warning', color: '#F59E0B' },
-              { key: 'respiratory_distress', label: 'Distress', color: '#EF4444' },
-            ].map(s => (
-              <button
-                key={s.key}
-                className={`digital-twin__state-btn ${patientState === s.key ? 'active' : ''}`}
-                style={{ '--btn-color': s.color }}
-                onClick={() => setPatientState(s.key)}
-              >
-                <span className="digital-twin__state-btn-dot" style={{ background: s.color }} />
-                {s.label}
-              </button>
-            ))}
+          <div className="digital-twin__state-controls-wrapper">
+            {sensing.isConnected && (
+              <div className="digital-twin__live-override-overlay">
+                <span className="material-icons" style={{ fontSize: '13px', marginRight: '4px' }}>sensors</span>
+                LIVE WAVE FEED
+              </div>
+            )}
+            <div
+              className="digital-twin__state-controls glass-card"
+              style={{
+                opacity: sensing.isConnected ? 0.35 : 1,
+                pointerEvents: sensing.isConnected ? 'none' : 'auto',
+              }}
+            >
+              <span className="digital-twin__controls-label">Simulate:</span>
+              {[
+                { key: 'healthy', label: 'Healthy', color: '#22C55E' },
+                { key: 'stable', label: 'Stable', color: '#3B82F6' },
+                { key: 'warning', label: 'Warning', color: '#F59E0B' },
+                { key: 'respiratory_distress', label: 'Distress', color: '#EF4444' },
+              ].map(s => (
+                <button
+                  key={s.key}
+                  className={`digital-twin__state-btn ${effectiveState === s.key ? 'active' : ''}`}
+                  style={{ '--btn-color': s.color }}
+                  onClick={() => setPatientState(s.key)}
+                >
+                  <span className="digital-twin__state-btn-dot" style={{ background: s.color }} />
+                  {s.label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
-      {/* State Status Banner - Positioned below the twin controls or absolutely */}
-      <div className={`digital-twin__state-banner ${patientState === 'respiratory_distress' ? 'digital-twin__state-banner--critical' : ''}`}>
+      {/* State Status Banner */}
+      <div className={`digital-twin__state-banner ${effectiveState === 'respiratory_distress' ? 'digital-twin__state-banner--critical' : ''}`}>
         <span className="digital-twin__state-dot" style={{ background: stateConf.bodyColor }} />
         <span style={{ color: stateConf.bodyColor }}>{stateConf.label}</span>
-        {patientState === 'respiratory_distress' && (
+        {effectiveState === 'respiratory_distress' && (
           <span className="digital-twin__alert-text">ALERT: RESPIRATORY DISTRESS</span>
         )}
       </div>
@@ -80,6 +120,14 @@ export default function DigitalTwin({ patientState = 'stable', setPatientState, 
       <div className="digital-twin__stage">
         {/* Holographic Platform */}
         <div className="digital-twin__platform" />
+
+        {isSearching && sensing.isConnected && (
+          <div className="digital-twin__searching-overlay">
+            <div className="searching-overlay__spinner" />
+            <div className="searching-overlay__text">Searching for Signal...</div>
+            <div className="searching-overlay__subtext">Targeting biological resonance peak</div>
+          </div>
+        )}
 
         {/* 3D Human Twin Canvas with embedded anatomical pins */}
         <div
@@ -103,7 +151,7 @@ export default function DigitalTwin({ patientState = 'stable', setPatientState, 
                 wireframe={true}
                 scaleFactor={0.75}
                 animate={false}
-                regions={bodyRegions}
+                regions={liveBodyRegions}
                 activePin={activePin}
                 onPinClick={handlePinClick}
                 enableControls={true}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './EmergencyOverlay.css';
 import { useToast } from '../layout/ToastContext';
 
-export default function EmergencyOverlay({ onDismiss, event = 'Respiratory Distress', bed = 'BED 04' }) {
+export default function EmergencyOverlay({ onDismiss, event = 'Critical event', bed = 'Live zone' }) {
   const toast = useToast();
   const [elapsed, setElapsed] = useState(0);
 
@@ -42,7 +42,7 @@ export default function EmergencyOverlay({ onDismiss, event = 'Respiratory Distr
           </div>
           <div className="emergency-overlay__detail-item">
             <span className="emergency-overlay__detail-label">Risk Level</span>
-            <span className="emergency-overlay__detail-value" style={{ color: '#EF4444' }}>CRITICAL — 92/100</span>
+            <span className="emergency-overlay__detail-value" style={{ color: '#EF4444' }}>CRITICAL — live status</span>
           </div>
         </div>
 
