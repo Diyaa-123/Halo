@@ -101,6 +101,7 @@ export default function useSensingWebSocket(url = DEFAULT_WS_URL) {
     
     // Parsed convenience fields
     vitals,
+    allVitals: data?.all_vitals || [],
     features,
     classification,
     nodes,

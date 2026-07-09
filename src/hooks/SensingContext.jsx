@@ -32,6 +32,7 @@ export function useSensing() {
       isConnected: false,
       error: null,
       vitals: {},
+      allVitals: [],
       features: {},
       classification: {},
       nodes: [],

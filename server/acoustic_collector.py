@@ -87,8 +87,9 @@ class AcousticDopplerCollector:
         self._phase_hist  = deque(maxlen=phase_hist_n)   # (timestamp, phase)
 
         # ── Cached outputs ────────────────────────────────────────────────────
-        self.latest_bpm        = 0.0
-        self.latest_heart_bpm  = 0.0
+        from .multi_person_tracker import MultiPersonTracker
+        self.tracker = MultiPersonTracker(max_occupants=10)
+        self.latest_vitals = []
         self.latest_breathing_score = 0.0
         self.latest_motion_score    = 0.0
         self._last_extract_t   = 0.0
@@ -217,8 +218,7 @@ class AcousticDopplerCollector:
         self._phase_hist.append((now, float(phase_dec[-1])))
 
         # ── 7. Bandpass for breathing / heart & estimate rates ────────────────
-        bpm       = 0.0
-        heart_bpm = 0.0
+        vitals = []
 
         if len(phase_dec) >= int(PHASE_RATE * 3):
             # Breathing band (0.1 – 0.6 Hz)
@@ -239,8 +239,8 @@ class AcousticDopplerCollector:
 
             # Only estimate rates if we have enough data
             if len(phase_dec) >= int(PHASE_RATE * 6):
-                bpm       = _acf_peak_bpm(br_sig, PHASE_RATE, BREATH_LO, BREATH_HI)
-                heart_bpm = _acf_peak_bpm(hr_sig, PHASE_RATE, HEART_LO,  HEART_HI)
+                # We will rely on robust harmonic rejection to separate multiple people in the frequency domain.
+                vitals = self.tracker.separate_vital_signs(phase_dec, PHASE_RATE, max_persons=10)
         else:
             breathing_score = 0.0
 
@@ -253,15 +253,8 @@ class AcousticDopplerCollector:
             (1 - alpha) * self.latest_motion_score + alpha * motion_score
         )
 
-        if bpm > 0:
-            bpm = float(np.clip(bpm, 6.0, 36.0))       # physiological BrPM limits
-            self.latest_bpm = (1 - alpha) * self.latest_bpm + alpha * bpm
-
-        if heart_bpm > 0:
-            heart_bpm = float(np.clip(heart_bpm, 45.0, 120.0))  # BPM limits
-            self.latest_heart_bpm = (
-                (1 - alpha) * self.latest_heart_bpm + alpha * heart_bpm
-            )
+        if len(vitals) > 0:
+            self.latest_vitals = vitals
 
         self._last_extract_t = now
         return self._cached()
@@ -274,8 +267,7 @@ class AcousticDopplerCollector:
         return {
             "breathing":  self.latest_breathing_score,
             "motion":     self.latest_motion_score,
-            "bpm":        self.latest_bpm,
-            "heart_bpm":  self.latest_heart_bpm,
+            "vitals":     self.latest_vitals,
         }
 
 

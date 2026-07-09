@@ -24,31 +24,42 @@ const stateConfigs = {
   stable: { bodyColor: '#adc6ff', glowColor: '#adc6ff', label: 'Stable', animClass: 'twin--stable' },
 };
 
-export default function DigitalTwin({ patientState = 'stable', setPatientState, healthScore = 82 }) {
+export default function DigitalTwin({ patientState = 'stable', setPatientState, healthScore = 82, selectedOccupantIndex = 0 }) {
   const toast = useToast();
   const sensing = useSensing();
   const [activePin, setActivePin] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [zoom, setZoom] = useState(1);
 
+  const currentVitals = sensing.allVitals?.[selectedOccupantIndex] || {};
+
   // Derive patient state from live data when backend is connected
   const effectiveState = sensing.isConnected
-    ? (sensing.breathingRate > 20 || (sensing.heartRate && sensing.heartRate > 95) ? 'respiratory_distress'
-      : sensing.breathingRate > 0 && sensing.breathingRate < 10 ? 'warning'
+    ? (currentVitals.stress === 'Stressed' || currentVitals.apnea_events > 0 || currentVitals.breathing_rate_bpm > 20 || (currentVitals.heart_rate_bpm && currentVitals.heart_rate_bpm > 95) ? 'respiratory_distress'
+      : currentVitals.breathing_rate_bpm > 0 && currentVitals.breathing_rate_bpm < 10 ? 'warning'
       : 'stable')
     : patientState;
 
   const stateConf = stateConfigs[effectiveState] || stateConfigs.stable;
 
   // Build live body regions from sensing data
-  const liveHr = sensing.heartRate ? `${Math.round(sensing.heartRate)} BPM` : '-- BPM';
-  const liveBr = sensing.breathingRate ? `${sensing.breathingRate.toFixed(1)} BPM` : '-- BPM';
-  const hrStatus = sensing.heartRate > 95 ? 'warning' : 'stable';
-  const brStatus = sensing.breathingRate > 20 ? 'critical' : (sensing.breathingRate > 0 && sensing.breathingRate < 10 ? 'warning' : 'stable');
+  const liveHr = currentVitals.heart_rate_bpm ? `${Math.round(currentVitals.heart_rate_bpm)} BPM` : '-- BPM';
+  const liveBr = currentVitals.breathing_rate_bpm ? `${currentVitals.breathing_rate_bpm.toFixed(1)} BPM` : '-- BPM';
+  const liveBp = currentVitals.blood_pressure_sys ? `${currentVitals.blood_pressure_sys}/${currentVitals.blood_pressure_dia}` : '--';
+  const liveSleep = currentVitals.sleep_state || 'Awake';
+  const liveMeditation = currentVitals.meditation_score ? `${Math.round(currentVitals.meditation_score)}/100` : '--';
+  const liveHrv = currentVitals.hrv_sdnn ? `${currentVitals.hrv_sdnn.toFixed(1)} ms` : '--';
+  const liveApnea = currentVitals.apnea_events != null ? `${currentVitals.apnea_events}` : '0';
+
+  const hrStatus = (currentVitals.heart_rate_bpm > 95 || currentVitals.hrv_sdnn < 30) ? 'warning' : 'stable';
+  const brStatus = (currentVitals.breathing_rate_bpm > 20 || currentVitals.apnea_events > 0) ? 'critical' : (currentVitals.breathing_rate_bpm > 0 && currentVitals.breathing_rate_bpm < 10 ? 'warning' : 'stable');
+  const bpStatus = currentVitals.blood_pressure_sys > 130 ? 'warning' : 'stable';
 
   const liveBodyRegions = bodyRegions.map(r => {
-    if (r.id === 'heart') return { ...r, status: hrStatus, details: { ...r.details, value: liveHr } };
-    if (r.id === 'lungs') return { ...r, status: brStatus, details: { ...r.details, value: liveBr, risk: brStatus === 'critical' ? 'High' : (brStatus === 'warning' ? 'Moderate' : 'Low') } };
+    if (r.id === 'heart') return { ...r, status: hrStatus, details: { metric: 'HR / HRV', value: `${liveHr} / ${liveHrv}`, risk: hrStatus === 'warning' ? 'Moderate' : 'Low', recommendation: 'Live cardiac telemetry.' } };
+    if (r.id === 'lungs') return { ...r, status: brStatus, details: { metric: 'Breathing / Apnea', value: `${liveBr} (${liveApnea} events)`, risk: brStatus === 'critical' ? 'High' : 'Low', recommendation: 'Live respiratory telemetry.' } };
+    if (r.id === 'brain') return { ...r, status: 'stable', details: { metric: 'Sleep State', value: liveSleep, risk: 'Low', recommendation: `Meditation Score: ${liveMeditation}` } };
+    if (r.id === 'left-arm' || r.id === 'right-arm') return { ...r, status: bpStatus, details: { metric: 'Blood Pressure', value: liveBp, risk: bpStatus === 'warning' ? 'Moderate' : 'Low', recommendation: 'Derived from pulse transit.' } };
     return r;
   });
 
