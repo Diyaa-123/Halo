@@ -1,0 +1,43 @@
+Activity | Number of .pcap files
+-----------------------------------
+fall | 177
+sit | 178
+sitdown | 155
+stand | 115
+standup | 155
+validation | 0
+walk | 154
+
+
+--- Activity: fall ---
+Error parsing fall10.pcap: Python int too large to convert to C long
+
+
+--- Activity: sit ---
+Error parsing sit1.pcap: Python int too large to convert to C long
+
+
+--- Activity: sitdown ---
+Error parsing sitdown1.pcap: Python int too large to convert to C long
+
+
+--- Activity: stand ---
+Error parsing stand1.pcap: Python int too large to convert to C long
+
+
+--- Activity: standup ---
+Error parsing standup1.pcap: Python int too large to convert to C long
+
+
+--- Activity: walk ---
+Error parsing walk1.pcap: Python int too large to convert to C long
+
+
+--- Total Frames Available per Activity Class ---
+fall: 0 frames
+sit: 0 frames
+sitdown: 0 frames
+stand: 0 frames
+standup: 0 frames
+validation: 0 frames
+walk: 0 frames
