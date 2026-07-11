@@ -1,0 +1,43 @@
+# Virtual environments
+venv/
+nenv/
+ENV/
+env/
+.env
+.venv
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.chrome-profile/
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python caches and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Datasets and model outputs
+datasets/
+scripts/models/*.h5
+scripts/processed/*.npy
+scripts/processed/*.npz

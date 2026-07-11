@@ -70,8 +70,11 @@ def main():
                     # Just take the first antenna/tx-rx pair
                     csi_matrix = csi_matrix[:, :, 0]
                 
+                amplitude = np.abs(csi_matrix)
+                # Remove static background
+                diff_amp = np.diff(amplitude, axis=0)
                 # Apply Bandpass filter
-                filtered_csi = bandpass_filter(np.abs(csi_matrix))
+                filtered_csi = bandpass_filter(diff_amp)
                 
                 # Sliding window
                 for start in range(0, len(filtered_csi) - window_size + 1, window_size - overlap):

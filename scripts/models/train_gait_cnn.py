@@ -7,24 +7,24 @@ import matplotlib.pyplot as plt
 import os
 
 def build_gait_cnn(n_timesteps, n_features, n_classes=3):
-    inputs = tf.keras.Input(shape=(n_timesteps, n_features))
+    inputs = tf.keras.Input(shape=(n_timesteps, n_features, 1))
     
     # Block 1: capture step-level patterns (~0.5-1 second)
-    x = layers.Conv1D(32, kernel_size=5, padding='same', activation='relu')(inputs)
+    x = layers.Conv2D(32, kernel_size=(5, 5), padding='same', activation='relu')(inputs)
     x = layers.BatchNormalization()(x)
-    x = layers.MaxPooling1D(pool_size=2)(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.2)(x)
     
     # Block 2: capture stride-level patterns (~1-2 seconds)
-    x = layers.Conv1D(64, kernel_size=5, padding='same', activation='relu')(x)
+    x = layers.Conv2D(64, kernel_size=(5, 5), padding='same', activation='relu')(x)
     x = layers.BatchNormalization()(x)
-    x = layers.MaxPooling1D(pool_size=2)(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2))(x)
     x = layers.Dropout(0.2)(x)
     
     # Block 3: high-level temporal features
-    x = layers.Conv1D(64, kernel_size=3, padding='same', activation='relu')(x)
+    x = layers.Conv2D(64, kernel_size=(3, 3), padding='same', activation='relu')(x)
     x = layers.BatchNormalization()(x)
-    x = layers.GlobalAveragePooling1D()(x)
+    x = layers.GlobalAveragePooling2D()(x)
     x = layers.Dropout(0.3)(x)
     
     # Classifier head
@@ -32,7 +32,7 @@ def build_gait_cnn(n_timesteps, n_features, n_classes=3):
     x = layers.Dropout(0.2)(x)
     outputs = layers.Dense(n_classes, activation='softmax')(x)
     
-    return models.Model(inputs, outputs, name='gait_1dcnn')
+    return models.Model(inputs, outputs, name='gait_2dcnn')
 
 def main():
     print("Loading data...")
@@ -48,10 +48,10 @@ def main():
     labels = [k for k, v in sorted(class_to_id.items(), key=lambda item: item[1])]
     n_classes = len(labels)
 
-    # Squeeze trailing channel dimension if present (e.g. from (N, 200, 256, 1) to (N, 200, 256))
-    if len(X_train.shape) == 4 and X_train.shape[3] == 1:
-        X_train = np.squeeze(X_train, axis=-1)
-        X_test = np.squeeze(X_test, axis=-1)
+    # Ensure trailing channel dimension is present for 2D CNN (e.g. from (N, 200, 256) to (N, 200, 256, 1))
+    if len(X_train.shape) == 3:
+        X_train = np.expand_dims(X_train, axis=-1)
+        X_test = np.expand_dims(X_test, axis=-1)
     
     n_subcarriers = X_train.shape[2]
     print(f"Data loaded. n_subcarriers: {n_subcarriers}, X_train shape: {X_train.shape}, n_classes: {n_classes}")
@@ -65,7 +65,7 @@ def main():
     for i in range(n_classes):
         idx = np.where(y_train == i)[0]
         if len(idx) > 0:
-            sample = X_train[idx[0]]
+            sample = np.squeeze(X_train[idx[0]])
             ax = axes[i]
             # Transpose so time is x-axis, subcarriers is y-axis
             im = ax.imshow(sample.T, aspect='auto', cmap='viridis', origin='lower')
@@ -112,12 +112,41 @@ def main():
     print("X_train mean:", X_train.mean())
     print("X_train std:", X_train.std())
     
+    X_train = X_train.astype(np.float32)
+    X_test = X_test.astype(np.float32)
+    
     print("Training model...")
+    # Manual split for validation since we use tf.data
+    # Ensure shuffle before split so validation is representative
+    indices = np.arange(len(X_train))
+    np.random.shuffle(indices)
+    split_idx = int(len(X_train) * 0.85)
+    train_idx, val_idx = indices[:split_idx], indices[split_idx:]
+    
+    X_train_split, y_train_split = X_train[train_idx], y_train[train_idx]
+    X_val_split, y_val_split = X_train[val_idx], y_train[val_idx]
+    
+    @tf.function
+    def augment(x, y):
+        # Add Gaussian noise
+        noise = tf.random.normal(shape=tf.shape(x), mean=0.0, stddev=0.05, dtype=tf.float32)
+        x = x + noise
+        
+        # Scale amplitude slightly
+        scale = tf.random.uniform(shape=[], minval=0.9, maxval=1.1, dtype=tf.float32)
+        x = x * scale
+        
+        return x, y
+
+    train_dataset = tf.data.Dataset.from_tensor_slices((X_train_split, y_train_split))
+    train_dataset = train_dataset.shuffle(buffer_size=1024).map(augment, num_parallel_calls=tf.data.AUTOTUNE).batch(64).prefetch(tf.data.AUTOTUNE)
+    
+    val_dataset = tf.data.Dataset.from_tensor_slices((X_val_split, y_val_split)).batch(64).prefetch(tf.data.AUTOTUNE)
+
     history = model.fit(
-        X_train, y_train,
+        train_dataset,
         epochs=50,
-        batch_size=64,
-        validation_split=0.15,
+        validation_data=val_dataset,
         class_weight=class_weight_dict,
         callbacks=callbacks,
         verbose=1
