@@ -1,0 +1,20 @@
+Output_Data_Folder = "./data/realdata/output_data/"; % folder path to extract output data as .mat file
+s=strcat(Input_Data_Folder,'*.mat'); %Access input data folder and bring .dat files
+
+    files = dir(s);
+    sequences = cell(length(files), 1); % initialize the data array
+    
+     labels = strings(length(files), 1); % initialize the labels array
+    tempClassMatrix= strings(1,1);
+    for i = 1:length(files)  %every files are iterated and their labels are extracted
+        fName = files(i).name; % the name of the data file
+        
+        % add this trial to the data array
+        s = strcat(path, fName);
+        loaded = load(s);
+        
+            figure 
+            plot(loaded.output_matrix)
+        
+    
+    end

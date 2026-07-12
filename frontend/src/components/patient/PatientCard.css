@@ -1,0 +1,225 @@
+.patient-card {
+  padding: 14px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.patient-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.patient-card__avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.patient-card__avatar-initials {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-container), var(--secondary-container));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.patient-card__status-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--surface-container-low);
+}
+
+.patient-card__identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.patient-card__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patient-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.patient-card__room {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Score Gauge */
+.patient-card__score-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-muted);
+  border-bottom: 1px solid var(--border-muted);
+  margin-bottom: 10px;
+}
+
+.patient-card__gauge {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.patient-card__gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.patient-card__gauge-value {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.patient-card__score-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.patient-card__score-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--outline);
+  font-weight: 600;
+}
+
+.patient-card__score-status {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Info Grid */
+.patient-card__info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.patient-card__info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.patient-card__info-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--outline);
+  font-weight: 600;
+  text-align: left;
+}
+
+.patient-card__info-value {
+  font-size: 11px;
+  color: var(--on-surface);
+  font-weight: 500;
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Quick Actions */
+.patient-card__actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.patient-card__action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius);
+  color: var(--on-surface);
+  font-family: var(--font-family);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.patient-card__action-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--primary);
+  border-color: rgba(173, 198, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+/* QR Row */
+.patient-card__qr-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-muted);
+}
+
+.patient-card__policy-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--outline);
+  font-weight: 600;
+  display: block;
+}
+
+.patient-card__policy-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  display: block;
+}
+
+.patient-card__ward {
+  font-size: 10px;
+  color: var(--text-secondary);
+  display: block;
+}

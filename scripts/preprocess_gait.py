@@ -15,7 +15,7 @@ def bandpass_filter(data, lowcut=0.5, highcut=5.0, fs=100.0, order=5):
     return sosfilt(sos, data, axis=0)
 
 def main():
-    dataset_dir = "datasets/gait analysis dataset/Experiment-2/realdata/csidata"
+    dataset_dir = os.path.join(os.path.dirname(__file__), "datasets", "Experiment-2", "Experiment-2", "realdata", "input_data", "30ms", "csidata")
     if not os.path.exists(dataset_dir):
         print(f"Dataset dir {dataset_dir} not found.")
         return

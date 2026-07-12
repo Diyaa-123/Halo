@@ -5,7 +5,7 @@ from CSIKit.util import csitools
 import sys
 
 def explore():
-    dataset_dir = "datasets/gait analysis dataset/Experiment-2/realdata/csidata"
+    dataset_dir = os.path.join(os.path.dirname(__file__), "datasets", "Experiment-2", "Experiment-2", "realdata", "input_data", "30ms", "csidata")
     
     if not os.path.exists(dataset_dir):
         print(f"Error: {dataset_dir} does not exist.")
