@@ -236,3 +236,163 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+/* ── Live Activity Banner ──────────────────────────────────────────────── */
+.gait-live-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 24px;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  margin-bottom: 16px;
+  transition: border-color 0.4s, background 0.4s;
+}
+
+.gait-live-banner--alert {
+  background: rgba(239, 68, 68, 0.10);
+  animation: banner-pulse 1s ease-in-out infinite;
+}
+
+@keyframes banner-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.30); }
+  50%       { box-shadow: 0 0 0 12px rgba(239,68,68,0.00); }
+}
+
+.gait-live-banner__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gait-live-banner__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface-variant);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.gait-live-banner__activity {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.gait-live-banner__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.gait-live-banner__confidence {
+  width: 100%;
+}
+
+.gait-live-banner__conf-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--outline);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.gait-live-banner__conf-bar {
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.gait-live-banner__conf-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+
+.gait-live-banner__conf-pct {
+  font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.gait-live-banner__risk {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: 99px;
+}
+
+.gait-live-banner__risk--low      { background: rgba(78,222,163,0.15); color: #4edea3; }
+.gait-live-banner__risk--medium   { background: rgba(245,158,11,0.15); color: #F59E0B; }
+.gait-live-banner__risk--critical { background: rgba(239,68,68,0.20);  color: #EF4444; }
+.gait-live-banner__risk--none     { background: rgba(107,114,128,0.15); color: #6b7280; }
+
+/* ── Activity History ──────────────────────────────────────────────────── */
+.gait-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.gait-history__row {
+  display: grid;
+  grid-template-columns: 24px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(148,163,184,0.10);
+  transition: opacity 0.3s;
+}
+
+.gait-history__activity {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gait-history__conf {
+  font-size: 11px;
+  color: var(--outline);
+  font-weight: 600;
+  min-width: 36px;
+  text-align: right;
+}
+
+.gait-history__time {
+  font-size: 10px;
+  color: var(--outline);
+  opacity: 0.7;
+  min-width: 72px;
+  text-align: right;
+}
+
+.gait-history__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 0;
+  color: var(--on-surface-variant);
+  font-size: 13px;
+}
+
+.gait-history__empty .material-icons {
+  font-size: 36px;
+  opacity: 0.4;
+}
+
+/* ── Badge extras ──────────────────────────────────────────────────────── */
+.badge-danger  { background: rgba(239,68,68,0.15);  color: #EF4444; font-size: 10px; padding: 4px 10px; border-radius: 99px; font-weight: 800; letter-spacing: 0.08em; }
+.badge-success { background: rgba(78,222,163,0.15); color: #4edea3; font-size: 10px; padding: 4px 10px; border-radius: 99px; font-weight: 800; letter-spacing: 0.08em; }
+

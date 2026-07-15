@@ -1,3 +1,20 @@
+# Core Sensing & Server
 numpy
 scipy
 websockets
+
+# Deep Learning & GPU Acceleration (WiFi-DensePose)
+# Note: For GPU acceleration on RTX 3050, install PyTorch with CUDA using:
+# pip install torch --index-url https://download.pytorch.org/whl/cu121
+torch
+safetensors
+tensorflow
+
+# Physical Sensing & Hardware Fallbacks
+sounddevice
+pyserial
+
+# CSI Preprocessing, Gait Analysis & Model Training (Scripts)
+csikit
+scikit-learn
+matplotlib

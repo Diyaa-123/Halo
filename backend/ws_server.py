@@ -113,32 +113,63 @@ class Esp32UdpCollector:
             
         self.csi_window_buffer = deque(maxlen=20)
         
-        # HAR / Gait CNN Integration
+        # HAR / Gait Activity Recognition — model loading
+        # Tries sklearn .pkl first (no TF/GPU DLL needed), falls back to TF .h5
         self.har_model = None
         self.har_labels = {}
         self.har_scaler = None
-        self.har_buffer = deque(maxlen=200)
+        self.har_use_sklearn = False       # True when sklearn pipeline is loaded
+        self.har_buffer = deque(maxlen=100)  # 100 frames @ 33Hz = ~3s window
         self.har_last_prediction = "Unknown"
         self.har_last_confidence = 0.0
-        try:
-            import os
-            import json
-            import tensorflow as tf
-            # Path to the compiled model and label mapping from the dataset preprocessing
-            model_path = os.path.join(os.path.dirname(__file__), "..", "scripts", "models", "gait_cnn.h5")
-            label_path = os.path.join(os.path.dirname(__file__), "..", "scripts", "processed", "label_map.json")
-            scaler_path = os.path.join(os.path.dirname(__file__), "..", "scripts", "processed", "gait_scaler_params.npz")
-            
-            if os.path.exists(model_path):
-                self.har_model = tf.keras.models.load_model(model_path)
-                with open(label_path, "r") as f:
-                    class_to_id = json.load(f)
-                    self.har_labels = {v: k for k, v in class_to_id.items()}
-                scaler_data = np.load(scaler_path)
-                self.har_scaler = (scaler_data['mean'], scaler_data['std'])
-                logger.info("HAR/Gait CNN model loaded successfully.")
-        except Exception as e:
-            logger.error(f"Failed to load HAR/Gait CNN: {e}")
+
+        import os, json as _json
+
+        _base     = os.path.dirname(__file__)
+        _pkl_path = os.path.join(_base, "..", "scripts", "models", "gait_model.pkl")
+        _h5_path  = os.path.join(_base, "..", "scripts", "models", "gait_cnn.h5")
+        _lbl_path = os.path.join(_base, "..", "scripts", "processed", "label_map.json")
+        _scl_path = os.path.join(_base, "..", "scripts", "processed", "gait_scaler_params.npz")
+
+        # ── Try sklearn .pkl first ──────────────────────────────────────────
+        if os.path.exists(_pkl_path):
+            try:
+                import pickle
+                with open(_pkl_path, "rb") as _f:
+                    _md = pickle.load(_f)
+                self.har_model       = _md["pipeline"]
+                # labels list → {int_id: label_str}
+                _lmap = _md.get("class_to_id", {})
+                self.har_labels      = {v: k for k, v in _lmap.items()}
+                self.har_use_sklearn = True
+                # sklearn pipeline includes its own scaler; we keep a numpy
+                # scaler for the bandpass-only normalisation step
+                if os.path.exists(_scl_path):
+                    _s = np.load(_scl_path)
+                    self.har_scaler = (_s["mean"], _s["std"])
+                logger.info("HAR sklearn model loaded: %s  (accuracy=%.1f%%)",
+                            _pkl_path, _md.get("accuracy", 0) * 100)
+            except Exception as _e:
+                logger.error(f"Failed to load sklearn HAR model: {_e}")
+
+        # ── Fall back to TF Keras .h5 ───────────────────────────────────────
+        if self.har_model is None and os.path.exists(_h5_path):
+            try:
+                import tensorflow as _tf
+                self.har_model = _tf.keras.models.load_model(_h5_path)
+                with open(_lbl_path, "r") as _f:
+                    _c2i = _json.load(_f)
+                    self.har_labels = {v: k for k, v in _c2i.items()}
+                if os.path.exists(_scl_path):
+                    _s = np.load(_scl_path)
+                    self.har_scaler = (_s["mean"], _s["std"])
+                self.har_use_sklearn = False
+                logger.info("HAR TF/Keras model loaded: %s", _h5_path)
+            except Exception as _e:
+                logger.error(f"Failed to load TF HAR model: {_e}")
+
+        if self.har_model is None:
+            logger.warning("No HAR model found. Run scripts/models/train_gait_sklearn.py to generate one.")
 
     @property
     def sample_rate_hz(self) -> float:
@@ -246,8 +277,21 @@ class Esp32UdpCollector:
 
         # Run DensePose Inference
         if amplitude_list and len(amplitude_list) >= 56:
-            # We cap at 56 subcarriers to match training setup
-            frame_features = np.array(amplitude_list[:56], dtype=np.float32)
+            # Down-sample to TARGET_N_SC=56 via mean-pooling, matching training.
+            # Training uses 256 Nexmon subcarriers mean-pooled to 56.
+            # Live ESP32 sends amplitude_list of varying length; we take the first
+            # 224 values (56 groups of 4) and average each group.
+            raw_amp = np.array(amplitude_list, dtype=np.float32)
+            n_available = len(raw_amp)
+            if n_available >= 224:
+                frame_features = raw_amp[:224].reshape(56, 4).mean(axis=1)
+            else:
+                # Fewer subcarriers — interpolate to 56
+                frame_features = np.interp(
+                    np.linspace(0, n_available - 1, 56),
+                    np.arange(n_available),
+                    raw_amp
+                ).astype(np.float32)
             self.csi_window_buffer.append(frame_features)
             
             if len(self.csi_window_buffer) == 20 and getattr(self, "densepose", None):
@@ -262,34 +306,84 @@ class Esp32UdpCollector:
             # Run HAR / Gait Inference
             if self.har_model is not None:
                 from scipy.signal import butter, sosfilt
-                self.har_buffer.append(frame_features)
-                if len(self.har_buffer) == 200:
-                    # Run inference every 10 frames (approx. 1-2 Hz depending on sample rate)
-                    if self._frames_received % 10 == 0:
+                self.har_buffer.append(frame_features)  # frame_features is (56,)
+                if len(self.har_buffer) == 100:
+                    # Run inference every 5 frames (~3-6 Hz at 33 Hz frame rate)
+                    if self._frames_received % 5 == 0:
                         try:
-                            # Apply bandpass filter (0.5Hz to 5Hz) on amplitude data
-                            data = np.array(self.har_buffer)
-                            nyq = 0.5 * self._rate
-                            sos = butter(5, [0.5 / nyq, 5.0 / nyq], btype='band', output='sos')
+                            data = np.array(self.har_buffer)  # (100, 56)
+
+                            # Static background removal (removes multipath)
+                            data = data - np.mean(data, axis=0)
+
+                            # Bandpass filter — use actual ESP32 rate, clamp highcut
+                            # to avoid Nyquist violations (same as training: fs=33 Hz)
+                            fs_live = max(self._rate, 10.0)
+                            nyq = 0.5 * fs_live
+                            lowcut  = 0.5 / nyq
+                            highcut = min(10.0 / nyq, 0.95)
+                            sos = butter(4, [lowcut, highcut], btype='band', output='sos')
                             filtered_data = sosfilt(sos, data, axis=0)
-                            
-                            # Normalize using pre-computed scaler from training
+
+                            # Normalize using training scaler (shape: (56,))
                             mean, std = self.har_scaler
                             norm_data = (filtered_data - mean) / (std + 1e-8)
-                            norm_data = np.nan_to_num(norm_data, nan=0.0, posinf=0.0, neginf=0.0)
-                            
-                            # Infer
-                            X = np.expand_dims(norm_data, axis=0)
-                            preds = self.har_model.predict(X, verbose=0)
-                            pred_class = np.argmax(preds[0])
-                            
+                            norm_data = np.nan_to_num(norm_data, nan=0.0,
+                                                      posinf=0.0, neginf=0.0)
+
+                            # ── sklearn inference path ──────────────────────
+                            if self.har_use_sklearn:
+                                # Build the same 570-feature vector used in training
+                                from scipy import stats as _sc_stats
+                                w = norm_data  # (200, 56)
+                                feat = []
+                                feat.extend(w.mean(axis=0).tolist())
+                                feat.extend(w.std(axis=0).tolist())
+                                feat.extend(w.min(axis=0).tolist())
+                                feat.extend(w.max(axis=0).tolist())
+                                feat.extend(np.median(w, axis=0).tolist())
+                                feat.extend(_sc_stats.skew(w, axis=0).tolist())
+                                feat.extend(_sc_stats.kurtosis(w, axis=0).tolist())
+                                feat.extend((w ** 2).mean(axis=0).tolist())
+                                feat.extend((w.max(axis=0) - w.min(axis=0)).tolist())
+                                T56 = w.shape[0]
+                                zcr = ((np.diff(np.sign(w), axis=0) != 0).sum(axis=0) / T56).tolist()
+                                feat.extend(zcr)
+                                flat = w.flatten()
+                                feat.append(float(flat.mean()))
+                                feat.append(float(flat.std()))
+                                feat.append(float(np.median(flat)))
+                                feat.append(float(_sc_stats.skew(flat)))
+                                feat.append(float(_sc_stats.kurtosis(flat)))
+                                feat.append(float((flat ** 2).mean()))
+                                feat.append(float(flat.max() - flat.min()))
+                                mean_ts = w.mean(axis=1)
+                                ac = float(np.corrcoef(mean_ts[:-1], mean_ts[1:])[0, 1]) if mean_ts.std() > 1e-8 else 0.0
+                                feat.append(ac)
+                                fft_mag = np.abs(np.fft.rfft(mean_ts - mean_ts.mean()))
+                                feat.append(float(fft_mag[1:].max()))
+                                feat.append(float(fft_mag[1:].argmax()))
+                                X_feat = np.array([feat], dtype=np.float32)
+                                X_feat = np.nan_to_num(X_feat, nan=0.0, posinf=0.0, neginf=0.0)
+                                pred_class = int(self.har_model.predict(X_feat)[0])
+                                proba = self.har_model.predict_proba(X_feat)[0]
+                                confidence = float(proba[pred_class])
+
+                            # ── TF Keras inference path ──────────────────────
+                            else:
+                                X = np.expand_dims(norm_data, axis=0)  # (1, 200, 56)
+                                preds = self.har_model.predict(X, verbose=0)
+                                pred_class = int(np.argmax(preds[0]))
+                                confidence = float(preds[0][pred_class])
+
                             self.har_last_prediction = self.har_labels.get(pred_class, "Unknown")
-                            self.har_last_confidence = float(preds[0][pred_class])
+                            self.har_last_confidence = confidence
                         except Exception as e:
                             logger.error(f"HAR inference failed: {e}")
-                    
+
                     self.last_csi["har_prediction"] = self.har_last_prediction
                     self.last_csi["har_confidence"] = self.har_last_confidence
+
 
         # Use RSSI from the ESP32 frame header as the primary signal metric.
         # If RSSI is the default -80 placeholder, derive a pseudo-RSSI from
