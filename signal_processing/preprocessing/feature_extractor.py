@@ -14,8 +14,45 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy import fft as scipy_fft
-from scipy import stats as scipy_stats
+
+try:
+    from scipy import fft as scipy_fft
+    from scipy import stats as scipy_stats
+except Exception:
+    class _FallbackFFT:
+        @staticmethod
+        def rfft(values):
+            return np.fft.rfft(values)
+
+        @staticmethod
+        def rfftfreq(n, d):
+            return np.fft.rfftfreq(n, d=d)
+
+    class _FallbackStats:
+        @staticmethod
+        def skew(values, bias=False):
+            arr = np.asarray(values, dtype=np.float64)
+            if arr.size < 3:
+                return 0.0
+            centered = arr - arr.mean()
+            std = arr.std(ddof=0)
+            if std < 1e-12:
+                return 0.0
+            return float(np.mean((centered / std) ** 3))
+
+        @staticmethod
+        def kurtosis(values, bias=False):
+            arr = np.asarray(values, dtype=np.float64)
+            if arr.size < 4:
+                return 0.0
+            centered = arr - arr.mean()
+            std = arr.std(ddof=0)
+            if std < 1e-12:
+                return 0.0
+            return float(np.mean((centered / std) ** 4) - 3.0)
+
+    scipy_fft = _FallbackFFT()
+    scipy_stats = _FallbackStats()
 
 from .rssi_collector import WifiSample
 

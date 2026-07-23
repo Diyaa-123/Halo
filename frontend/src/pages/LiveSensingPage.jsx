@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import LiveSensing3DMap from '../components/home/LiveSensing3DMap';
+import FloorPlan from '../components/FloorPlan';
 import './PageLayout.css';
 import './LiveSensingPage.css';
 import { useToast } from '../components/layout/ToastContext';
@@ -7,6 +8,28 @@ import { useSensing } from '../hooks/SensingContext';
 
 function formatNumber(value, digits = 1) {
   return typeof value === 'number' && Number.isFinite(value) ? value.toFixed(digits) : '--';
+}
+
+class SectionErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
+function getFlatPresence(sensing) {
+  return sensing?.presenceGate?.calibrated ? sensing.presenceGate.status === 'inside' : sensing.presence;
 }
 
 function PillarMeter({ title, score, color, desc, delay = 0 }) {
@@ -151,6 +174,7 @@ function CSIWaveform({ mode, showRaw, liveAmplitude }) {
 }
 
 function derivePillars(sensing) {
+  const flatPresence = getFlatPresence(sensing);
   if (!sensing.isConnected) {
     return [
       { title: 'Spatial', score: null, color: '#4edea3', desc: 'Awaiting live occupancy feed' },
@@ -161,13 +185,13 @@ function derivePillars(sensing) {
   }
 
   const confidence = Math.round((sensing.confidence ?? 0) * 100);
-  const occupancyScore = sensing.presence ? Math.min(100, confidence + (sensing.estimatedPersons === 1 ? 8 : 0)) : 0;
+  const occupancyScore = flatPresence ? Math.min(100, confidence + (sensing.estimatedPersons === 1 ? 8 : 0)) : 0;
   const temporalScore = sensing.lastUpdateAt ? Math.min(100, confidence + 6) : confidence;
   const biometricScore = sensing.breathingRate == null ? null : Math.min(100, Math.max(35, 40 + Math.round(sensing.breathingRate * 2)));
   const motionScore = sensing.motionPower == null ? null : Math.max(0, 100 - Math.round(sensing.motionPower * 100));
 
   return [
-    { title: 'Spatial', score: occupancyScore, color: '#4edea3', desc: sensing.presence ? 'Occupancy gate is live' : 'No target currently detected' },
+    { title: 'Spatial', score: occupancyScore, color: '#4edea3', desc: flatPresence ? 'Occupancy gate is live' : 'No target currently detected' },
     { title: 'Temporal', score: temporalScore, color: '#adc6ff', desc: sensing.lastUpdateAt ? 'Stream continuity is available' : 'No timestamped frame received' },
     { title: 'Biometric', score: biometricScore, color: '#F59E0B', desc: sensing.breathingRate != null ? 'Respiration derived from CSI' : 'Respiration feed missing' },
     { title: 'Behavioral', score: motionScore, color: '#a78bfa', desc: sensing.motionLevel === 'active' ? 'Motion context elevated' : 'Behavior context stable' },
@@ -175,14 +199,15 @@ function derivePillars(sensing) {
 }
 
 function deriveAlerts(sensing) {
+  const flatPresence = getFlatPresence(sensing);
   if (!sensing.isConnected) {
     return [{ icon: 'cloud_off', label: 'Live feed disconnected', sub: 'Waiting for backend websocket data', time: 'Now', color: '#EF4444', bg: '#FEF2F2' }];
   }
 
   const alerts = [];
 
-  if (!sensing.presence) {
-    alerts.push({ icon: 'meeting_room', label: 'No occupant detected', sub: 'The room is currently empty', time: 'Now', color: '#64748B', bg: '#F8FAFC' });
+  if (!flatPresence) {
+    alerts.push({ icon: 'meeting_room', label: 'No occupant detected', sub: 'No qualifying flat-wide presence at the moment', time: 'Now', color: '#64748B', bg: '#F8FAFC' });
   } else {
     alerts.push({
       icon: sensing.motionLevel === 'active' ? 'directions_walk' : 'check_circle',
@@ -246,6 +271,8 @@ export default function LiveSensingPage() {
   const confidence = sensing.confidence != null ? Math.round(sensing.confidence * 100) : null;
   const pillarCards = derivePillars(sensing);
   const recentAlerts = deriveAlerts(sensing);
+  const presenceGate = sensing.presenceGate || {};
+  const flatPresence = getFlatPresence(sensing);
   const breathRate = sensing.breathingRate;
   const heartRate = sensing.heartRate;
   const personCount = sensing.estimatedPersons ?? null;
@@ -283,8 +310,8 @@ export default function LiveSensingPage() {
     {
       label: 'Persons detected',
       value: personCount != null ? personCount : '--',
-      unit: 'in room',
-      pct: personCount != null ? Math.min(100, personCount * 33) : 0,
+      unit: 'in flat',
+      pct: personCount != null ? personCount * 10 : 0,
       color: '#4edea3',
       dot: true,
     },
@@ -351,6 +378,22 @@ export default function LiveSensingPage() {
                 ))}
               </div>
             </div>
+
+            <SectionErrorBoundary
+              fallback={(
+                <div className="glass-card" style={{ padding: 18, marginTop: 18 }}>
+                  <div className="section-label" style={{ marginBottom: 6 }}>Flat Context Plan</div>
+                  <div style={{ fontSize: 13, color: 'var(--on-surface)' }}>Floor plan failed to render in this browser session.</div>
+                  <div style={{ fontSize: 11, color: 'var(--on-surface-variant)', marginTop: 4 }}>
+                    The live sensing gate is still active; only the visual floor-plan layer was blocked.
+                  </div>
+                </div>
+              )}
+            >
+              <FloorPlan
+                presenceStatus={sensing.presenceGate?.calibrated ? sensing.presenceGate.status : 'uncalibrated'}
+              />
+            </SectionErrorBoundary>
 
             <div className="glass-card" style={{ padding: 20 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
@@ -532,6 +575,57 @@ export default function LiveSensingPage() {
                     <span style={{ fontSize: 11, fontWeight: 600, color: '#94A3B8', flexShrink: 0 }}>{alert.time}</span>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            <div className="glass-card" style={{ padding: 18, position: 'relative', overflow: 'hidden' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                    <span className="material-icons" style={{ fontSize: 14, color: '#4edea3' }}>fact_check</span>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--on-surface)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                      Flat Presence Gate
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 11, color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>
+                    Approximate single-sensor calibration gate for inside vs no-qualifying-presence.
+                  </div>
+                </div>
+                <span style={{
+                  fontSize: 10,
+                  fontWeight: 800,
+                  color: presenceGate.calibrated ? '#4edea3' : '#F59E0B',
+                  background: presenceGate.calibrated ? 'rgba(78,222,163,0.12)' : 'rgba(245,158,11,0.12)',
+                  padding: '4px 10px',
+                  borderRadius: 999,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  flexShrink: 0,
+                }}>
+                  {presenceGate.calibrated ? (flatPresence ? 'INSIDE' : 'NONE') : 'CALIBRATION REQUIRED'}
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
+                <div style={{ padding: '10px 12px', background: 'var(--surface-container-low)', borderRadius: 10 }}>
+                  <div style={{ fontSize: 10, color: 'var(--outline)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Smoothed value</div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--on-surface)' }}>
+                    {presenceGate.value != null ? formatNumber(presenceGate.value, 2) : '--'}
+                  </div>
+                </div>
+                <div style={{ padding: '10px 12px', background: 'var(--surface-container-low)', borderRadius: 10 }}>
+                  <div style={{ fontSize: 10, color: 'var(--outline)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Threshold</div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--on-surface)' }}>
+                    {presenceGate.threshold != null ? formatNumber(presenceGate.threshold, 2) : '--'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 11, color: 'var(--on-surface-variant)' }}>
+                <div><span style={{ color: 'var(--outline)' }}>Status:</span> {presenceGate.calibrated ? (flatPresence ? 'inside' : 'none') : 'none'}</div>
+                <div><span style={{ color: 'var(--outline)' }}>Calibrated at:</span> {presenceGate.calibrated_at || '--'}</div>
+                <div><span style={{ color: 'var(--outline)' }}>Reason:</span> {presenceGate.reason || (presenceGate.calibrated ? 'Gate active' : 'Calibration config missing')}</div>
+                <div style={{ lineHeight: 1.5 }}><span style={{ color: 'var(--outline)' }}>Limitation:</span> {presenceGate.limitation || 'Single-sensor flat-wide gate only.'}</div>
               </div>
             </div>
 

@@ -356,8 +356,8 @@ function BlueprintWalls({ sensing, isNightMode }) {
 export default function LiveSensing3DMap({ mode, sensing }) {
   const isNightMode = mode === 'night';
   const isLive = sensing.isConnected;
-  const presence = isLive && sensing.presence;
-  const occupantsCount = isLive && sensing.estimatedPersons ? Math.max(1, sensing.estimatedPersons) : 1;
+  const presence = isLive && (sensing.presenceGate?.calibrated ? sensing.presenceGate.status === 'inside' : sensing.presence);
+  const occupantsCount = isLive && presence ? 1 : 0;
 
   const occupants = Array.from({ length: occupantsCount }, (_, i) => i);
   

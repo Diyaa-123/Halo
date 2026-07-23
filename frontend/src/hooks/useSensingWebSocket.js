@@ -89,6 +89,15 @@ export default function useSensingWebSocket(url = DEFAULT_WS_URL) {
   const source = data?.source || 'disconnected';
   const streamStatus = data?.stream_status || (isConnected ? 'live' : 'offline');
   const streamMessage = data?.stream_message ?? null;
+  const presenceGate = data?.presence_gate ?? {
+    calibrated: false,
+    status: 'none',
+    value: null,
+    threshold: null,
+    calibrated_at: null,
+    reason: 'Presence gate not available yet',
+    limitation: 'Single-sensor flat-wide presence gate only. No room-level localization or positioning.',
+  };
 
   return {
     // Raw data
@@ -111,6 +120,7 @@ export default function useSensingWebSocket(url = DEFAULT_WS_URL) {
     streamStatus,
     streamMessage,
     lastUpdateAt: data?.timestamp ?? null,
+    presenceGate,
     
     // Individual vital sign values (with safe defaults)
     heartRate: vitals.heart_rate_bpm ?? null,

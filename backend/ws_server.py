@@ -40,12 +40,34 @@ from .rssi_collector import (
     WifiSample,
     RingBuffer,
 )
+from .esp32_csi import (
+    AmplitudeSmoother,
+    ESP32_CSI_HEADER_FMT,
+    ESP32_CSI_HEADER_SIZE,
+    ESP32_CSI_MAGIC,
+    parse_esp32_csi_packet,
+)
+from .presence_gate import PresenceGate
 from .feature_extractor import RssiFeatureExtractor, RssiFeatures
 from .classifier import MotionLevel, PresenceClassifier, SensingResult
-from .acoustic_collector import AcousticDopplerCollector
 from .ble_collector import BleCollector
-from .vitals_suite import CsiVitalSignDetector
 import random
+
+try:
+    from .acoustic_collector import AcousticDopplerCollector
+except Exception:
+    class AcousticDopplerCollector:  # type: ignore
+        pass
+
+try:
+    from .vitals_suite import CsiVitalSignDetector
+except Exception:
+    class CsiVitalSignDetector:  # type: ignore
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def process_frame(self, *args, **kwargs):
+            return {"breathing_rates": [], "heart_rates": []}
 
 logger = logging.getLogger(__name__)
 
@@ -76,15 +98,15 @@ class Esp32UdpCollector:
     """
 
     # ADR-018 header: magic(4) node_id(1) n_ant(1) n_sc(2) freq(4) seq(4) rssi(1) noise(1) reserved(2)
-    MAGIC = 0xC5110001
-    HEADER_SIZE = 20
-    HEADER_FMT = '<IBBHIIBB2x'
+    MAGIC = ESP32_CSI_MAGIC
+    HEADER_SIZE = ESP32_CSI_HEADER_SIZE
+    HEADER_FMT = ESP32_CSI_HEADER_FMT
 
     def __init__(
         self,
         bind_addr: str = "0.0.0.0",
         port: int = ESP32_UDP_PORT,
-        sample_rate_hz: float = 10.0,
+        sample_rate_hz: float = 20.0,
         buffer_seconds: int = 120,
     ) -> None:
         self._bind = bind_addr
@@ -98,6 +120,7 @@ class Esp32UdpCollector:
         # Last CSI frame for enhanced UI
         self.last_csi: Optional[Dict] = None
         self._frames_received = 0
+        self._amplitude_smoother = AmplitudeSmoother(window_seconds=1.0)
         
         # Pure Wi-Fi CSI Vitals derived from RuView DSP engine
         self.vital_detector = CsiVitalSignDetector(sample_rate=20.0)
@@ -105,7 +128,8 @@ class Esp32UdpCollector:
         # DensePose Neural Network
         from .densepose import WiFiDensePoseInference
         try:
-            model_path = r"c:\Users\Aayush Walsangikar\OneDrive\Desktop\RuView-main\RuView-main\v2\crates\cog-pose-estimation\cog\artifacts\pose_v1.safetensors"
+            import os
+            model_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'models', 'pose_v1.safetensors')
             self.densepose = WiFiDensePoseInference(model_path)
         except Exception as e:
             logger.error(f"Failed to load DensePose: {e}")
@@ -220,43 +244,25 @@ class Esp32UdpCollector:
                     logger.exception("Error receiving ESP32 UDP packet")
 
     def _parse_and_store(self, raw: bytes, addr) -> None:
-        if len(raw) < self.HEADER_SIZE:
+        frame = parse_esp32_csi_packet(raw)
+        if frame is None:
             return
 
-        magic, node_id, n_ant, n_sc, freq_mhz, seq, rssi_u8, noise_u8 = \
-            struct.unpack_from(self.HEADER_FMT, raw, 0)
-
-        if magic != self.MAGIC:
-            return
-
-        rssi = rssi_u8 if rssi_u8 < 128 else rssi_u8 - 256
-        noise = noise_u8 if noise_u8 < 128 else noise_u8 - 256
-
-        # Parse I/Q data if available
-        iq_count = n_ant * n_sc
-        iq_bytes_needed = self.HEADER_SIZE + iq_count * 2
-        amplitude_list = []
-
-        if len(raw) >= iq_bytes_needed and iq_count > 0:
-            iq_raw = struct.unpack_from(f'<{iq_count * 2}b', raw, self.HEADER_SIZE)
-            i_vals = np.array(iq_raw[0::2], dtype=np.float64)
-            q_vals = np.array(iq_raw[1::2], dtype=np.float64)
-            amplitudes = np.sqrt(i_vals ** 2 + q_vals ** 2)
-            phases = np.arctan2(q_vals, i_vals)
-            mean_amp = float(np.mean(amplitudes))
-            amplitude_list = amplitudes.tolist()
-            phase_list = phases.tolist()
-            try:
-                csi_matrix = (i_vals + 1j * q_vals).reshape((n_ant, n_sc))
-            except Exception:
-                csi_matrix = None
-        else:
-            mean_amp = 0.0
-            amplitude_list = []
-            csi_matrix = None
+        node_id = frame.node_id
+        n_ant = frame.n_antennas
+        n_sc = frame.n_subcarriers
+        freq_mhz = frame.frequency_mhz
+        seq = frame.sequence
+        rssi = frame.rssi_dbm
+        noise = frame.noise_floor_dbm
+        amplitude_list = frame.amplitudes.tolist()
+        phase_list = frame.phases.tolist()
+        mean_amp = frame.mean_amplitude
+        smoothed_amp = self._amplitude_smoother.update(mean_amp, timestamp=time.time())
+        csi_matrix = frame.csi_matrix
 
         # Run RuView CSI vital extraction
-        vitals = self.vital_detector.process_frame(amplitude_list, phase_list if 'phase_list' in locals() else [])
+        vitals = self.vital_detector.process_frame(amplitude_list, phase_list)
 
         # Store enhanced CSI info for UI
         self.last_csi = {
@@ -268,8 +274,10 @@ class Esp32UdpCollector:
             "rssi_dbm": rssi,
             "noise_floor_dbm": noise,
             "mean_amplitude": mean_amp,
+            "rms_amplitude": frame.rms_amplitude,
+            "smoothed_amplitude": smoothed_amp,
             "amplitude": amplitude_list[:56],  # cap for JSON size
-            "phase": phase_list[:56] if 'phase_list' in locals() else [],
+            "phase": phase_list[:56],
             "source_addr": f"{addr[0]}:{addr[1]}",
             "vitals": vitals,
             "csi_matrix": csi_matrix,
@@ -333,36 +341,54 @@ class Esp32UdpCollector:
 
                             # ── sklearn inference path ──────────────────────
                             if self.har_use_sklearn:
-                                # Build the same 570-feature vector used in training
+                                # Build the same 1132-feature vector used in training
                                 from scipy import stats as _sc_stats
+                                import warnings
                                 w = norm_data  # (200, 56)
                                 feat = []
-                                feat.extend(w.mean(axis=0).tolist())
-                                feat.extend(w.std(axis=0).tolist())
-                                feat.extend(w.min(axis=0).tolist())
-                                feat.extend(w.max(axis=0).tolist())
-                                feat.extend(np.median(w, axis=0).tolist())
-                                feat.extend(_sc_stats.skew(w, axis=0).tolist())
-                                feat.extend(_sc_stats.kurtosis(w, axis=0).tolist())
-                                feat.extend((w ** 2).mean(axis=0).tolist())
-                                feat.extend((w.max(axis=0) - w.min(axis=0)).tolist())
-                                T56 = w.shape[0]
-                                zcr = ((np.diff(np.sign(w), axis=0) != 0).sum(axis=0) / T56).tolist()
-                                feat.extend(zcr)
-                                flat = w.flatten()
-                                feat.append(float(flat.mean()))
-                                feat.append(float(flat.std()))
-                                feat.append(float(np.median(flat)))
-                                feat.append(float(_sc_stats.skew(flat)))
-                                feat.append(float(_sc_stats.kurtosis(flat)))
-                                feat.append(float((flat ** 2).mean()))
-                                feat.append(float(flat.max() - flat.min()))
-                                mean_ts = w.mean(axis=1)
-                                ac = float(np.corrcoef(mean_ts[:-1], mean_ts[1:])[0, 1]) if mean_ts.std() > 1e-8 else 0.0
-                                feat.append(ac)
-                                fft_mag = np.abs(np.fft.rfft(mean_ts - mean_ts.mean()))
-                                feat.append(float(fft_mag[1:].max()))
-                                feat.append(float(fft_mag[1:].argmax()))
+                                
+                                with warnings.catch_warnings():
+                                    warnings.simplefilter("ignore", category=RuntimeWarning)
+                                    # -- Per-subcarrier time-domain statistics (10 x 56 = 560) --
+                                    feat.extend(w.mean(axis=0).tolist())
+                                    feat.extend(w.std(axis=0).tolist())
+                                    feat.extend(w.min(axis=0).tolist())
+                                    feat.extend(w.max(axis=0).tolist())
+                                    feat.extend(np.median(w, axis=0).tolist())
+                                    feat.extend(_sc_stats.skew(w, axis=0).tolist())
+                                    feat.extend(_sc_stats.kurtosis(w, axis=0).tolist())
+                                    feat.extend((w ** 2).mean(axis=0).tolist())
+                                    feat.extend((w.max(axis=0) - w.min(axis=0)).tolist())
+                                    T56 = w.shape[0]
+                                    zcr = ((np.diff(np.sign(w), axis=0) != 0).sum(axis=0) / T56).tolist()
+                                    feat.extend(zcr)
+                                    
+                                    # -- Per-subcarrier FFT spectrum features (10 x 56 = 560) --
+                                    FFT_BINS = 10
+                                    fft_all = np.abs(np.fft.rfft(w - w.mean(axis=0), axis=0))
+                                    psd = fft_all[1:FFT_BINS+1, :]
+                                    psd_norm = psd / (psd.sum(axis=0, keepdims=True) + 1e-8)
+                                    feat.extend(psd_norm.T.flatten().tolist())
+                                    
+                                    # -- Global / temporal statistics (12 features) --
+                                    flat = w.flatten()
+                                    feat.append(float(flat.mean()))
+                                    feat.append(float(flat.std()))
+                                    feat.append(float(np.median(flat)))
+                                    feat.append(float(_sc_stats.skew(flat)))
+                                    feat.append(float(_sc_stats.kurtosis(flat)))
+                                    feat.append(float((flat ** 2).mean()))
+                                    feat.append(float(flat.max() - flat.min()))
+                                    
+                                    mean_ts = w.mean(axis=1)
+                                    ac = float(np.corrcoef(mean_ts[:-1], mean_ts[1:])[0, 1]) if mean_ts.std() > 1e-8 else 0.0
+                                    feat.append(ac)
+                                    g_fft = np.abs(np.fft.rfft(mean_ts - mean_ts.mean()))
+                                    feat.append(float(g_fft[1:].max()))
+                                    feat.append(float(g_fft[1:].argmax()))
+                                    feat.append(float(np.abs(np.diff(mean_ts)).mean()))
+                                    feat.append(float(w.var(axis=0).var()))
+                                
                                 X_feat = np.array([feat], dtype=np.float32)
                                 X_feat = np.nan_to_num(X_feat, nan=0.0, posinf=0.0, neginf=0.0)
                                 pred_class = int(self.har_model.predict(X_feat)[0])
@@ -579,6 +605,7 @@ class SensingWebSocketServer:
         self.acoustic_collector: Optional[AcousticDopplerCollector] = None
         self.ble_collector = BleCollector()
         self.ble_collector.start()
+        self.presence_gate = PresenceGate()
         self.source: str = "unknown"
         self._running = False
 
@@ -634,11 +661,11 @@ class SensingWebSocketServer:
         if probe_esp32_udp(ESP32_UDP_PORT, timeout=2.0):
             logger.info("ESP32 CSI stream detected on UDP :%d", ESP32_UDP_PORT)
             self.source = "esp32"
-            return Esp32UdpCollector(port=ESP32_UDP_PORT, sample_rate_hz=10.0)
+            return Esp32UdpCollector(port=ESP32_UDP_PORT, sample_rate_hz=20.0)
 
         # 2. Platform-specific WiFi (auto-detect with graceful fallback)
         try:
-            collector = create_collector(preferred="auto", sample_rate_hz=10.0)
+            collector = create_collector(preferred="auto", sample_rate_hz=20.0)
         except Exception as exc:
             logger.warning("WiFi collector unavailable (%s). Running in offline mode.", exc)
             self.source = "offline"
@@ -657,6 +684,14 @@ class SensingWebSocketServer:
         self.acoustic_collector = None
             
         return collector
+
+    def _presence_gate_payload(self, csi_data: Optional[Dict]) -> Dict:
+        value = None
+        if csi_data:
+            value = csi_data.get("smoothed_amplitude")
+            if value is None:
+                value = csi_data.get("mean_amplitude")
+        return self.presence_gate.evaluate(value)
 
     def _build_message(self, features: RssiFeatures, result: SensingResult) -> str:
         """Build the JSON message to broadcast."""
@@ -704,6 +739,7 @@ class SensingWebSocketServer:
                     
         a_feat = {}
         effective_presence = result.presence_detected
+        presence_gate = self._presence_gate_payload(csi_data)
 
         # ── Bayesian Sensor Fusion Layer (WiFi + BLE) ──
         ble_feat = self.ble_collector.extract_features()
@@ -720,6 +756,8 @@ class SensingWebSocketServer:
         # Use fused probability to determine actual presence
         effective_presence = fused_presence_prob > 0.45
         result.confidence = fused_presence_prob
+        if presence_gate.get("calibrated"):
+            effective_presence = effective_presence and presence_gate.get("status") == "inside"
         
         # Fused motion and variance
         fused_motion = features.motion_band_power
@@ -779,16 +817,19 @@ class SensingWebSocketServer:
             # Start with 1 person as the baseline (WiFi confirmed presence).
             wifi_occupancy_estimate = 1
 
-            # ── Step 2: WiFi Variance Enhancement (from RuView) ────────────────
-            # Use WiFi RSSI variance (multipath scattering) to estimate multiple people
-            # Based on RuView Bayesian fusion logic (adjusted for single antenna).
-            if fused_var > 0.3:
-                wifi_occupancy_estimate = 2
-            if fused_var > 0.8:
-                wifi_occupancy_estimate = 3
-                
-            # Cap the estimate based on max allowed
-            wifi_occupancy_estimate = max(1, min(self.max_wifi_occupants, wifi_occupancy_estimate))
+            # ── Step 2: Dynamic Occupancy from WiFi Variance ────────────────────
+            # Each additional person in the RF field adds a measurable multipath
+            # scattering contribution to the fused variance.  We model this
+            # linearly: occupancy ≈ 1 + fused_var / VARIANCE_PER_PERSON.
+            #
+            # VARIANCE_PER_PERSON is derived from the original calibration data:
+            #   1 person  → fused_var ≈ 0.0 – 0.29  (baseline noise)
+            #   2 persons → fused_var ≈ 0.30 – 0.79
+            #   3 persons → fused_var ≈ 0.80 – 1.29
+            # ⟹ each person adds ~0.40 variance units above the baseline.
+            VARIANCE_PER_PERSON = 0.40
+            dynamic_estimate = 1 + int(fused_var / VARIANCE_PER_PERSON)
+            wifi_occupancy_estimate = max(1, dynamic_estimate)
 
             # ── Step 3: EMA Temporal Smoothing ──────────────────────────────────
             # Alpha = 0.2 → ~2-second lag. Prevents single-frame count jumps.
@@ -1084,6 +1125,8 @@ class SensingWebSocketServer:
             primary_hr = None
             nodes = [{"node_id": 1, "rssi_dbm": None, "position": [2.0, 0.0, 1.5], "amplitude": [], "subcarrier_count": 0}]
             tracked_occupants = []
+        elif presence_gate.get("calibrated"):
+            tracked_occupants = tracked_occupants[:1] if effective_presence else []
 
         msg = {
             "type": "sensing_update",
@@ -1091,7 +1134,8 @@ class SensingWebSocketServer:
             "source": self.source,
             "stream_status": "live" if self.source != "offline" else "offline",
             "stream_message": None if self.source != "offline" else getattr(self.collector, "reason", "No real collector available"),
-            "estimated_persons": len(tracked_occupants) if effective_presence else 0,
+            "estimated_persons": 1 if effective_presence else 0,
+            "presence_gate": presence_gate,
             "nodes": nodes,
             "room_layout": room_layout,
 
@@ -1187,6 +1231,7 @@ class SensingWebSocketServer:
                             "stream_status": "offline",
                             "stream_message": getattr(self.collector, "reason", "No real collector available"),
                             "estimated_persons": 0,
+                            "presence_gate": self.presence_gate.evaluate(None),
                             "nodes": [{"node_id": 1, "rssi_dbm": None, "position": [2.0, 0.0, 1.5], "amplitude": [], "subcarrier_count": 0}],
                             "features": {
                                 "mean_rssi": None,

@@ -1,0 +1,9 @@
+{
+  "scale_note": "1 unit = 1 cm",
+  "sensor_position": { "x": 150, "y": 125 },
+  "rooms": [
+    { "id": "kitchen", "label": "Kitchen", "x": 0, "y": 0, "width": 300, "height": 250 },
+    { "id": "hall", "label": "Hall", "x": 300, "y": 0, "width": 400, "height": 250 },
+    { "id": "bedroom", "label": "Bedroom", "x": 0, "y": 250, "width": 350, "height": 300 }
+  ]
+}

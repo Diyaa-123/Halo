@@ -1,0 +1,6 @@
+{
+  "threshold": 12.5,
+  "calibrated_at": "2026-07-23T00:00:00+05:30",
+  "metric": "smoothed_amplitude",
+  "window_seconds": 1.0
+}

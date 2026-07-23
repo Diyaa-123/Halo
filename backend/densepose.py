@@ -117,7 +117,8 @@ class WiFiDensePoseInference:
 if __name__ == "__main__":
     # Test execution
     logging.basicConfig(level=logging.INFO)
-    model_file = r"c:\Users\Aayush Walsangikar\OneDrive\Desktop\RuView-main\RuView-main\v2\crates\cog-pose-estimation\cog\artifacts\pose_v1.safetensors"
+    import os
+    model_file = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'models', 'pose_v1.safetensors')
     engine = WiFiDensePoseInference(model_file)
     
     # Dummy data test

@@ -8,32 +8,37 @@ Standalone backend that uses:
   3. Bayesian fusion to combine both for high-accuracy results
 """
 
-from .rssi_collector import (
-    LinuxWifiCollector,
-    SimulatedCollector,
-    WindowsWifiCollector,
-    WifiSample,
-)
-from .feature_extractor import (
-    RssiFeatureExtractor,
-    RssiFeatures,
-)
-from .classifier import (
-    PresenceClassifier,
-    SensingResult,
-    MotionLevel,
-)
-from .acoustic_collector import AcousticDopplerCollector
+try:
+    from .rssi_collector import (
+        LinuxWifiCollector,
+        SimulatedCollector,
+        WindowsWifiCollector,
+        WifiSample,
+    )
+    from .feature_extractor import (
+        RssiFeatureExtractor,
+        RssiFeatures,
+    )
+    from .classifier import (
+        PresenceClassifier,
+        SensingResult,
+        MotionLevel,
+    )
+    from .acoustic_collector import AcousticDopplerCollector
 
-__all__ = [
-    "LinuxWifiCollector",
-    "SimulatedCollector",
-    "WindowsWifiCollector",
-    "WifiSample",
-    "RssiFeatureExtractor",
-    "RssiFeatures",
-    "PresenceClassifier",
-    "SensingResult",
-    "MotionLevel",
-    "AcousticDopplerCollector",
-]
+    __all__ = [
+        "LinuxWifiCollector",
+        "SimulatedCollector",
+        "WindowsWifiCollector",
+        "WifiSample",
+        "RssiFeatureExtractor",
+        "RssiFeatures",
+        "PresenceClassifier",
+        "SensingResult",
+        "MotionLevel",
+        "AcousticDopplerCollector",
+    ]
+except Exception:
+    # Keep package importable in environments that do not have the full
+    # scientific stack installed. Submodules can still be imported directly.
+    __all__ = []
