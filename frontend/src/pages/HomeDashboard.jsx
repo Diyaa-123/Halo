@@ -2,14 +2,23 @@ import React, { useState } from 'react';
 import ProfileColumn from '../components/home/ProfileColumn';
 import TwinColumn from '../components/home/TwinColumn';
 import InsightsColumn from '../components/home/InsightsColumn';
+import PillarAttributionPanel from '../components/dashboard/PillarAttributionPanel';
 
 export default function HomeDashboard() {
   const [isNightMode, setIsNightMode] = useState(true);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', minHeight: 0 }}>
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      width: '100%', 
+      height: '100vh', 
+      maxHeight: '100vh',
+      overflowY: 'auto', 
+      paddingBottom: '40px' 
+    }}>
       {/* Top Controls for Demo / Testing */}
-      <div style={{ padding: '0 0 8px 0', display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+      <div style={{ padding: '0 0 8px 0', display: 'flex', justifyContent: 'flex-end', gap: 12, flexShrink: 0 }}>
         <button 
           onClick={() => setIsNightMode(false)}
           className={`btn btn-sm ${!isNightMode ? 'btn-primary' : 'btn-outline'}`}
@@ -24,7 +33,12 @@ export default function HomeDashboard() {
         </button>
       </div>
 
-      <div className="home-dashboard" style={{ flex: 1, minHeight: 0 }}>
+      {/* Multi-Evidence Attribution Framework (Pillar 4) */}
+      <div style={{ flexShrink: 0 }}>
+        <PillarAttributionPanel />
+      </div>
+
+      <div className="home-dashboard" style={{ flexShrink: 0 }}>
         <div className="home-col animate-slide-up" style={{ animationDelay: '0s' }}>
           <ProfileColumn isNightMode={isNightMode} />
         </div>
