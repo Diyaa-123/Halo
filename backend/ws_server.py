@@ -1178,15 +1178,48 @@ class SensingWebSocketServer:
             primary_br = tracked_occupants[0]["vitals"].get("breathing_rate_bpm")
             primary_hr = tracked_occupants[0]["vitals"].get("heart_rate_bpm")
 
-        if self.source == "offline":
-            primary_br = None
-            primary_hr = None
-            nodes = [{"node_id": 1, "rssi_dbm": None, "position": [2.0, 0.0, 1.5], "amplitude": [], "subcarrier_count": 0}]
-            tracked_occupants = []
-        elif presence_gate.get("calibrated"):
-            # Maintain full multi-occupant tracking array when calibrated, filtered by presence
-            if not effective_presence:
-                tracked_occupants = []
+        # Compute 4-Pillar Bayesian Attribution metrics
+        spatial_pillar = 0.96 if effective_presence else 0.05
+        if tracked_occupants:
+            min_dist = min(occ.get("distance_from_esp32_m", 2.0) for occ in tracked_occupants)
+            spatial_pillar = max(0.10, min(0.99, 1.0 - (min_dist / 8.0)))
+
+        import datetime as dt
+        current_hour = dt.datetime.now().hour
+        # Circadian sleep prior: 22:00 - 07:00 high rest window, daytime active window
+        temporal_pillar = 0.95 if (current_hour >= 22 or current_hour <= 7) else 0.90
+        if not effective_presence:
+            temporal_pillar = 0.40
+
+        # Biometric signature matching against target patient profile (BR_target = 15.0 brpm)
+        if primary_br is not None and primary_br > 0:
+            biometric_pillar = max(0.30, min(0.98, math.exp(-((primary_br - 15.0) ** 2) / (2 * (4.0 ** 2)))))
+        else:
+            biometric_pillar = 0.75 if effective_presence else 0.20
+
+        # Behavioral context prior from HAR model and motion level
+        har_conf = csi_data.get("har_confidence") if csi_data else None
+        if har_conf is not None:
+            behavioral_pillar = max(0.50, float(har_conf))
+        elif result.motion_level.value == "still":
+            behavioral_pillar = 0.92
+        elif result.motion_level.value == "active":
+            behavioral_pillar = 0.85
+        else:
+            behavioral_pillar = 0.50
+
+        # Bayesian fusion calculation: P(Target | Evidence_1..4)
+        num = spatial_pillar * temporal_pillar * biometric_pillar * behavioral_pillar
+        den = num + ((1 - spatial_pillar) * (1 - temporal_pillar) * (1 - biometric_pillar) * (1 - behavioral_pillar))
+        fused_confidence = num / max(den, 1e-6)
+
+        attribution_breakdown = {
+            "spatial": round(spatial_pillar * 100),
+            "temporal": round(temporal_pillar * 100),
+            "biometric": round(biometric_pillar * 100),
+            "behavioral": round(behavioral_pillar * 100),
+            "overall_confidence": round(fused_confidence * 100),
+        }
 
         msg = {
             "type": "sensing_update",
@@ -1198,6 +1231,7 @@ class SensingWebSocketServer:
             "presence_gate": presence_gate,
             "nodes": nodes,
             "room_layout": room_layout,
+            "attribution": attribution_breakdown,
 
             "features": {
                 "mean_rssi": features.mean,

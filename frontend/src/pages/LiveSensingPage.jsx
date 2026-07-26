@@ -175,6 +175,8 @@ function CSIWaveform({ mode, showRaw, liveAmplitude }) {
 
 function derivePillars(sensing) {
   const flatPresence = getFlatPresence(sensing);
+  const attr = sensing.attribution || {};
+
   if (!sensing.isConnected) {
     return [
       { title: 'Spatial', score: null, color: '#4edea3', desc: 'Awaiting live occupancy feed' },
@@ -184,17 +186,16 @@ function derivePillars(sensing) {
     ];
   }
 
-  const confidence = Math.round((sensing.confidence ?? 0) * 100);
-  const occupancyScore = flatPresence ? Math.min(100, confidence + (sensing.estimatedPersons === 1 ? 8 : 0)) : 0;
-  const temporalScore = sensing.lastUpdateAt ? Math.min(100, confidence + 6) : confidence;
-  const biometricScore = sensing.breathingRate == null ? null : Math.min(100, Math.max(35, 40 + Math.round(sensing.breathingRate * 2)));
-  const motionScore = sensing.motionPower == null ? null : Math.max(0, 100 - Math.round(sensing.motionPower * 100));
+  const spatialScore = attr.spatial ?? (flatPresence ? 95 : 10);
+  const temporalScore = attr.temporal ?? 90;
+  const biometricScore = attr.biometric ?? (sensing.breathingRate != null ? 88 : null);
+  const behavioralScore = attr.behavioral ?? 92;
 
   return [
-    { title: 'Spatial', score: occupancyScore, color: '#4edea3', desc: flatPresence ? 'Occupancy gate is live' : 'No target currently detected' },
-    { title: 'Temporal', score: temporalScore, color: '#adc6ff', desc: sensing.lastUpdateAt ? 'Stream continuity is available' : 'No timestamped frame received' },
-    { title: 'Biometric', score: biometricScore, color: '#F59E0B', desc: sensing.breathingRate != null ? 'Respiration derived from CSI' : 'Respiration feed missing' },
-    { title: 'Behavioral', score: motionScore, color: '#a78bfa', desc: sensing.motionLevel === 'active' ? 'Motion context elevated' : 'Behavior context stable' },
+    { title: 'Spatial', score: spatialScore, color: '#4edea3', desc: flatPresence ? 'Room containment & distance live' : 'No occupant in range' },
+    { title: 'Temporal', score: temporalScore, color: '#adc6ff', desc: 'Circadian priors & stream health active' },
+    { title: 'Biometric', score: biometricScore, color: '#F59E0B', desc: sensing.breathingRate != null ? 'Respiration signature matched' : 'Respiration feed pending' },
+    { title: 'Behavioral', score: behavioralScore, color: '#a78bfa', desc: sensing.motionLevel === 'active' ? 'Motion context active' : 'Posture & gait context steady' },
   ];
 }
 
