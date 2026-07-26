@@ -606,17 +606,23 @@ export default function LiveSensingPage() {
                 </span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
-                <div style={{ padding: '10px 12px', background: 'var(--surface-container-low)', borderRadius: 10 }}>
-                  <div style={{ fontSize: 10, color: 'var(--outline)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Smoothed value</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--on-surface)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
+                <div style={{ padding: '8px 10px', background: 'var(--surface-container-low)', borderRadius: 10 }}>
+                  <div style={{ fontSize: 9, color: 'var(--outline)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Smoothed value</div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--on-surface)' }}>
                     {presenceGate.value != null ? formatNumber(presenceGate.value, 2) : '--'}
                   </div>
                 </div>
-                <div style={{ padding: '10px 12px', background: 'var(--surface-container-low)', borderRadius: 10 }}>
-                  <div style={{ fontSize: 10, color: 'var(--outline)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Threshold</div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--on-surface)' }}>
+                <div style={{ padding: '8px 10px', background: 'var(--surface-container-low)', borderRadius: 10 }}>
+                  <div style={{ fontSize: 9, color: 'var(--outline)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Threshold</div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--on-surface)' }}>
                     {presenceGate.threshold != null ? formatNumber(presenceGate.threshold, 2) : '--'}
+                  </div>
+                </div>
+                <div style={{ padding: '8px 10px', background: 'var(--surface-container-low)', borderRadius: 10 }}>
+                  <div style={{ fontSize: 9, color: 'var(--outline)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Anomaly Score</div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: sensing.anomalyScore > 0.4 ? '#F59E0B' : '#4edea3' }}>
+                    {sensing.anomalyScore != null ? (sensing.anomalyScore * 100).toFixed(0) + '%' : '--'}
                   </div>
                 </div>
               </div>
@@ -625,7 +631,100 @@ export default function LiveSensingPage() {
                 <div><span style={{ color: 'var(--outline)' }}>Status:</span> {presenceGate.calibrated ? (flatPresence ? 'inside' : 'none') : 'none'}</div>
                 <div><span style={{ color: 'var(--outline)' }}>Calibrated at:</span> {presenceGate.calibrated_at || '--'}</div>
                 <div><span style={{ color: 'var(--outline)' }}>Reason:</span> {presenceGate.reason || (presenceGate.calibrated ? 'Gate active' : 'Calibration config missing')}</div>
-                <div style={{ lineHeight: 1.5 }}><span style={{ color: 'var(--outline)' }}>Limitation:</span> {presenceGate.limitation || 'Single-sensor flat-wide gate only.'}</div>
+                <div style={{ lineHeight: 1.5 }}><span style={{ color: 'var(--outline)' }}>Limitation:</span> {presenceGate.limitation || 'Single/Multi-sensor hybrid presence gate.'}</div>
+              </div>
+            </div>
+
+            <div className="glass-card" style={{ padding: 18 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                <span className="material-icons" style={{ fontSize: 14, color: '#adc6ff' }}>radar</span>
+                <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--on-surface)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                  Spatial Tracking (Fresnel/MUSIC)
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {sensing.trackedOccupants && sensing.trackedOccupants.length > 0 ? (
+                  sensing.trackedOccupants.map((occ, idx) => {
+                    // ESP32 probe distance (backend already computes sqrt(x²+y²))
+                    const distM  = occ.distance_from_esp32_m ?? occ.distance_from_router_m ?? occ.distance_m ?? 0;
+                    const distFt = occ.distance_from_esp32_ft ?? (distM * 3.28084);
+                    const speed  = occ.speed_mps ?? 0;
+                    const mstate = occ.motion_status ?? (speed > 0.25 ? 'moving' : speed > 0.05 ? 'adjusting' : 'stationary');
+
+                    const motionColor = mstate === 'moving'     ? '#F59E0B'
+                                      : mstate === 'adjusting' ? '#60a5fa'
+                                      : '#4edea3';
+                    const motionLabel = mstate === 'moving'     ? '⚡ Moving'
+                                      : mstate === 'adjusting' ? '↔ Adjusting'
+                                      : '● Stationary';
+
+                    return (
+                      <div key={occ.id ?? idx} style={{
+                        padding: '12px 14px',
+                        background: mstate === 'moving'
+                          ? 'rgba(245,158,11,0.08)'
+                          : 'var(--surface-container-low)',
+                        borderRadius: 10,
+                        border: `1.5px solid ${mstate === 'moving' ? 'rgba(245,158,11,0.35)' : 'transparent'}`,
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8,
+                        transition: 'all 0.3s ease'
+                      }}>
+                        <div style={{ flex: 1 }}>
+                          {/* Occupant ID + motion badge */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                            <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--on-surface)' }}>
+                              Occupant {occ.id ?? (idx + 1)}
+                            </span>
+                            <span style={{
+                              fontSize: 9, fontWeight: 700, color: motionColor,
+                              background: `${motionColor}18`, borderRadius: 6, padding: '2px 6px',
+                              border: `1px solid ${motionColor}44`
+                            }}>{motionLabel}</span>
+                          </div>
+                          {/* Position XY */}
+                          <div style={{ fontSize: 9, color: 'var(--outline)' }}>
+                            X: {occ.position?.[0]?.toFixed(2) ?? '--'} m &nbsp;|&nbsp;
+                            Y: {occ.position?.[1]?.toFixed(2) ?? '--'} m
+                            {speed > 0 && <>&nbsp;|&nbsp;{speed.toFixed(2)} m/s</>}
+                          </div>
+                        </div>
+                        {/* Distance from ESP32 probe */}
+                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                          <div style={{ fontSize: 15, fontWeight: 900, color: '#4edea3', lineHeight: 1 }}>
+                            {distM.toFixed(2)} m
+                          </div>
+                          <div style={{ fontSize: 9, color: 'var(--outline)', marginTop: 2 }}>
+                            {distFt.toFixed(1)} ft
+                          </div>
+                          <div style={{ fontSize: 8, color: 'var(--outline)', marginTop: 1, opacity: 0.7 }}>
+                            from ESP32
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  sensing.presence ? (() => {
+                    // ITU-R P.1238 Log-Distance Path Loss fallback
+                    // d = 10^((TxPower_1m - RSSI) / (10 × n))  [formula.txt §5]
+                    const rssi  = sensing.meanRssi || -60;
+                    const distM = Math.max(0.3, Math.pow(10, (-40 - rssi) / (10 * 2.7)));
+                    const distFt = (distM * 3.28084).toFixed(1);
+                    return (
+                      <div style={{ padding: '12px 14px', background: 'var(--surface-container-low)', borderRadius: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--on-surface)' }}>Occupant 1</div>
+                          <div style={{ fontSize: 9, color: 'var(--outline)', marginTop: 2 }}>LDPL estimate · awaiting tracker</div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: 15, fontWeight: 900, color: '#4edea3' }}>{distM.toFixed(2)} m</div>
+                          <div style={{ fontSize: 9, color: 'var(--outline)' }}>{distFt} ft from ESP32</div>
+                        </div>
+                      </div>
+                    );
+                  })()
+                  : <div style={{ fontSize: 11, color: 'var(--outline)', textAlign: 'center', padding: 16 }}>No occupants detected</div>
+                )}
               </div>
             </div>
 

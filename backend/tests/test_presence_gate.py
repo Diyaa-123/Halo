@@ -75,6 +75,8 @@ class TestPresenceGate(unittest.TestCase):
                     "status",
                     "value",
                     "threshold",
+                    "anomaly_score",
+                    "isolation_forest",
                     "calibrated_at",
                     "metric",
                     "window_seconds",

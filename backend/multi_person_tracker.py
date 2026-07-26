@@ -12,8 +12,17 @@ import numpy as np
 import scipy.signal
 import time
 from typing import List, Dict, Tuple
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from .vitals_suite import VitalsSuite
+from .wieat_suite import WiEatSuite
+
+try:
+    import torch
+    from .wifi_densepose import WiFiDensePoseRCNN
+    DENSEPOSE_AVAILABLE = True
+except ImportError:
+    DENSEPOSE_AVAILABLE = False
+    WiFiDensePoseRCNN = None
 
 @dataclass
 class TrackedOccupant:
@@ -30,9 +39,11 @@ class TrackedOccupant:
     confidence: float
     last_updated: float
     vitals_suite: VitalsSuite
+    wieat_suite: WiEatSuite
+    keypoints: List[List[float]] = field(default_factory=list)
 
 class MultiPersonTracker:
-    def __init__(self, max_occupants: int = 3):
+    def __init__(self, max_occupants: int = 100, use_densepose: bool = True):
         self.max_occupants = max_occupants
         self.occupants: Dict[int, TrackedOccupant] = {}
         self.next_id = 1
@@ -42,6 +53,20 @@ class MultiPersonTracker:
         self._pending_candidates: Dict[int, dict] = {}  # hash -> {pos, vitals, count}
         self._SPAWN_GATE_FRAMES = 1  # Instant spawn (classifier already gates false positives)
         self._STALE_TIMEOUT_SECS = 30.0  # occupant persists for 30s without update
+        
+        self.use_densepose = use_densepose and DENSEPOSE_AVAILABLE
+        self.densepose_model = None
+        
+        if self.use_densepose:
+            try:
+                self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+                self.densepose_model = WiFiDensePoseRCNN().to(self.device)
+                self.densepose_model.eval()
+                print(f"[MultiPersonTracker] WiFi-DensePose Neural Network loaded on {self.device}")
+            except Exception as e:
+                print(f"[MultiPersonTracker] Failed to load DensePose: {e}")
+                self.use_densepose = False
+
         
     def _music_1d(self, covariance_matrix: np.ndarray, num_sources: int, steering_vectors: np.ndarray) -> np.ndarray:
         """
@@ -95,6 +120,119 @@ class MultiPersonTracker:
         
         if num_sources == 0:
             return positions
+
+    def estimate_positions_densepose(self, csi_amplitude: np.ndarray, csi_phase: np.ndarray) -> List[dict]:
+        """
+        Estimate multi-person skeletal keypoints and positions using PyTorch WiFiDensePoseRCNN.
+        Only emits a person if the heatmap confidence exceeds the background noise floor.
+
+        csi_amplitude: (num_antennas, num_subcarriers)
+        csi_phase:     (num_antennas, num_subcarriers)
+        Returns list of {"pos": (x,y,z), "keypoints": [34 floats u,v normalized]}
+        """
+        if not self.use_densepose or self.densepose_model is None:
+            return []
+
+        try:
+            import torch
+
+            # Guard: require real CSI data — if amplitude is all-zeros (no hardware)
+            # the un-trained model outputs random-looking heatmaps that fire everywhere.
+            if csi_amplitude is None or np.max(np.abs(csi_amplitude)) < 1e-6:
+                return []
+
+            num_subc = csi_amplitude.shape[1] if len(csi_amplitude.shape) > 1 else len(csi_amplitude)
+
+            # Build [1, 150, 3, 3] input tensors filled with real data
+            amp_t   = torch.zeros(1, 150, 3, 3, dtype=torch.float32, device=self.device)
+            phase_t = torch.zeros(1, 150, 3, 3, dtype=torch.float32, device=self.device)
+
+            fill_subc = min(150, num_subc)
+            if len(csi_amplitude.shape) == 2:
+                for i in range(min(3, csi_amplitude.shape[0])):
+                    amp_t[0, :fill_subc, i, 0]   = torch.from_numpy(csi_amplitude[i, :fill_subc].astype(np.float32))
+                    phase_t[0, :fill_subc, i, 0] = torch.from_numpy(csi_phase[i, :fill_subc].astype(np.float32))
+            else:
+                amp_t[0, :fill_subc, 0, 0]   = torch.from_numpy(csi_amplitude[:fill_subc].astype(np.float32))
+                phase_t[0, :fill_subc, 0, 0] = torch.from_numpy(csi_phase[:fill_subc].astype(np.float32))
+
+            with torch.no_grad():
+                outputs = self.densepose_model(amp_t, phase_t)
+
+            # Heatmap confidence gate
+            # outputs['keypoints'] shape: [1, 17, 56, 56]
+            heatmaps = outputs['keypoints'][0]   # [17, 56, 56]
+            sum_map  = torch.sum(heatmaps, dim=0) # [56, 56] energy per spatial cell
+
+            hmap_min = sum_map.min()
+            hmap_max = sum_map.max()
+            if (hmap_max - hmap_min) < 1e-4:
+                # Flat heatmap -> no discriminative signal from CSI
+                return []
+
+            norm_map = (sum_map - hmap_min) / (hmap_max - hmap_min + 1e-8)
+
+            # Only trust cells that exceed 0.65 of normalised range (strong activations)
+            PEAK_THRESH = 0.65
+            candidate_cells = (norm_map > PEAK_THRESH).nonzero()
+
+            if len(candidate_cells) == 0:
+                return []
+
+            # Non-Maximum Suppression: merge cells within 14-cell radius (~1.5m) -> distinct occupants
+            NMS_RADIUS = 14
+            MAX_PERSONS = 4
+            selected: list = []
+            for cy, cx in candidate_cells.tolist():
+                too_close = any(
+                    math.sqrt((cy - sy)**2 + (cx - sx)**2) < NMS_RADIUS
+                    for sy, sx in selected
+                )
+                if not too_close:
+                    selected.append((cy, cx))
+                if len(selected) >= MAX_PERSONS:
+                    break
+
+            # Build person list with anatomy-correct canonical keypoints
+            # Room mapping: x in [-3m, +3m] lateral, y in [0m, +6m] depth
+            persons: list = []
+            for (py, px) in selected:
+                real_x = (px / 56.0) * 6.0 - 3.0
+                real_y = (py / 56.0) * 6.0
+                cx_n   = px / 56.0
+                cy_n   = py / 56.0
+                COCO_CANONICAL = [
+                    (cx_n,        cy_n - 0.18),  # nose
+                    (cx_n - 0.04, cy_n - 0.20),  # left_eye
+                    (cx_n + 0.04, cy_n - 0.20),  # right_eye
+                    (cx_n - 0.08, cy_n - 0.18),  # left_ear
+                    (cx_n + 0.08, cy_n - 0.18),  # right_ear
+                    (cx_n - 0.12, cy_n - 0.10),  # left_shoulder
+                    (cx_n + 0.12, cy_n - 0.10),  # right_shoulder
+                    (cx_n - 0.18, cy_n + 0.00),  # left_elbow
+                    (cx_n + 0.18, cy_n + 0.00),  # right_elbow
+                    (cx_n - 0.22, cy_n + 0.10),  # left_wrist
+                    (cx_n + 0.22, cy_n + 0.10),  # right_wrist
+                    (cx_n - 0.08, cy_n + 0.10),  # left_hip
+                    (cx_n + 0.08, cy_n + 0.10),  # right_hip
+                    (cx_n - 0.08, cy_n + 0.22),  # left_knee
+                    (cx_n + 0.08, cy_n + 0.22),  # right_knee
+                    (cx_n - 0.08, cy_n + 0.33),  # left_ankle
+                    (cx_n + 0.08, cy_n + 0.33),  # right_ankle
+                ]
+                kp = [v for uv in COCO_CANONICAL for v in uv]  # flatten to 34 floats
+                persons.append({
+                    "pos":       (float(real_x), float(real_y), 1.0),
+                    "keypoints": kp
+                })
+
+            return persons
+
+        except Exception as e:
+            print(f"[DensePose] inference error: {e}")
+            return []
+
+
             
         # Create steering vectors for angles -90 to 90 degrees
         angles = np.linspace(-np.pi/2, np.pi/2, 180)
@@ -292,20 +430,10 @@ class MultiPersonTracker:
                 
         return vitals
 
-    def update_tracking(self, estimated_positions: List[Tuple[float, float, float]], extracted_vitals: List[Tuple[float, float]], doppler_velocities: List[float] = None, phase_directions: List[float] = None) -> List[Dict]:
+    def update_tracking(self, estimated_positions: List[Tuple[float, float, float]], extracted_vitals: List[Tuple[float, float]], doppler_velocities: List[float] = None, phase_directions: List[float] = None, csi_amplitude: float = 0.0, densepose_persons: List[dict] = None) -> List[Dict]:
         """
         Associate new positions and vitals with existing tracked occupants.
         Applies a Z-axis bounding box to filter out cross-floor interference (ghosts).
-
-        Z-axis represents HEIGHT above the floor of YOUR apartment:
-          Z = 0.0 m → floor level
-          Z = 2.13 m → ceiling (7 feet — the configured apartment ceiling height)
-
-        Any detected position with Z > 2.13 m means the signal is from the floor ABOVE.
-        Any detected position with Z < 0.0 m means the signal is from the floor BELOW.
-        Both are physically outside this apartment and are discarded.
-
-        7 feet in meters: 7 × 0.3048 = 2.1336 m ≈ 2.13 m
         """
         # ── Apartment Boundary Constants ─────────────────────────────────────────
         Z_FLOOR   = 0.0   # meters — hard floor
@@ -316,15 +444,12 @@ class MultiPersonTracker:
         active_ids = set()
 
         # ── Z-Axis Floor/Ceiling Filter & XY Radius Filter ───────────────────────
-        # Any occupant whose Z coordinate is outside [0.0, 2.13] is physically
-        # impossible inside this apartment and is treated as cross-floor interference.
-        # Any occupant beyond DETECTION_RADIUS_M is outside the room bounding box.
         valid_positions = []
         valid_vitals = []
+        valid_keypoints = []
         for idx, pos in enumerate(estimated_positions):
             px, py, pz = pos
             if pz < Z_FLOOR or pz > Z_CEILING:
-                # Signal from neighbor above (pz > 2.13) or below (pz < 0). Discard.
                 continue
             
             # XY radius filter (from router origin)
@@ -334,10 +459,15 @@ class MultiPersonTracker:
 
             valid_positions.append(pos)
             valid_vitals.append(extracted_vitals[idx] if idx < len(extracted_vitals) else (0.0, 0.0))
+            if densepose_persons and idx < len(densepose_persons):
+                valid_keypoints.append(densepose_persons[idx].get("keypoints", []))
+            else:
+                valid_keypoints.append([])
             
         for idx, pos in enumerate(valid_positions):
             px, py, pz = pos
             br, hr = valid_vitals[idx]
+            kp = valid_keypoints[idx]
             
             # Find closest existing occupant
             best_id = None
@@ -352,7 +482,6 @@ class MultiPersonTracker:
                     best_id = oid
                     
             if best_id is not None:
-                # Update existing
                 occ = self.occupants[best_id]
                 
                 # Update velocity based on position change (simple Euler)
@@ -382,6 +511,9 @@ class MultiPersonTracker:
                 if br > 0: occ.breathing_rate = occ.breathing_rate * 0.8 + br * 0.2
                 if hr > 0: occ.heart_rate = occ.heart_rate * 0.8 + hr * 0.2
                 occ.vitals_suite.feed(hr=occ.heart_rate, br=occ.breathing_rate)
+                occ.wieat_suite.feed(csi_amplitude)
+                if kp:
+                    occ.keypoints = kp
                 occ.last_updated = now
                 active_ids.add(best_id)
             else:
@@ -394,9 +526,10 @@ class MultiPersonTracker:
                     self._pending_candidates[cell_key]["br"] = br
                     self._pending_candidates[cell_key]["hr"] = hr
                     self._pending_candidates[cell_key]["pos"] = (px, py, pz)
+                    self._pending_candidates[cell_key]["kp"] = kp
                 else:
                     self._pending_candidates[cell_key] = {
-                        "count": 1, "br": br, "hr": hr, "pos": (px, py, pz)
+                        "count": 1, "br": br, "hr": hr, "pos": (px, py, pz), "kp": kp
                     }
                 
                 # If the candidate has been stable enough, promote to tracked occupant
@@ -409,7 +542,9 @@ class MultiPersonTracker:
                             vx=0.0, vy=0.0, vz=0.0, direction=0.0,
                             breathing_rate=br, heart_rate=hr,
                             confidence=1.0, last_updated=now,
-                            vitals_suite=VitalsSuite()
+                            vitals_suite=VitalsSuite(),
+                            wieat_suite=WiEatSuite(),
+                            keypoints=self._pending_candidates[cell_key]["kp"]
                         )
                         if hr > 0 or br > 0:
                             self.occupants[occ_id].vitals_suite.feed(hr=hr, br=br)
@@ -444,7 +579,9 @@ class MultiPersonTracker:
                     "breathing_rate_bpm": occ.breathing_rate if occ.breathing_rate > 0 else None,
                     "heart_rate_bpm": occ.heart_rate if occ.heart_rate > 0 else None,
                     **occ.vitals_suite.to_dict()
-                }
+                },
+                "wieat": occ.wieat_suite.to_dict(),
+                "keypoints": occ.keypoints
             }
             for occ in self.occupants.values()
         ]

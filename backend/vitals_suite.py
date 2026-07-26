@@ -174,35 +174,38 @@ class VitalsSuite:
             self.sleep_state = "Awake"
 
     def _compute_meditation(self):
-        """Meditation quality: BR regularity + HR deceleration + HRV increase."""
+        """Meditation quality: BR regularity + HR deceleration + HRV increase (Formula 4.C)."""
         brs = list(self.br_buf)
         hrs = list(self.hr_buf)
         if len(brs) < 15 or len(hrs) < 15:
             self.meditation_score = 0.0
             return
 
-        # BR regularity (lower CV = more regular breathing)
+        # BR_CV = sigma_BR / mu_BR
         br_recent = brs[-15:]
         br_mean = sum(br_recent) / len(br_recent)
         br_std = math.sqrt(sum((b - br_mean) ** 2 for b in br_recent) / len(br_recent))
         br_cv = br_std / br_mean if br_mean > 0 else 1.0
-        br_score = max(0, min(1, 1.0 - br_cv * 5))  # CV < 0.05 = perfect
+        
+        # BR_Score = max(0, min(1, 1.0 - 5 * BR_CV))
+        br_score = max(0.0, min(1.0, 1.0 - 5.0 * br_cv))
 
-        # HR deceleration (lower HR = better)
+        # HR_Score = max(0, min(1, (90 - Mean_HR) / 30))
         hr_recent = hrs[-15:]
         mean_hr = sum(hr_recent) / len(hr_recent)
-        hr_score = max(0, min(1, (90 - mean_hr) / 30))  # 60bpm=1.0, 90bpm=0.0
+        hr_score = max(0.0, min(1.0, (90.0 - mean_hr) / 30.0))
 
-        # HRV increase (higher SDNN = better)
-        rr = [60000 / h for h in hr_recent if h > 0]
+        # HRV_Score = max(0, min(1, SDNN / 100))
+        rr = [60000.0 / h for h in hr_recent if h > 0]
         if len(rr) >= 5:
             rr_mean = sum(rr) / len(rr)
             sdnn = math.sqrt(sum((r - rr_mean) ** 2 for r in rr) / len(rr))
-            hrv_score = max(0, min(1, sdnn / 100))  # 100ms SDNN = perfect
+            hrv_score = max(0.0, min(1.0, sdnn / 100.0))
         else:
             hrv_score = 0.0
 
-        self.meditation_score = (br_score * 0.4 + hr_score * 0.3 + hrv_score * 0.3) * 100
+        # Meditation Score = (0.4 * BR_Score + 0.3 * HR_Score + 0.3 * HRV_Score) * 100
+        self.meditation_score = (0.4 * br_score + 0.3 * hr_score + 0.3 * hrv_score) * 100.0
 
     def activity_state(self):
         if len(self.hr_buf) < 3:
@@ -407,7 +410,8 @@ class CsiVitalSignDetector:
             
         band_mean = float(np.mean(band_spectrum))
         import scipy.signal
-        peaks, _ = scipy.signal.find_peaks(band_spectrum, height=band_mean*1.2, distance=2)
+        # Lower threshold factor from 1.2 to 1.05 and use prominence to reliably detect secondary occupants' breathing/heartbeat
+        peaks, _ = scipy.signal.find_peaks(band_spectrum, height=band_mean*1.05, prominence=band_mean*0.15, distance=2)
         if len(peaks) == 0:
             peak_idx = np.argmax(band_spectrum)
             peaks = [peak_idx]
@@ -447,23 +451,59 @@ class CsiVitalSignDetector:
         return results if results else [(None, 0.0)]
 
     def compute_signal_quality(self, amplitude):
-        if not amplitude:
+        if not amplitude or len(amplitude) == 0:
             return 0.0
             
-        mean = np.mean(amplitude)
-        if mean < 1e-9:
+        n = len(amplitude)
+        mean_amp = np.mean(amplitude)
+        if mean_amp < 1e-9:
             return 0.0
-            
-        cv = np.std(amplitude) / mean
+
+        # --- Formula 4.D: Signal Quality Index (SQI) ---
+        # SQI_i = Γ_SNR_i * Γ_Agree_i * Γ_SPI_i
         
-        if cv < 0.01:
-            quality = cv / 0.01 * 0.3
-        elif cv < 0.3:
-            quality = 0.3 + 0.7 * max(0.0, 1.0 - abs((cv - 0.15) / 0.15))
+        # 1. Γ_SNR_i: Ratio of in-band signal spectrum (f1 to f2) to total spectrum
+        fft_vals = np.abs(np.fft.rfft(amplitude))
+        fft_sum_total = np.sum(fft_vals)
+        if fft_sum_total < 1e-9:
+            return 0.0
+            
+        freqs = np.fft.rfftfreq(n, d=1.0 / self.sample_rate)
+        in_band_mask = (freqs >= self.breathing_min_hz) & (freqs <= self.heartbeat_max_hz)
+        snr_gamma = np.sum(fft_vals[in_band_mask]) / fft_sum_total
+
+        # 2. Γ_Agree_i: Agreement between FFT Breathing & Time Domain Zero-Crossing Breathing <= 4 brpm
+        br_fft = self.extract_breathing()
+        br_fft_bpm = br_fft[0][0] if br_fft and br_fft[0][0] is not None else 0.0
+        
+        # Zero-crossing estimation on raw amplitude
+        zc_bpm = 0.0
+        if n >= 4:
+            demeaned = amplitude - mean_amp
+            crossings = np.where(np.diff(np.signbit(demeaned)))[0]
+            if len(crossings) >= 2:
+                avg_period_samples = np.mean(np.diff(crossings)) * 2.0
+                if avg_period_samples > 0:
+                    zc_bpm = (self.sample_rate / avg_period_samples) * 60.0
+
+        agree_gamma = 1.0 if (br_fft_bpm > 0 and zc_bpm > 0 and abs(br_fft_bpm - zc_bpm) <= 4.0) else 0.0
+        if br_fft_bpm > 0 and agree_gamma == 0.0:
+            # Fallback soft agreement for general UI visualization if zero-crossing has noise
+            agree_gamma = max(0.2, 1.0 - abs(br_fft_bpm - zc_bpm) / 20.0)
+
+        # 3. Γ_SPI_i: Spectral Power Index using spectral moments w_n
+        # w_n = - integral (w^n * S_x(e^j w) dw)
+        w = 2.0 * np.pi * freqs / self.sample_rate
+        psd = fft_vals ** 2
+        w0 = np.sum(psd)
+        w2 = np.sum((w ** 2) * psd)
+        w4 = np.sum((w ** 4) * psd)
+
+        if w0 > 1e-9 and w4 > 1e-9:
+            spi_gamma = (w2 ** 2) / (w0 * w4)
+            spi_gamma = float(np.clip(spi_gamma, 0.0, 1.0))
         else:
-            quality = max(0.1, min(0.5, 1.0 - (cv - 0.3) / 0.7))
-            
-        fill = len(self.breathing_buffer) / max(1.0, float(self.breathing_capacity))
-        fill_factor = max(0.0, min(1.0, fill))
-        
-        return max(0.0, min(1.0, quality * (0.3 + 0.7 * fill_factor)))
+            spi_gamma = 0.5
+
+        sqi = float(snr_gamma * agree_gamma * spi_gamma)
+        return float(np.clip(sqi, 0.0, 1.0))

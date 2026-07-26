@@ -161,7 +161,11 @@ def main() -> int:
     print(f'  "threshold": {threshold:.6f},')
     print(f'  "calibrated_at": "{datetime.now().astimezone().isoformat(timespec="seconds")}",')
     print(f'  "metric": "{args.metric}",')
-    print('  "window_seconds": 1.0')
+    print('  "window_seconds": 1.0,')
+    print('  "isolation_forest": {')
+    print(f'    "empty_room_variance_baseline": {_fmt(pstdev(outside_segments[0].values) if outside_segments[0].values else 0.05)},')
+    print('    "anomaly_threshold_std": 0.40')
+    print('  }')
     print("}")
     return 0
 

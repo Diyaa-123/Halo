@@ -753,15 +753,16 @@ class SensingWebSocketServer:
         # P(Presence) = 1 - P(No WiFi) * P(No BLE)
         fused_presence_prob = 1.0 - ((1.0 - p_wifi) * (1.0 - p_ble))
         
-        # Use fused probability to determine actual presence
-        effective_presence = fused_presence_prob > 0.45
-        result.confidence = fused_presence_prob
-        if presence_gate.get("calibrated"):
-            effective_presence = effective_presence and presence_gate.get("status") == "inside"
-        
         # Fused motion and variance
         fused_motion = features.motion_band_power
         fused_var    = features.variance + ble_feat.get("variance", 0.0) / 200.0
+
+        effective_presence = fused_presence_prob > 0.45
+        result.confidence = fused_presence_prob
+
+        presence_gate = self.presence_gate.evaluate(fused_presence_prob, variance=fused_var)
+        if self.presence_gate.calibrated:
+            effective_presence = effective_presence and presence_gate.get("status") == "inside"
 
         # Build synthetic subcarrier amplitude array for 3D visualisation if none
         if not csi_data:
@@ -817,26 +818,40 @@ class SensingWebSocketServer:
             # Start with 1 person as the baseline (WiFi confirmed presence).
             wifi_occupancy_estimate = 1
 
-            # ── Step 2: Dynamic Occupancy from WiFi Variance ────────────────────
-            # Each additional person in the RF field adds a measurable multipath
-            # scattering contribution to the fused variance.  We model this
-            # linearly: occupancy ≈ 1 + fused_var / VARIANCE_PER_PERSON.
-            #
-            # VARIANCE_PER_PERSON is derived from the original calibration data:
-            #   1 person  → fused_var ≈ 0.0 – 0.29  (baseline noise)
-            #   2 persons → fused_var ≈ 0.30 – 0.79
-            #   3 persons → fused_var ≈ 0.80 – 1.29
-            # ⟹ each person adds ~0.40 variance units above the baseline.
-            VARIANCE_PER_PERSON = 0.40
-            dynamic_estimate = 1 + int(fused_var / VARIANCE_PER_PERSON)
-            wifi_occupancy_estimate = max(1, dynamic_estimate)
+            # ── Step 2: Dynamic Occupancy from Adaptive WiFi Baseline Variance ─
+            # Update rolling baseline variance when environment is quiet/baseline
+            if not hasattr(self, '_var_baseline_min') or self._var_baseline_min is None:
+                self._var_baseline_min = fused_var
+            else:
+                # Dynamically track lowest variance (empty/quiet room baseline)
+                if fused_var > 0.0001:
+                    self._var_baseline_min = min(self._var_baseline_min, fused_var)
+
+            # Calculate excess variance above dynamic baseline
+            excess_var = max(0.0, fused_var - self._var_baseline_min)
+            
+            # Use dynamic increment: if csi_vitals separated multiple breathing/heart rates, use that count directly
+            vitals_detected_count = len(csi_vitals) if (csi_vitals and csi_vitals[0][0] is not None) else 1
+            
+            # Physics-grounded variance scaling (formula.txt §5C Fresnel / Welford):
+            # CSI amplitude variance is ~0.0 to 1.5 (0.40/person); RSSI variance is in dBm² (15.0/person).
+            if fused_var > 5.0:
+                var_based_count = 1 + int(excess_var / 15.0) if excess_var > 5.0 else 1
+            else:
+                var_based_count = 1 + int(excess_var / 0.40) if excess_var > 0.30 else 1
+
+            # Spectral vitals count is the primary signal (each distinct breathing peak = 1 person)
+            dynamic_estimate = vitals_detected_count if vitals_detected_count > 1 else var_based_count
+
+            # Cap fallback estimated count to 8 occupants max
+            wifi_occupancy_estimate = max(1, min(8, dynamic_estimate))
 
             # ── Step 3: EMA Temporal Smoothing ──────────────────────────────────
-            # Alpha = 0.2 → ~2-second lag. Prevents single-frame count jumps.
+            # Alpha = 0.15 → Slow, stable count (avoids flickering between 1 and 2)
             if not hasattr(self, '_smoothed_occupancy'):
                 self._smoothed_occupancy = float(wifi_occupancy_estimate)
-            self._smoothed_occupancy = 0.8 * self._smoothed_occupancy + 0.2 * wifi_occupancy_estimate
-            wifi_occupancy_estimate = max(0, round(self._smoothed_occupancy))
+            self._smoothed_occupancy = 0.85 * self._smoothed_occupancy + 0.15 * wifi_occupancy_estimate
+            wifi_occupancy_estimate = max(1, round(self._smoothed_occupancy))
 
         # ── Update Multi-Person Tracker ─────────────────────────────────────────
         tracked_occupants = []
@@ -986,8 +1001,20 @@ class SensingWebSocketServer:
                 self._damped_r = 0.85 * self._damped_r + 0.15 * r_from_router
             r_from_router = self._damped_r
 
+            # Use WiFi-DensePose for skeletal multi-occupant tracking (Highest Priority)
+            dp_persons = []
+            if getattr(self.tracker, "use_densepose", False) and csi_data and csi_data.get("csi_matrix") is not None:
+                csi_mat = csi_data["csi_matrix"]
+                dp_persons = self.tracker.estimate_positions_densepose(np.abs(csi_mat), np.angle(csi_mat))
+                if dp_persons:
+                    for person in dp_persons:
+                        estimated_positions.append(person["pos"])
+                        doppler_velocities.append(velocity)
+                        phase_gradient_sign = 1 if (len(self._phase_history) > 1 and self._phase_history[-1] > self._phase_history[0]) else -1
+                        phase_directions.append(math.atan2(person["pos"][1], person["pos"][0]) + (velocity * phase_gradient_sign * 0.2))
+
             # Use true MUSIC algorithm for exact X,Y positions if CSI data allows (multi-antenna)
-            if csi_data and csi_data.get("csi_matrix") is not None and csi_data.get("n_antennas", 0) >= 2:
+            if not dp_persons and csi_data and csi_data.get("csi_matrix") is not None and csi_data.get("n_antennas", 0) >= 2:
                 music_positions = self.tracker.estimate_positions_music(
                     csi_data["csi_matrix"], 
                     csi_data["n_antennas"], 
@@ -1027,10 +1054,18 @@ class SensingWebSocketServer:
                 else:
                     base_angle = self._current_angle
                 
-                # To distinguish multiple people in single-antenna mode, separate them based on independent sub-bands
-                # (Since we lack AoA, we use harmonic offsets)
-                angular_offset = (i * math.pi / 3.0) if i > 0 else 0.0
-                radial_offset = (i * 0.6) if i > 0 else 0.0
+                # Distribute multiple occupants in a natural 2D room layout with proper physical spacing (1.2m–1.8m apart)
+                N_total = wifi_occupancy_estimate
+                if N_total > 1:
+                    # Spread angles symmetrically across -40° to +40° arc around base_angle
+                    arc_span = math.pi / 2.2  # ~80 degrees total arc
+                    angle_step = arc_span / max(1, N_total - 1)
+                    angular_offset = -(arc_span / 2.0) + (i * angle_step)
+                    # Stagger depth (row 1 vs row 2) so occupants don't form an overlapping line
+                    radial_offset = 0.9 if (i % 2 == 1) else 0.0
+                else:
+                    angular_offset = 0.0
+                    radial_offset = 0.0
                 
                 final_angle = base_angle + angular_offset
                 final_r = r_from_router + radial_offset
@@ -1070,19 +1105,42 @@ class SensingWebSocketServer:
                 estimated_positions, 
                 vitals_list, 
                 doppler_velocities=doppler_velocities, 
-                phase_directions=phase_directions
+                phase_directions=phase_directions,
+                csi_amplitude=csi_data.get("mean_amplitude", 0.0) if csi_data else 0.0,
+                densepose_persons=dp_persons
             )
 
-            # Annotate each occupant with router-centric distance metrics
+            # Annotate each occupant with ESP32-probe and laptop distance metrics.
+            # The ESP32 probe is placed at the room origin (0,0,0), so:
+            #   distance_from_esp32_m = sqrt(x² + y²)  (already in distance_m from tracker)
+            #   distance_from_laptop_m = router-to-laptop distance minus occupant depth
             for occ in tracked_occupants:
-                d_from_router = occ.get("distance_m", 1.0)  # distance_m = sqrt(x²+y²) from origin = router
-                d_from_laptop = max(0.3, d_rl - d_from_router)
-                occ["distance_from_router_m"]  = round(d_from_router, 2)
-                occ["distance_from_router_ft"] = round(d_from_router * 3.28084, 2)
+                # distance_m from tracker = 2D Euclidean from origin = distance from ESP32
+                d_esp32 = occ.get("distance_m", 1.0)
+                d_from_laptop = max(0.3, d_rl - d_esp32)
+
+                # Speed magnitude from velocity vector (m/s)
+                vel = occ.get("velocity", [0.0, 0.0, 0.0])
+                speed_mps = round(math.sqrt(vel[0]**2 + vel[1]**2 + vel[2]**2), 3)
+
+                # Motion state thresholds (tuned for WiFi CSI resolution)
+                if speed_mps > 0.25:
+                    motion_status = "moving"
+                elif speed_mps > 0.05:
+                    motion_status = "adjusting"
+                else:
+                    motion_status = "stationary"
+
+                occ["distance_from_esp32_m"]   = round(d_esp32, 2)
+                occ["distance_from_esp32_ft"]  = round(d_esp32 * 3.28084, 2)
+                occ["distance_from_router_m"]  = round(d_esp32, 2)   # alias: ESP32 IS the probe
+                occ["distance_from_router_ft"] = round(d_esp32 * 3.28084, 2)
                 occ["distance_from_laptop_m"]  = round(d_from_laptop, 2)
                 occ["distance_from_laptop_ft"] = round(d_from_laptop * 3.28084, 2)
                 occ["router_to_laptop_m"]      = round(d_rl, 2)
                 occ["router_to_laptop_ft"]     = round(d_rl * 3.28084, 2)
+                occ["speed_mps"]               = speed_mps
+                occ["motion_status"]           = motion_status
 
         else:
             self.tracker.occupants.clear()
@@ -1126,7 +1184,9 @@ class SensingWebSocketServer:
             nodes = [{"node_id": 1, "rssi_dbm": None, "position": [2.0, 0.0, 1.5], "amplitude": [], "subcarrier_count": 0}]
             tracked_occupants = []
         elif presence_gate.get("calibrated"):
-            tracked_occupants = tracked_occupants[:1] if effective_presence else []
+            # Maintain full multi-occupant tracking array when calibrated, filtered by presence
+            if not effective_presence:
+                tracked_occupants = []
 
         msg = {
             "type": "sensing_update",
@@ -1134,7 +1194,7 @@ class SensingWebSocketServer:
             "source": self.source,
             "stream_status": "live" if self.source != "offline" else "offline",
             "stream_message": None if self.source != "offline" else getattr(self.collector, "reason", "No real collector available"),
-            "estimated_persons": 1 if effective_presence else 0,
+            "estimated_persons": len(tracked_occupants) if tracked_occupants else presence_gate.get("occupancy_count", 1 if effective_presence else 0),
             "presence_gate": presence_gate,
             "nodes": nodes,
             "room_layout": room_layout,
@@ -1163,6 +1223,7 @@ class SensingWebSocketServer:
                 "breathing_rate_bpm": primary_br,
             },
             "all_vitals": [occ["vitals"] for occ in tracked_occupants],
+            "tracked_occupants": tracked_occupants,
             "pose": csi_data.get("pose") if csi_data else None,
             "har_prediction": csi_data.get("har_prediction") if csi_data else None,
             "har_confidence": csi_data.get("har_confidence") if csi_data else None,
@@ -1341,23 +1402,12 @@ def main():
 
     server = SensingWebSocketServer()
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
-    def _shutdown(sig, frame):
-        print("\nShutting down...")
-        server.stop()
-        loop.stop()
-
-    signal.signal(signal.SIGINT, _shutdown)
-
     try:
-        loop.run_until_complete(server.run())
+        asyncio.run(server.run())
     except KeyboardInterrupt:
-        pass
+        print("\nShutting down...")
     finally:
         server.stop()
-        loop.close()
 
 
 if __name__ == "__main__":

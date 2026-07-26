@@ -1,0 +1,254 @@
+=============================================================================
+                          SILENTSENSE PROJECT FORMULAS
+=============================================================================
+
+This document lists all the mathematical formulations, physical signal models, 
+statistical equations, and heuristics implemented across the SilentSense 
+platform (ESP32-S3 firmware, signal processing modules, and backend servers).
+
+-----------------------------------------------------------------------------
+1. SIGNAL MODEL & REPRESENTATION
+-----------------------------------------------------------------------------
+
+A. Received Signal Model
+   The received signal Y in a multipath wireless channel is modeled as:
+   
+       Y = H * X + N
+       
+       Where:
+       - Y = Received signal vector
+       - X = Transmitted signal vector
+       - H = Channel State Information (CSI) matrix / channel transfer function
+       - N = Noise vector
+
+B. CSI Component Extraction
+   For each subcarrier, CSI is a complex number representing amplitude and phase:
+   
+       H = |H| * e^(j * θ)
+       
+       Where I and Q represent the In-phase and Quadrature components:
+       - Amplitude (|H|):
+           |H| = sqrt(I^2 + Q^2)
+       - Phase (θ):
+           θ = atan2(Q, I)
+
+-----------------------------------------------------------------------------
+2. SIGNAL PREPROCESSING & FILTERING
+-----------------------------------------------------------------------------
+
+A. Phase Unwrapping
+   To prevent phase discontinuities (jumps of 2π), the phase is unwrapped:
+   
+       Δθ = θ_curr - θ_prev
+       
+       If Δθ > π:
+           Δθ = Δθ - 2π
+       Else If Δθ < -π:
+           Δθ = Δθ + 2π
+           
+       θ_unwrapped_curr = θ_unwrapped_prev + Δθ
+
+B. Welford's Running Variance Algorithm
+   Calculates running mean and variance incrementally to minimize memory footprint:
+   
+       M_1 = x_1,  M_k = M_{k-1} + (x_k - M_{k-1}) / k
+       S_1 = 0,    S_k = S_{k-1} + (x_k - M_{k-1}) * (x_k - M_k)
+       
+       Variance (σ^2) = S_k / (k - 1)   [for k > 1]
+
+C. Butterworth Bandpass Biquad Filter Design
+   Second-order digital biquad bandpass filter coefficients:
+   
+       w0 = 2 * π * ((f_lo + f_hi) / 2) / fs
+       bw = 2 * π * (f_hi - f_lo) / fs
+       α  = sin(w0) * sinh(ln(2)/2 * (BW_octaves)* w0/sin(w0))
+       
+       a0_inv = 1 / (1 + α)
+       
+       Filter Coefficients:
+       - b0 =  α * a0_inv
+       - b1 =  0.0
+       - b2 = -α * a0_inv
+       - a1 = -2 * cos(w0) * a0_inv
+       - a2 =  (1 - α) * a0_inv
+       
+   Biquad Processing Difference Equation:
+   
+       y[n] = b0*x[n] + b1*x[n-1] + b2*x[n-2] - a1*y[n-1] - a2*y[n-2]
+
+D. Phase Circular Variance
+   Used to measure phase spread/coherence:
+   
+       sin_sum = Σ sin(θ_i)
+       cos_sum = Σ cos(θ_i)
+       R = sqrt(sin_sum^2 + cos_sum^2) / N
+       
+       Circular Variance = 1.0 - R   (Clamped to [0.0, 1.0])
+
+-----------------------------------------------------------------------------
+3. PERIODICITY & VITAL SIGN EXTRACTION
+-----------------------------------------------------------------------------
+
+A. Zero-Crossing Periodicity Estimator
+   Estimates BPM (Breathing/Heart Rate) from positive zero-crossings:
+   
+       Average Period (samples) = (Index_last - Index_first) / (N_crossings - 1)
+       Frequency (Hz)           = fs / Average Period
+       BPM                      = Frequency * 60
+
+B. Autocorrelation Periodicity Estimator
+   Computes the correlation of a signal with its lagged copy to estimate period:
+   
+       R(τ) = Σ_{i} sig[i] * sig[i + τ]
+       
+       The search window for lag τ is constrained by the target BPM band:
+       - τ_min = fs * 60 / BPM_high
+       - τ_max = fs * 60 / BPM_low
+
+C. Breathing Harmonic Rejection
+   Prevents the heartbeat tracker from locking onto breathing harmonics:
+   
+       Reject candidate frequency f if:
+           |f - k * f_br| < 0.08 * (k * f_br)   [for k = 1, 2, ..., 6]
+           
+       Where:
+       - f    = Candidate heart rate frequency (Hz)
+       - f_br = Detected breathing frequency (Hz)
+
+D. Parabolic Interpolation (Fine Peak Refinement)
+   Refines discrete peak bins to sub-sample resolution:
+   
+       p = 0.5 * (α - γ) / (α - 2*β + γ)
+       
+       Where:
+       - β = Peak bin magnitude R(τ_best)
+       - α = Adjacent left bin magnitude R(τ_best - 1)
+       - γ = Adjacent right bin magnitude R(τ_best + 1)
+       
+       τ_refined = τ_best + p
+       BPM = (fs / τ_refined) * 60
+
+-----------------------------------------------------------------------------
+4. CLINICAL TELEMETRY & HEALTH METRICS
+-----------------------------------------------------------------------------
+
+A. Heart Rate Variability (HRV) Metrics
+   Calculated from standard RR intervals (in milliseconds, RR = 60000 / HR):
+   
+   - SDNN (Standard Deviation of NN Intervals):
+       SDNN = sqrt( 1/N * Σ_{i=1}^N (RR_i - Mean_RR)^2 )
+       
+   - RMSSD (Root Mean Square of Successive Differences):
+       RMSSD = sqrt( 1/(N-1) * Σ_{i=1}^{N-1} (RR_{i+1} - RR_i)^2 )
+       
+   - pNN50 (Percentage of Successive Differences > 50 ms):
+       pNN50 = ( count(|RR_{i+1} - RR_i| > 50 ms) / (N - 1) ) * 100
+
+B. Blood Pressure Estimation Heuristic (HRV/HR-based)
+   Estimates blood pressure based on deviations from normal HR and SDNN:
+   
+       Δ_HR = Mean_HR - 72
+       
+       Systolic Blood Pressure (SBP):
+           SBP = 120 + 0.5 * Δ_HR - 0.8 * (SDNN - 50) / 50   [Clamped to 80-200 mmHg]
+           
+       Diastolic Blood Pressure (DBP):
+           DBP = 80 + 0.3 * Δ_HR - 0.5 * (SDNN - 50) / 50    [Clamped to 50-130 mmHg]
+
+C. Meditation Quality Score
+   Weights breathing consistency, heart rate deceleration, and HRV status:
+   
+       BR_CV     = σ_BR / μ_BR
+       BR_Score  = max(0, min(1, 1.0 - 5 * BR_CV))       [CV < 0.05 is ideal]
+       HR_Score  = max(0, min(1, (90 - Mean_HR) / 30))   [60bpm is 1.0, 90bpm is 0.0]
+       HRV_Score = max(0, min(1, SDNN / 100))            [100ms SDNN is ideal]
+       
+       Meditation Score = (0.4 * BR_Score + 0.3 * HR_Score + 0.3 * HRV_Score) * 100
+
+D. Signal Quality Index (SQI)
+
+     SQIi = ΓSNRi ·ΓAgreei · ΓSPIi 
+     where 
+     ΓSNRi (w) = ∑f2 f=f1 FFT(fi) ∑N f=1 FFT(fi)
+     ΓAgreei =  1, if |RRFFTi − RRbreathi | ≤ 4 brpm 0, otherwise
+     ΓSPI(i) = ω22(i) ω0(i) · ω4(i)
+
+     where
+     ωn = −π ωnSx(ejω)dω
+
+     
+
+-----------------------------------------------------------------------------
+5. POSITIONING & VELOCITY TRACKING
+-----------------------------------------------------------------------------
+
+A. 1D MUSIC Algorithm (Angle of Arrival - AoA)
+   Estimates spatial arrival angle from a Uniform Linear Array (ULA) of antennas:
+   
+   - Spatial Covariance Matrix R:
+       R = (H * H^H) / N_subcarriers
+       
+   - Noise Subspace (En):
+       Obtained from the eigenvectors corresponding to the smallest eigenvalues 
+       after sorting: eigenvalues, eigenvectors = eigh(R)
+       
+   - MUSIC Pseudo-Spectrum:
+       P_MUSIC(θ) = 1 / (a(θ)^H * En * En^H * a(θ))
+       
+       Where steering vector a(θ) at antenna index i with spacing d is:
+       a_i(θ) = e^(-j * 2 * π * d * i * sin(θ))
+       define d=0.5
+
+B. Doppler Velocity Estimation
+   Estimates user motion velocity from unwrapped phase gradient over time:
+   
+       v = (|dθ/dt| * λ) / (4 * π)
+       
+       Where:
+       - dθ/dt = Average gradient of unwrapped phase over time
+       - λ     = Signal wavelength (0.0517 meters for 5.8 GHz WiFi)
+
+C. Fresnel Geometry Solver
+   Recovers TX-to-body (d1) and body-to-RX (d2) distance from multi-subcarrier 
+   Fresnel reflections using regularized least-squares:
+   
+       A_matrix = [ a00  a01 ]
+                  [ a10  a11 ]
+                  
+       Target b = [  b0  ]
+                  [  b1  ]
+                  
+       Where:
+       - λ_reg = 0.5 * Σ (1 / w_i^2)
+       - a00 = a11 = Σ (1 / w_i^2) + λ_reg
+       - a01 = a10 = -Σ (1 / w_i^2)
+       - b0  = Σ (Amplitude_Variation_i / w_i)
+       
+       det = a00 * a11 - a01^2
+       
+       d1 = (a11 * b0 - a01 * b1) / det
+       d2 = (-a01 * b0 + a00 * b1) / det
+
+-----------------------------------------------------------------------------
+6. ANOMALY & CHANGE-POINT DETECTION
+-----------------------------------------------------------------------------
+
+A. Fall Detection (Phase Acceleration)
+   Triggers a fall event if continuous angular phase acceleration spikes:
+   
+       v[n] = θ[n] - θ[n-1]   [Velocity: unwrapped phase difference]
+       a[n] = v[n] - v[n-1]   [Acceleration: velocity difference]
+       
+       Trigger Fall Event if:
+           a[n] > Threshold   [Default: 2.0 rad/s^2]
+
+B. CUSUM (Cumulative Sum) Change-Point Detection
+   Identifies sudden transitions in RSSI baseline mean (abrupt room entries/exits):
+   
+       S_pos[i] = max(0, S_pos[i-1] + (signal[i] - Mean) - Drift)
+       S_neg[i] = max(0, S_neg[i-1] - (signal[i] - Mean) - Drift)
+       
+       If S_pos[i] > Threshold or S_neg[i] > Threshold:
+           Flag Change-Point at index i
+           Reset S_pos = S_neg = 0.0
+=============================================================================

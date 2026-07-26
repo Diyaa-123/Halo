@@ -121,6 +121,8 @@ export default function useSensingWebSocket(url = DEFAULT_WS_URL) {
     streamMessage,
     lastUpdateAt: data?.timestamp ?? null,
     presenceGate,
+    anomalyScore: presenceGate?.anomaly_score ?? 0.0,
+    detectorProduct: presenceGate?.detector_product ?? null,
     
     // Individual vital sign values (with safe defaults)
     heartRate: vitals.heart_rate_bpm ?? null,
@@ -140,5 +142,10 @@ export default function useSensingWebSocket(url = DEFAULT_WS_URL) {
     // HAR (Gait Analysis)
     harPrediction: data?.har_prediction ?? null,
     harConfidence: data?.har_confidence ?? null,
+    
+    // Pillar 4 & Multiperson Tracking
+    trackedOccupants: data?.tracked_occupants || [],
+    primaryWieat: (data?.tracked_occupants && data.tracked_occupants.length > 0) ? data.tracked_occupants[0].wieat : { is_eating: false, chew_count: 0, swallow_count: 0, utensil_type: "None" },
+    actualOccupancyCount: presenceGate?.occupancy_count ?? estimatedPersons,
   };
 }

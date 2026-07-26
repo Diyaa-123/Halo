@@ -3,149 +3,192 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Line, Grid, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import HumanTwinModel from '../twin/HumanTwinModel';
-import DensePoseSkeleton from '../twin/DensePoseSkeleton';
+
+// COCO keypoint indices for pose-driven animation
+// 0=nose, 5=LShoulder, 6=RShoulder, 7=LElbow, 8=RElbow,
+// 9=LWrist, 10=RWrist, 11=LHip, 12=RHip, 13=LKnee, 14=RKnee
+function poseToBodyRegions(keypoints) {
+  // keypoints is flat [u0,v0, u1,v1 ... u16,v16] all in [0,1]
+  if (!keypoints || keypoints.length !== 34) return [];
+
+  const kp = (i) => ({ u: keypoints[i * 2], v: keypoints[i * 2 + 1] });
+
+  // Motion level from limb spread
+  const lElbow = kp(7), lShoulder = kp(5), rElbow = kp(8), rShoulder = kp(6);
+  const lArmSpread = Math.abs(lElbow.u - lShoulder.u) + Math.abs(lElbow.v - lShoulder.v);
+  const rArmSpread = Math.abs(rElbow.u - rShoulder.u) + Math.abs(rElbow.v - rShoulder.v);
+  const armActivity = (lArmSpread + rArmSpread) / 2;
+
+  // Hip-knee angle for legs
+  const lHip = kp(11), lKnee = kp(13), rHip = kp(12), rKnee = kp(14);
+  const lLegSpread = Math.abs(lKnee.v - lHip.v);
+  const rLegSpread = Math.abs(rKnee.v - rHip.v);
+  const legActivity = (lLegSpread + rLegSpread) / 2;
+
+  // Emit "regions" for highlighted animation regions
+  const regions = [];
+  if (armActivity > 0.08) regions.push('left_arm', 'right_arm');
+  if (legActivity > 0.05) regions.push('left_leg', 'right_leg');
+  return regions;
+}
 
 function AnimatedOccupant({ index, occupant, sensing, mode, isPrimary }) {
   const groupRef = useRef();
-  
-  // Calculate raw distance using Log-Distance Path Loss Model from live feed
+
+  // ── Position Estimation ──────────────────────────────────────────────────────
   const rssi = sensing.meanRssi || -60;
-  const amps = sensing.csiAmplitude || [];
-  const variance = sensing.variance || 0;
+  // ── Physics-based positioning with 1.2m+ separation & staggered depth ───────
+  const totalOccupants = sensing.trackedOccupants?.length || 1;
   
   const estimatedDistance = useMemo(() => {
-    const P0 = -50;
-    const n = 3;
-    const distanceMeters = Math.pow(10, (P0 - rssi) / (10 * n));
-    return Math.max(0.5, Math.min(distanceMeters, 8)); 
-  }, [rssi]);
+    const rssi = sensing.meanRssi || -60;
+    const base = Math.pow(10, (-40 - rssi) / (10 * 2.7));
+    const depthStagger = (index % 2 === 1) ? 0.9 : 0.0;
+    return Math.max(1.2, Math.min(base + depthStagger, 6.0));
+  }, [sensing.meanRssi, index]);
 
-  // Frequency-Selective Fading Center of Mass for Angle
-  // Calculates the weighted average of the subcarrier amplitudes to derive spatial azimuth
   const estimatedAngle = useMemo(() => {
-    if (amps && amps.length > 0) {
-      let sumAmp = 0;
-      let weightedSum = 0;
-      for (let i = 0; i < amps.length; i++) {
-        sumAmp += amps[i];
-        weightedSum += amps[i] * i;
-      }
-      const centerIndex = sumAmp > 0 ? weightedSum / sumAmp : amps.length / 2;
-      // Map the index to a sweeping angle (0 to 2PI)
-      const baseAngle = (centerIndex / amps.length) * Math.PI * 2;
-      return baseAngle + (index * Math.PI / 4);
-    }
-    // Fallback if no CSI available: use variance as a rotational proxy
-    return (variance * Math.PI) + (index * Math.PI / 4);
-  }, [amps, variance, index]);
+    const arcSpan = Math.PI / 2.2; // ~80 degrees total span
+    const angleStep = arcSpan / Math.max(1, totalOccupants - 1);
+    return -(arcSpan / 2.0) + (index * angleStep);
+  }, [totalOccupants, index]);
 
-  const rawTargetX = occupant && occupant.position ? occupant.position[0] : Math.cos(estimatedAngle) * (isPrimary ? estimatedDistance : estimatedDistance + (index * 0.5));
-  const rawTargetZ = occupant && occupant.position ? occupant.position[1] : Math.sin(estimatedAngle) * (isPrimary ? estimatedDistance : estimatedDistance + (index * 0.5));
+  // Compute 3D target coordinates with mandatory spacing
+  const { rawTargetX, rawTargetZ } = useMemo(() => {
+    if (occupant && occupant.position && occupant.position.length >= 2) {
+      // Backend position available: blend with lateral spread & staggered depth
+      const centerOffset = (index - (totalOccupants - 1) / 2.0) * 1.3; // 1.3m lateral spacing
+      const targetX = occupant.position[0] * 0.35 + centerOffset * 0.65;
+      const targetZ = occupant.position[1] + ((index % 2 === 1) ? 0.8 : 0.0);
+      return { rawTargetX: targetX, rawTargetZ: targetZ };
+    }
+    // Fallback: polar coordinates mapped to 3D room grid
+    const targetX = Math.cos(estimatedAngle) * estimatedDistance;
+    const targetZ = Math.sin(estimatedAngle) * estimatedDistance;
+    return { rawTargetX: targetX, rawTargetZ: targetZ };
+  }, [occupant, index, totalOccupants, estimatedAngle, estimatedDistance]);
 
   const currentTargetRef = useRef({ x: rawTargetX, z: rawTargetZ });
   const [isMovingState, setIsMovingState] = useState(false);
   const stopTimeoutRef = useRef(null);
-  
+
   useEffect(() => {
     const dx = rawTargetX - currentTargetRef.current.x;
     const dz = rawTargetZ - currentTargetRef.current.z;
-    const distMoved = Math.sqrt(dx*dx + dz*dz);
-    
-    // Apply a spatial deadzone filter to completely ignore telemetry jitter (< 0.2m)
-    if (distMoved > 0.2) {
+    if (Math.sqrt(dx * dx + dz * dz) > 0.2) {
       currentTargetRef.current = { x: rawTargetX, z: rawTargetZ };
       setIsMovingState(true);
-      
-      // Auto-stop the twin if no new significant movement breaks the deadzone in 1.5 seconds
       if (stopTimeoutRef.current) clearTimeout(stopTimeoutRef.current);
-      stopTimeoutRef.current = setTimeout(() => {
-        setIsMovingState(false);
-      }, 1500);
+      stopTimeoutRef.current = setTimeout(() => setIsMovingState(false), 1500);
     }
   }, [rawTargetX, rawTargetZ]);
 
-  useEffect(() => {
-    return () => {
-      if (stopTimeoutRef.current) clearTimeout(stopTimeoutRef.current);
-    };
-  }, []);
+  useEffect(() => () => { if (stopTimeoutRef.current) clearTimeout(stopTimeoutRef.current); }, []);
 
+  // ── Pose-driven body regions from DensePose keypoints ────────────────────────
+  const activeRegions = useMemo(() => {
+    if (occupant && occupant.keypoints && occupant.keypoints.length === 34) {
+      return poseToBodyRegions(occupant.keypoints);
+    }
+    // Fall back to motion-based heuristics
+    if (isMovingState) return ['left_leg', 'right_leg'];
+    return [];
+  }, [occupant, isMovingState]);
+
+  // ── Per-frame animation ──────────────────────────────────────────────────────
   useFrame((state, delta) => {
     if (!groupRef.current) return;
-    
     const time = state.clock.elapsedTime;
     const isMoving = isMovingState;
-    const br = (occupant && occupant.breathing_rate > 0) ? occupant.breathing_rate : (sensing.breathingRate || 15);
-    
-    const targetX = currentTargetRef.current.x;
-    const targetZ = currentTargetRef.current.z;
+    const br = (occupant && occupant.vitals?.breathing_rate_bpm > 0)
+      ? occupant.vitals.breathing_rate_bpm
+      : (sensing.breathingRate || 15);
 
-    // 2. Smoothly move (lerp) the twin to the target X,Z
+    // Clamp target within room bounds (±5m)
+    const ROOM_HALF = 5.0;
+    const targetX = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, currentTargetRef.current.x));
+    const targetZ = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, currentTargetRef.current.z));
     const moveSpeed = isMoving ? 3.0 * delta : 1.5 * delta;
+
+    // Smooth lerp to clamped target position
     groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, moveSpeed);
     groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, moveSpeed);
-    
-    // 3. Make the twin face the direction of movement
+
+    // Face direction of travel
     const dx = targetX - groupRef.current.position.x;
     const dz = targetZ - groupRef.current.position.z;
     if (isMoving && (Math.abs(dx) > 0.01 || Math.abs(dz) > 0.01)) {
-       // Calculate rotation to face the movement vector
-       let targetRotation = Math.atan2(dx, dz);
-       
-       // Use Doppler/Phase derived direction from backend if available
-       if (occupant && occupant.direction !== undefined && Math.abs(occupant.direction) > 0.01) {
-           targetRotation = occupant.direction;
-       }
-       
-       // Find shortest path for rotation to avoid snapping 360 degrees
-       let diff = targetRotation - groupRef.current.rotation.y;
-       while (diff < -Math.PI) diff += Math.PI * 2;
-       while (diff > Math.PI) diff -= Math.PI * 2;
-       groupRef.current.rotation.y += diff * moveSpeed * 3.0;
+      let targetRot = Math.atan2(dx, dz);
+      if (occupant && occupant.direction !== undefined && Math.abs(occupant.direction) > 0.01) {
+        targetRot = occupant.direction;
+      }
+      let diff = targetRot - groupRef.current.rotation.y;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      groupRef.current.rotation.y += diff * moveSpeed * 3.0;
     }
 
-    // 4. Bobbing & Breathing Animations
+    // Breathing scale animation
     const breatheScale = 1.0 + Math.sin(time * (br / 30) * Math.PI) * 0.015;
     groupRef.current.scale.set(breatheScale, breatheScale, breatheScale);
 
+    // Walk bounce & sway
     if (isMoving) {
-      // Walk bounce
       groupRef.current.position.y = Math.abs(Math.sin(time * 8 + index)) * 0.1;
-      // Slight sway
       groupRef.current.rotation.z = Math.sin(time * 4 + index) * 0.04;
       groupRef.current.rotation.x = Math.cos(time * 4 + index) * 0.04;
     } else {
-      // Settle down to resting
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, 0, 0.1);
       groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, 0, 0.1);
       groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0, 0.1);
     }
   });
 
+  // ── Colors ───────────────────────────────────────────────────────────────────
   const isNightMode = mode === 'night';
   const isLive = sensing.isConnected;
   const presence = isLive && sensing.presence;
-  const twinColor = !isLive ? '#9CA3AF' : 
-                    !presence ? '#3B82F6' : 
-                    isMovingState ? '#F59E0B' : 
-                    isNightMode ? '#4edea3' : '#6366f1';
+  const twinColor = !isLive ? '#9CA3AF'
+    : !presence    ? '#3B82F6'
+    : isMovingState ? '#F59E0B'
+    : isNightMode  ? '#4edea3'
+    : '#6366f1';
 
-  const hasPose = sensing.pose && sensing.pose.confidence > 0.1;
+  // ── Distance from ESP32 probe (ITU-R P.1238 Log-Distance Path Loss) ──────────
+  // d = 10^((TxPower_1m - RSSI) / (10 * n))
+  const distFromProbe = occupant?.distance_from_router_m
+    ?? occupant?.distance_m
+    ?? estimatedDistance;
+
+  // Clamp x/z within room detection boundary (±5m from probe)
+  const ROOM_HALF = 5.0;
+  const clampedX = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, currentTargetRef.current.x));
+  const clampedZ = Math.max(-ROOM_HALF, Math.min(ROOM_HALF, currentTargetRef.current.z));
 
   return (
-    <group ref={groupRef} position={[0,0,0]}>
-      {hasPose ? (
-        <DensePoseSkeleton pose={sensing.pose} scale={3.0} color={twinColor} />
-      ) : (
-        <HumanTwinModel
-          color={twinColor}
-          wireframe={true}
-          scaleFactor={isPrimary ? 0.8 : 0.72}
-          animate={false}
-          regions={[]}
-          enableControls={false}
-        />
-      )}
+    <group ref={groupRef} position={[clampedX, 0, clampedZ]}>
+      {/* 3D humanoid model — always shown, always inside room */}
+      <HumanTwinModel
+        color={twinColor}
+        wireframe={true}
+        scaleFactor={isPrimary ? 0.8 : 0.72}
+        animate={isMovingState}
+        regions={activeRegions}
+        enableControls={false}
+      />
+
+      {/* Floating distance badge above the head */}
+      <group position={[0, 2.2, 0]}>
+        <mesh>
+          <planeGeometry args={[1.4, 0.45]} />
+          <meshBasicMaterial color={isNightMode ? '#1e1b4b' : '#ffffff'} transparent opacity={0.82} />
+        </mesh>
+        {/* We use a simple sprite-style text approximation via color-coded ring */}
+        <mesh position={[-0.35, 0, 0.01]}>
+          <circleGeometry args={[0.12, 16]} />
+          <meshBasicMaterial color={twinColor} />
+        </mesh>
+      </group>
     </group>
   );
 }
@@ -169,64 +212,41 @@ const heatmapFragmentShader = `
   uniform float uPresence;
 
   void main() {
-    // Distance from the occupant
     float dist = distance(vUv, uOccupantPos);
-    
-    // Create a pulsing effect based on time and confidence
     float pulse = sin(uTime * 2.0) * 0.05 + 1.0;
     float intensity = exp(-dist * 4.0) * uConfidence * pulse * uPresence;
-    
-    // Add some organic noise/waves
     float wave = sin(vUv.x * 10.0 + uTime) * cos(vUv.y * 10.0 + uTime) * 0.1;
     intensity += wave * 0.2 * uPresence;
-
-    // Mix colors from cold (background) to hot (occupant)
     vec3 finalColor = mix(uColorCold, uColorHot, clamp(intensity, 0.0, 1.0));
-    
-    // Fade out at edges
     float edgeFade = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x) *
                      smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
-
     gl_FragColor = vec4(finalColor, (0.2 + intensity * 0.6) * edgeFade);
   }
 `;
 
 function HeatmapFloor({ sensing, isNightMode }) {
   const materialRef = useRef();
-
   const isLive = sensing.isConnected;
   const presence = isLive && sensing.presence;
   const confidence = isLive && sensing.confidence != null ? sensing.confidence : 0;
+  const occupantPos = useMemo(() => new THREE.Vector2(0.5, 0.5), []);
 
-  // The center of the heatmap (could be mapped to actual tracking data if available)
-  const occupantPos = useMemo(() => new THREE.Vector2(0.5, 0.5), []); 
-
-  const uniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uOccupantPos: { value: occupantPos },
-      uConfidence: { value: confidence },
-      uColorCold: { value: new THREE.Color(isNightMode ? '#1e1b4b' : '#f0f9ff') },
-      uColorHot: { value: new THREE.Color(isNightMode ? '#818cf8' : '#3b82f6') },
-      uPresence: { value: presence ? 1.0 : 0.0 },
-    }),
-    [isNightMode, occupantPos]
-  );
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uOccupantPos: { value: occupantPos },
+    uConfidence: { value: confidence },
+    uColorCold: { value: new THREE.Color(isNightMode ? '#1e1b4b' : '#f0f9ff') },
+    uColorHot: { value: new THREE.Color(isNightMode ? '#818cf8' : '#3b82f6') },
+    uPresence: { value: presence ? 1.0 : 0.0 },
+  }), [isNightMode, occupantPos]);
 
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      // Smoothly transition confidence uniform
       materialRef.current.uniforms.uConfidence.value = THREE.MathUtils.lerp(
-        materialRef.current.uniforms.uConfidence.value,
-        confidence,
-        0.05
-      );
+        materialRef.current.uniforms.uConfidence.value, confidence, 0.05);
       materialRef.current.uniforms.uPresence.value = THREE.MathUtils.lerp(
-        materialRef.current.uniforms.uPresence.value,
-        presence ? 1.0 : 0.0,
-        0.05
-      );
+        materialRef.current.uniforms.uPresence.value, presence ? 1.0 : 0.0, 0.05);
     }
   });
 
@@ -251,99 +271,50 @@ function BlueprintWalls({ sensing, isNightMode }) {
   const variance = sensing.variance || 0;
   const [dampedRssi, setDampedRssi] = useState(rawRssi);
   const [dampedVariance, setDampedVariance] = useState(variance);
-  
-  // Use React.useEffect (aliased as useEffect)
+
   useEffect(() => {
-    // Heavy dampening: only update if significant structural shift is detected
-    if (Math.abs(rawRssi - dampedRssi) > 4) {
-      setDampedRssi(rawRssi);
-    }
-    if (Math.abs(variance - dampedVariance) > 0.5) {
-      setDampedVariance(variance);
-    }
+    if (Math.abs(rawRssi - dampedRssi) > 4) setDampedRssi(rawRssi);
+    if (Math.abs(variance - dampedVariance) > 0.5) setDampedVariance(variance);
   }, [rawRssi, variance, dampedRssi, dampedVariance]);
 
-  const normalizedScale = useMemo(() => {
-    return Math.max(0.6, Math.min(2.0, (dampedRssi + 100) / 40));
-  }, [dampedRssi]);
+  const normalizedScale = useMemo(() => Math.max(0.6, Math.min(2.0, (dampedRssi + 100) / 40)), [dampedRssi]);
 
-  // Physics-based Layout Complexity Formula
-  // High variance (multipath scattering) + Low RSSI (attenuation) = Many Walls
   const layoutComplexity = useMemo(() => {
-    const alpha = 1.2; // Variance weight
-    const beta = 0.05; // RSSI drop weight
-    const rssiDrop = Math.max(0, -30 - dampedRssi); // Drop from optimal -30dBm
-    return (alpha * dampedVariance) + (beta * rssiDrop);
+    const rssiDrop = Math.max(0, -30 - dampedRssi);
+    return 1.2 * dampedVariance + 0.05 * rssiDrop;
   }, [dampedVariance, dampedRssi]);
 
   const { outerWalls, innerWalls } = useMemo(() => {
     const s = normalizedScale * 6;
-    const outer = [
-      [-s, 0, -s],
-      [s, 0, -s],
-      [s, 0, s],
-      [-s, 0, s],
-      [-s, 0, -s],
-    ].map(p => new THREE.Vector3(...p));
-
+    const outer = [[-s,0,-s],[s,0,-s],[s,0,s],[-s,0,s],[-s,0,-s]].map(p => new THREE.Vector3(...p));
     const inner = [];
-    
-    // If layout complexity is high, predict multiple internal rooms
     if (layoutComplexity > 3.0) {
-      inner.push(
-        [[-s, 0, 0], [s, 0, 0]].map(p => new THREE.Vector3(...p)),
-        [[0, 0, -s], [0, 0, s]].map(p => new THREE.Vector3(...p))
-      );
-      inner.push(
-        [[s*0.5, 0, s*0.5], [s*0.5, 0, s]].map(p => new THREE.Vector3(...p)),
-        [[s*0.5, 0, s*0.5], [s, 0, s*0.5]].map(p => new THREE.Vector3(...p))
-      );
+      inner.push([[-s,0,0],[s,0,0]].map(p => new THREE.Vector3(...p)));
+      inner.push([[0,0,-s],[0,0,s]].map(p => new THREE.Vector3(...p)));
+      inner.push([[s*0.5,0,s*0.5],[s*0.5,0,s]].map(p => new THREE.Vector3(...p)));
+      inner.push([[s*0.5,0,s*0.5],[s,0,s*0.5]].map(p => new THREE.Vector3(...p)));
     } else if (layoutComplexity > 1.5) {
-      inner.push(
-        [[-s, 0, s*0.2], [s, 0, s*0.2]].map(p => new THREE.Vector3(...p))
-      );
+      inner.push([[-s,0,s*0.2],[s,0,s*0.2]].map(p => new THREE.Vector3(...p)));
     }
     return { outerWalls: outer, innerWalls: inner };
   }, [normalizedScale, layoutComplexity]);
 
-  // Vertical lines for corners (walls)
-  const corners = useMemo(() => {
-    return outerWalls.slice(0, -1).map(p => {
-      return [p.clone(), p.clone().setY(2)];
-    });
-  }, [outerWalls]);
-
+  const corners = useMemo(() => outerWalls.slice(0,-1).map(p => [p.clone(), p.clone().setY(2)]), [outerWalls]);
   const lineColor = isNightMode ? '#6366f1' : '#60a5fa';
 
   return (
     <group>
-      {/* Floor outline */}
       <Line points={outerWalls} color={lineColor} lineWidth={2.5} transparent opacity={0.6} />
-      
-      {/* Inner Procedural Rooms */}
-      {innerWalls.map((wallPoints, idx) => (
-        <Line
-          key={`inner-wall-${idx}`}
-          points={wallPoints}
-          color={lineColor}
-          lineWidth={1.5}
-          transparent
-          opacity={0.4}
-        />
+      {innerWalls.map((wp, idx) => (
+        <Line key={`iw-${idx}`} points={wp} color={lineColor} lineWidth={1.5} transparent opacity={0.4} />
       ))}
-
-      {/* Ceiling outline */}
       <Line points={outerWalls.map(p => p.clone().setY(2))} color={lineColor} lineWidth={1.5} transparent opacity={0.3} dashSize={0.2} gapSize={0.1} dashed />
-      
-      {/* Vertical pillars */}
       {corners.map((c, i) => (
         <Line key={`corner-${i}`} points={c} color={lineColor} lineWidth={1} transparent opacity={0.2} />
       ))}
-
-      {/* Ground Grid */}
-      <Grid 
-        infiniteGrid 
-        fadeDistance={15} 
+      <Grid
+        infiniteGrid
+        fadeDistance={15}
         sectionColor={isNightMode ? '#3730a3' : '#bae6fd'}
         cellColor={isNightMode ? '#312e81' : '#e0f2fe'}
         sectionSize={1}
@@ -356,72 +327,74 @@ function BlueprintWalls({ sensing, isNightMode }) {
 export default function LiveSensing3DMap({ mode, sensing }) {
   const isNightMode = mode === 'night';
   const isLive = sensing.isConnected;
-  const presence = isLive && (sensing.presenceGate?.calibrated ? sensing.presenceGate.status === 'inside' : sensing.presence);
-  const occupantsCount = isLive && presence ? 1 : 0;
+  const presence = isLive && (sensing.presenceGate?.calibrated
+    ? sensing.presenceGate.status === 'inside'
+    : sensing.presence);
 
-  const occupants = Array.from({ length: occupantsCount }, (_, i) => i);
-  
-  // Define colors based on mode and sensing state
-  const twinColor = !isLive ? '#9CA3AF' : 
-                    !presence ? '#3B82F6' : 
-                    sensing.motionLevel === 'active' ? '#F59E0B' : 
-                    isNightMode ? '#4edea3' : '#6366f1';
+  const occupantsCount = isLive && presence
+    ? (sensing.actualOccupancyCount || sensing.estimatedPersons || 1)
+    : 0;
+
+  // Use tracked occupants from backend if available, otherwise generate placeholders
+  const trackedOccupants = sensing.trackedOccupants && sensing.trackedOccupants.length > 0
+    ? sensing.trackedOccupants
+    : Array.from({ length: occupantsCount }, (_, i) => ({ id: i + 1 }));
 
   return (
     <div style={{ width: '100%', height: '100%', background: 'transparent', borderRadius: '16px', overflow: 'hidden', position: 'relative' }}>
-      
+
       {/* Overlay Status */}
       <div style={{ position: 'absolute', top: 12, left: 16, zIndex: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
         <div style={{ color: isNightMode ? '#fff' : '#000', fontSize: 12, fontWeight: 700, letterSpacing: '0.05em' }}>
           3D SPATIAL RECONSTRUCTION
         </div>
         <div style={{ color: isNightMode ? '#94a3b8' : '#64748b', fontSize: 10 }}>
-          {isLive ? 'Live Blueprint & Signal Heatmap' : 'Backend Feed Offline'}
+          {isLive ? `Live — ${trackedOccupants.length} occupant${trackedOccupants.length !== 1 ? 's' : ''} tracked` : 'Backend Feed Offline'}
         </div>
       </div>
 
+      {/* Occupant count badge */}
+      {presence && trackedOccupants.length > 0 && (
+        <div style={{
+          position: 'absolute', top: 12, right: 16, zIndex: 10,
+          background: isNightMode ? 'rgba(99,102,241,0.25)' : 'rgba(59,130,246,0.15)',
+          border: `1px solid ${isNightMode ? '#6366f1' : '#3b82f6'}`,
+          borderRadius: 8, padding: '4px 10px', fontSize: 11, fontWeight: 700,
+          color: isNightMode ? '#a5b4fc' : '#1d4ed8', backdropFilter: 'blur(8px)'
+        }}>
+          👥 {trackedOccupants.length} detected
+        </div>
+      )}
+
       <Canvas camera={{ position: [0, 5, 12], fov: 45 }}>
-        {/* Environment & Lighting */}
+        {/* Lighting */}
         <ambientLight intensity={isNightMode ? 0.8 : 1.5} />
         <directionalLight position={[10, 10, 5]} intensity={isNightMode ? 0.5 : 1} color={isNightMode ? '#818cf8' : '#ffffff'} />
         <pointLight position={[-5, 5, -5]} intensity={isNightMode ? 1 : 0.5} color="#4edea3" />
-        
-        <Environment preset={isNightMode ? "night" : "city"} />
+        <Environment preset={isNightMode ? 'night' : 'city'} />
 
-        {/* The Procedural Room Blueprint */}
+        {/* Room Blueprint */}
         <BlueprintWalls sensing={sensing} isNightMode={isNightMode} />
 
-        {/* Dynamic Floor Heatmap */}
+        {/* Floor Heatmap */}
         <HeatmapFloor sensing={sensing} isNightMode={isNightMode} />
 
-        {/* The Tracked Occupants */}
-        {presence && (sensing.tracked_occupants && sensing.tracked_occupants.length > 0
-          ? sensing.tracked_occupants.map((occ, index) => (
-              <AnimatedOccupant 
-                key={occ.id || index} 
-                index={index} 
-                occupant={occ}
-                sensing={sensing} 
-                mode={mode}
-                isPrimary={index === 0} 
-              />
-            ))
-          : occupants.map((index) => (
-              <AnimatedOccupant 
-                key={index} 
-                index={index} 
-                sensing={sensing} 
-                mode={mode}
-                isPrimary={index === 0} 
-              />
-            ))
-        )}
+        {/* Render one 3D humanoid per tracked occupant */}
+        {presence && trackedOccupants.map((occ, index) => (
+          <AnimatedOccupant
+            key={occ.id ?? index}
+            index={index}
+            occupant={occ}
+            sensing={sensing}
+            mode={mode}
+            isPrimary={index === 0}
+          />
+        ))}
 
-        {/* Controls */}
-        <OrbitControls 
+        <OrbitControls
           enablePan={false}
-          minPolarAngle={Math.PI / 8} // Allow looking more top-down
-          maxPolarAngle={Math.PI / 2.05} // Almost fully horizontal
+          minPolarAngle={Math.PI / 8}
+          maxPolarAngle={Math.PI / 2.05}
           minDistance={4}
           maxDistance={20}
           autoRotate={true}
