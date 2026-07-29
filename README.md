@@ -1,8 +1,8 @@
-# SilentSense™
+# Halo™
 
 **Passive WiFi CSI Cognitive Health Monitoring**
 
-SilentSense is a cutting-edge, passive, camera-free, wearable-free home health monitoring system. It leverages WiFi Channel State Information (CSI) to detect early behavioral indicators of cognitive decline in elderly individuals. 
+Halo is a cutting-edge, passive, camera-free, wearable-free home health monitoring system. It leverages WiFi Channel State Information (CSI) to detect early behavioral indicators of cognitive decline in elderly individuals. 
 
 Unlike traditional monitoring systems that struggle in multi-occupant households, SilentSense introduces a **Multi-Evidence Attribution Framework** to selectively monitor a specific individual without requiring signal separation, intrusive cameras, or wearable devices.
 
