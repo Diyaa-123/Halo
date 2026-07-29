@@ -53,6 +53,20 @@ from .classifier import MotionLevel, PresenceClassifier, SensingResult
 from .ble_collector import BleCollector
 import random
 
+# ── Alert Manager (Telegram fall notifications) ───────────────────────────────
+try:
+    from .notifications.alert_manager import AlertManager as _AlertManager
+    _alert_manager = _AlertManager()
+    if _alert_manager.is_ready():
+        logger_init = logging.getLogger(__name__)
+        logger_init.info("[AlertManager] Telegram fall alerts enabled.")
+except Exception as _am_exc:
+    logging.getLogger(__name__).warning(
+        "[AlertManager] Could not initialise AlertManager (%s) — fall alerts disabled.",
+        _am_exc,
+    )
+    _alert_manager = None  # type: ignore
+
 try:
     from .acoustic_collector import AcousticDopplerCollector
 except Exception:
@@ -1007,6 +1021,25 @@ class SensingWebSocketServer:
             if self._last_fall_result.event:
                 if self._last_fall_result.event == "fall_detected":
                     logger.warning("[FALL DETECTED] score=%.1f", self._last_fall_result.fall_risk_score)
+                    # ── Fire Telegram alert ───────────────────────────────
+                    if _alert_manager is not None:
+                        score = self._last_fall_result.fall_risk_score
+                        _msg = (
+                            f"Fall detected for monitored resident.\n"
+                            f"Risk score: {score:.1f}/100\n"
+                            f"Please check in immediately.\n\n"
+                            f"— Halo"
+                        )
+                        # Run in background thread — does not block the async loop
+                        asyncio.get_event_loop().run_in_executor(
+                            None,
+                            lambda: _alert_manager.send_alert(
+                                alert_type="fall",
+                                severity="critical",
+                                message=_msg,
+                                cooldown_seconds=60,
+                            ),
+                        )
                 elif self._last_fall_result.event == "fall_risk_elevated":
                     logger.warning("[FALL RISK ELEVATED] score=%.1f", self._last_fall_result.fall_risk_score)
             
