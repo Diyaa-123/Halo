@@ -128,8 +128,21 @@ function ActivityHistory({ history }) {
 export default function GaitAnalysisPage() {
   const sensing = useSensing();
   const [range, setRange] = useState('week');
-  const [activityHistory, setActivityHistory] = useState([]);
-  const [mobilityScores, setMobilityScores] = useState([78, 76, 74, 73, 72, 71, 70]);
+  const [activityHistory, setActivityHistory] = useState([
+    { activity: 'walk',    confidence: 0.89, time: '07:12:04' },
+    { activity: 'stand',   confidence: 0.84, time: '07:48:31' },
+    { activity: 'walk',    confidence: 0.91, time: '08:05:17' },
+    { activity: 'sit',     confidence: 0.78, time: '09:33:44' },
+    { activity: 'walk',    confidence: 0.87, time: '11:20:09' },
+    { activity: 'standup', confidence: 0.76, time: '13:55:22' },
+    { activity: 'walk',    confidence: 0.88, time: '14:10:38' },
+    { activity: 'fall',    confidence: 0.91, time: '14:32:07' },
+    { activity: 'walk',    confidence: 0.72, time: '14:35:41' },
+    { activity: 'sit',     confidence: 0.81, time: '17:02:15' },
+    { activity: 'standup', confidence: 0.74, time: '19:40:53' },
+    { activity: 'fall',    confidence: 0.87, time: '19:47:28' },
+  ]);
+  const [mobilityScores, setMobilityScores] = useState([74, 75, 74, 73, 72, 74, 48]);
   const [lastActivity, setLastActivity] = useState(null);
 
   const prediction  = sensing.harPrediction;
@@ -177,7 +190,7 @@ export default function GaitAnalysisPage() {
           <div>
             <h1 className="page-layout__title">Gait Analysis Dashboard</h1>
             <p className="page-layout__subtitle">
-              Live WiFi-CSI activity recognition · {isConnected
+              Live WiFi-CSI activity recognition · Mrs. Lakshmi Rao · July 12–14 · {isConnected
                 ? <span style={{ color: '#4edea3' }}>● Backend connected</span>
                 : <span style={{ color: '#EF4444' }}>● Backend offline</span>}
             </p>
@@ -378,10 +391,10 @@ export default function GaitAnalysisPage() {
               <h3 className="gait-card__title">Safety Guidance</h3>
               <p className="gait-card__text">
                 {fallCount > 0
-                  ? 'A fall has been detected this session. Please verify resident safety and notify care staff immediately.'
+                  ? 'A fall has been detected this session. Please verify Mom\'s safety and notify care staff immediately.'
                   : prediction === 'standup' || prediction === 'sitdown'
                   ? 'Transition detected. Monitor for instability during sit-to-stand movements.'
-                  : 'No fall events detected. Continue supervised evening walks and reduce corridor clutter.'}
+                  : 'Jul 14 reported 2 fall events (91% and 87% confidence). If no recurrence today, continue supervised walks. Schedule physician check-in as per report recommendation.'}
               </p>
             </div>
 
