@@ -4,20 +4,16 @@ import './PageLayout.css';
 import './MobilityPage.css';
 
 const weeklyMobility = [
-  { day: 'Mon', speed: 0.84, score: 71, steps: 1240 },
-  { day: 'Tue', speed: 0.82, score: 69, steps: 1180 },
-  { day: 'Wed', speed: 0.86, score: 73, steps: 1315 },
-  { day: 'Thu', speed: 0.83, score: 70, steps: 1262 },
-  { day: 'Fri', speed: 0.77, score: 63, steps: 980 },
-  { day: 'Sat', speed: 0.85, score: 72, steps: 1388 },
-  { day: 'Sun', speed: 0.87, score: 74, steps: 1440 },
+  { day: 'Jul 12', speed: 0.82, score: 74, steps: 1180 },
+  { day: 'Jul 13', speed: 0.80, score: 72, steps: 1140 },
+  { day: 'Jul 14', speed: 0.61, score: 48, steps: 620 },
 ];
 
 const gaitMetrics = [
-  { label: 'Walking Speed', value: '0.84', unit: 'm/s', color: '#ffb786', note: 'steady' },
-  { label: 'Stride Symmetry', value: '94', unit: '%', color: '#4edea3', note: 'within target' },
-  { label: 'Balance Score', value: '76', unit: '/100', color: '#adc6ff', note: 'mild sway' },
-  { label: 'Fall Risk Score', value: '18', unit: '/100', color: '#F59E0B', note: 'low-moderate' },
+  { label: 'Walking Speed', value: '0.74', unit: 'm/s', color: '#ffb786', note: 'reduced Jul 14' },
+  { label: 'Stride Symmetry', value: '88', unit: '%', color: '#4edea3', note: 'slightly reduced' },
+  { label: 'Balance Score', value: '61', unit: '/100', color: '#adc6ff', note: 'below baseline' },
+  { label: 'Fall Risk Score', value: '47', unit: '/100', color: '#EF4444', note: '2 falls Jul 14' },
 ];
 
 function MiniLineChart({ data, color }) {
@@ -73,10 +69,10 @@ export default function MobilityPage() {
           <span className="material-icons icon-lg" style={{ color: 'var(--primary)' }}>directions_walk</span>
           <div>
             <h1 className="page-layout__title">Mobility & Fall Risk</h1>
-            <p className="page-layout__subtitle">Gait analysis and activity tracking for Mr. Raghav Iyer</p>
+            <p className="page-layout__subtitle">Gait analysis and activity tracking for Mrs. Lakshmi Rao · July 12–14</p>
           </div>
         </div>
-        <span className="badge badge-stable">LOW RISK</span>
+        <span className="badge badge-danger">ELEVATED RISK</span>
       </div>
 
       <div className="page-layout__content">
@@ -123,7 +119,7 @@ export default function MobilityPage() {
                   <h3 className="mobility-card__title">Mobility Trend</h3>
                   <p className="mobility-card__subtitle">Weekly gait consistency and walk speed with a Friday dip</p>
                 </div>
-                <span className="badge badge-warning">MONITORING</span>
+                <span className="badge badge-danger">FALL EVENTS</span>
               </div>
               <MiniLineChart data={weeklyMobility.map(item => item.speed)} color="#ffb786" />
               <div className="mobility-week-axis">
@@ -147,10 +143,10 @@ export default function MobilityPage() {
 
               <div className="mobility-activity-grid">
                 {[
-                  { label: 'Morning walk', value: '22 min', note: 'steady pace' },
-                  { label: 'Afternoon transfers', value: '6', note: 'all assisted' },
-                  { label: 'Night bathroom trips', value: '2', note: 'slow but stable' },
-                  { label: 'Unsteady moments', value: '1', note: 'near chair turn' },
+                  { label: 'Morning walk (Jul 12–13)', value: '18 min', note: 'steady pace' },
+                  { label: 'Activity Jul 14', value: 'Reduced', note: 'post-fall rest periods' },
+                  { label: 'Fall events (Jul 14)', value: '2', note: '14:32 and 19:47' },
+                  { label: 'Low-activity window', value: '~40 min', note: 'after 19:47 fall' },
                 ].map(item => (
                   <div key={item.label} className="mobility-activity-item">
                     <span className="mobility-activity-item__label">{item.label}</span>
@@ -167,10 +163,10 @@ export default function MobilityPage() {
               <h3 className="mobility-card__title">Mobility Notes</h3>
               <div className="mobility-notes">
                 {[
-                  { key: 'Assistive device', value: 'Single-point cane' },
-                  { key: 'Turning stability', value: 'Mild trunk sway' },
-                  { key: 'Stair tolerance', value: 'Needs rail support' },
-                  { key: 'Nurse note', value: 'No observed near-falls today' },
+                  { key: 'Fall events (Jul 14)', value: '2 confirmed' },
+                  { key: 'Confidence (event 1)', value: '91%' },
+                  { key: 'Confidence (event 2)', value: '87%' },
+                  { key: 'Nurse note', value: 'Physician check-in advised' },
                 ].map(item => (
                   <div key={item.key} className="mobility-note-row">
                     <span>{item.key}</span>
@@ -187,7 +183,7 @@ export default function MobilityPage() {
                   <span className="material-icons">tips_and_updates</span>
                 </div>
                 <p>
-                  Continue supervised evening walks, keep hallway lighting warm and even, and reassess chair-to-stand confidence if the speed drops below 0.75 m/s.
+                  Two high-confidence fall events occurred on July 14 (14:32 at 91%, 19:47 at 87%). We recommend speaking with Mom directly and scheduling a physician check-in. If incidents recur, escalate to a physiotherapy assessment.
                 </p>
               </div>
             </div>
