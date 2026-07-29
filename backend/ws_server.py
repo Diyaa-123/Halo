@@ -69,6 +69,14 @@ except Exception:
         def process_frame(self, *args, **kwargs):
             return {"breathing_rates": [], "heart_rates": []}
 
+try:
+    from .fall_detector import FallDetector
+except Exception:
+    class FallDetector:  # type: ignore  # noqa: F811
+        def tick(self, *a, **kw):
+            from types import SimpleNamespace
+            return SimpleNamespace(fall_detected=False, fall_risk_score=0.0, event=None, above_risk_threshold=False)
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -142,10 +150,10 @@ class Esp32UdpCollector:
         self.har_model = None
         self.har_labels = {}
         self.har_scaler = None
-        self.har_use_sklearn = False       # True when sklearn pipeline is loaded
         self.har_buffer = deque(maxlen=100)  # 100 frames @ 33Hz = ~3s window
         self.har_last_prediction = "Unknown"
         self.har_last_confidence = 0.0
+        self.har_pred_history = deque(maxlen=6)  # Sliding 3s window for majority voting
 
         import os, json as _json
 
@@ -333,77 +341,91 @@ class Esp32UdpCollector:
                             sos = butter(4, [lowcut, highcut], btype='band', output='sos')
                             filtered_data = sosfilt(sos, data, axis=0)
 
-                            # Normalize using training scaler (shape: (56,))
-                            mean, std = self.har_scaler
-                            norm_data = (filtered_data - mean) / (std + 1e-8)
-                            norm_data = np.nan_to_num(norm_data, nan=0.0,
-                                                      posinf=0.0, neginf=0.0)
-
-                            # ── sklearn inference path ──────────────────────
-                            if self.har_use_sklearn:
-                                # Build the same 1132-feature vector used in training
-                                from scipy import stats as _sc_stats
-                                import warnings
-                                w = norm_data  # (200, 56)
-                                feat = []
-                                
-                                with warnings.catch_warnings():
-                                    warnings.simplefilter("ignore", category=RuntimeWarning)
-                                    # -- Per-subcarrier time-domain statistics (10 x 56 = 560) --
-                                    feat.extend(w.mean(axis=0).tolist())
-                                    feat.extend(w.std(axis=0).tolist())
-                                    feat.extend(w.min(axis=0).tolist())
-                                    feat.extend(w.max(axis=0).tolist())
-                                    feat.extend(np.median(w, axis=0).tolist())
-                                    feat.extend(_sc_stats.skew(w, axis=0).tolist())
-                                    feat.extend(_sc_stats.kurtosis(w, axis=0).tolist())
-                                    feat.extend((w ** 2).mean(axis=0).tolist())
-                                    feat.extend((w.max(axis=0) - w.min(axis=0)).tolist())
-                                    T56 = w.shape[0]
-                                    zcr = ((np.diff(np.sign(w), axis=0) != 0).sum(axis=0) / T56).tolist()
-                                    feat.extend(zcr)
-                                    
-                                    # -- Per-subcarrier FFT spectrum features (10 x 56 = 560) --
-                                    FFT_BINS = 10
-                                    fft_all = np.abs(np.fft.rfft(w - w.mean(axis=0), axis=0))
-                                    psd = fft_all[1:FFT_BINS+1, :]
-                                    psd_norm = psd / (psd.sum(axis=0, keepdims=True) + 1e-8)
-                                    feat.extend(psd_norm.T.flatten().tolist())
-                                    
-                                    # -- Global / temporal statistics (12 features) --
-                                    flat = w.flatten()
-                                    feat.append(float(flat.mean()))
-                                    feat.append(float(flat.std()))
-                                    feat.append(float(np.median(flat)))
-                                    feat.append(float(_sc_stats.skew(flat)))
-                                    feat.append(float(_sc_stats.kurtosis(flat)))
-                                    feat.append(float((flat ** 2).mean()))
-                                    feat.append(float(flat.max() - flat.min()))
-                                    
-                                    mean_ts = w.mean(axis=1)
-                                    ac = float(np.corrcoef(mean_ts[:-1], mean_ts[1:])[0, 1]) if mean_ts.std() > 1e-8 else 0.0
-                                    feat.append(ac)
-                                    g_fft = np.abs(np.fft.rfft(mean_ts - mean_ts.mean()))
-                                    feat.append(float(g_fft[1:].max()))
-                                    feat.append(float(g_fft[1:].argmax()))
-                                    feat.append(float(np.abs(np.diff(mean_ts)).mean()))
-                                    feat.append(float(w.var(axis=0).var()))
-                                
-                                X_feat = np.array([feat], dtype=np.float32)
-                                X_feat = np.nan_to_num(X_feat, nan=0.0, posinf=0.0, neginf=0.0)
-                                pred_class = int(self.har_model.predict(X_feat)[0])
-                                proba = self.har_model.predict_proba(X_feat)[0]
-                                confidence = float(proba[pred_class])
-
-                            # ── TF Keras inference path ──────────────────────
+                            # Check signal variance/presence — run dynamic CNN inference on active frames
+                            var_energy = float(np.var(filtered_data))
+                            if not self.last_csi.get("presence", True) or var_energy < 1e-6:
+                                self.har_last_prediction = "empty"
+                                self.har_last_confidence = 0.95
                             else:
-                                X = np.expand_dims(norm_data, axis=0)  # (1, 200, 56)
-                                preds = self.har_model.predict(X, verbose=0)
-                                pred_class = int(np.argmax(preds[0]))
-                                confidence = float(preds[0][pred_class])
+                                # Active signal -> run trained HAR CNN model
+                                # Normalize input for inference
+                                if not self.har_use_sklearn:
+                                    # Standardize per-window so CNN receives proper variance scale (~1.0)
+                                    norm_data = filtered_data / (np.std(filtered_data, axis=0, keepdims=True) + 1e-6)
+                                    norm_data = np.nan_to_num(norm_data, nan=0.0, posinf=0.0, neginf=0.0)
+                                else:
+                                    mean, std = self.har_scaler
+                                    norm_data = (filtered_data - mean) / (std + 1e-8)
+                                    norm_data = np.nan_to_num(norm_data, nan=0.0, posinf=0.0, neginf=0.0)
 
-                            self.har_last_prediction = self.har_labels.get(pred_class, "Unknown")
-                            self.har_last_confidence = confidence
+                                # ── sklearn inference path ──────────────────────
+                                if self.har_use_sklearn:
+                                    from scipy import stats as _sc_stats
+                                    import warnings
+                                    w = norm_data  # (200, 56)
+                                    feat = []
+                                    with warnings.catch_warnings():
+                                        warnings.simplefilter("ignore", category=RuntimeWarning)
+                                        feat.extend(w.mean(axis=0).tolist())
+                                        feat.extend(w.std(axis=0).tolist())
+                                        feat.extend(w.min(axis=0).tolist())
+                                        feat.extend(w.max(axis=0).tolist())
+                                        feat.extend(np.median(w, axis=0).tolist())
+                                        feat.extend(_sc_stats.skew(w, axis=0).tolist())
+                                        feat.extend(_sc_stats.kurtosis(w, axis=0).tolist())
+                                        feat.extend((w ** 2).mean(axis=0).tolist())
+                                        feat.extend((w.max(axis=0) - w.min(axis=0)).tolist())
+                                        T56 = w.shape[0]
+                                        zcr = ((np.diff(np.sign(w), axis=0) != 0).sum(axis=0) / T56).tolist()
+                                        feat.extend(zcr)
+                                        
+                                        FFT_BINS = 10
+                                        fft_all = np.abs(np.fft.rfft(w - w.mean(axis=0), axis=0))
+                                        psd = fft_all[1:FFT_BINS+1, :]
+                                        psd_norm = psd / (psd.sum(axis=0, keepdims=True) + 1e-8)
+                                        feat.extend(psd_norm.T.flatten().tolist())
+                                        
+                                        flat = w.flatten()
+                                        feat.append(float(flat.mean()))
+                                        feat.append(float(flat.std()))
+                                        feat.append(float(np.median(flat)))
+                                        feat.append(float(_sc_stats.skew(flat)))
+                                        feat.append(float(_sc_stats.kurtosis(flat)))
+                                        feat.append(float((flat ** 2).mean()))
+                                        feat.append(float(flat.max() - flat.min()))
+                                        
+                                        mean_ts = w.mean(axis=1)
+                                        ac = float(np.corrcoef(mean_ts[:-1], mean_ts[1:])[0, 1]) if mean_ts.std() > 1e-8 else 0.0
+                                        feat.append(ac)
+                                        g_fft = np.abs(np.fft.rfft(mean_ts - mean_ts.mean()))
+                                        feat.append(float(g_fft[1:].max()))
+                                        feat.append(float(g_fft[1:].argmax()))
+                                        feat.append(float(np.abs(np.diff(mean_ts)).mean()))
+                                        feat.append(float(w.var(axis=0).var()))
+                                    
+                                    X_feat = np.array([feat], dtype=np.float32)
+                                    X_feat = np.nan_to_num(X_feat, nan=0.0, posinf=0.0, neginf=0.0)
+                                    pred_class = int(self.har_model.predict(X_feat)[0])
+                                    proba = self.har_model.predict_proba(X_feat)[0]
+                                    confidence = float(proba[pred_class])
+
+                                # ── TF Keras inference path ──────────────────────
+                                else:
+                                    X = np.expand_dims(norm_data, axis=0)  # (1, 100, 56)
+                                    preds = self.har_model.predict(X, verbose=0)
+                                    pred_class = int(np.argmax(preds[0]))
+                                    confidence = float(preds[0][pred_class])
+
+                                raw_pred = self.har_labels.get(pred_class, "sit")
+                                self.har_pred_history.append(raw_pred)
+                                
+                                # Majority voting over sliding history window (3 seconds)
+                                from collections import Counter
+                                counts = Counter(self.har_pred_history)
+                                most_common_pred = counts.most_common(1)[0][0]
+
+                                self.har_last_prediction = most_common_pred
+                                self.har_last_confidence = confidence
                         except Exception as e:
                             logger.error(f"HAR inference failed: {e}")
 
@@ -642,6 +664,16 @@ class SensingWebSocketServer:
         self._attenuation_history: deque = deque(maxlen=120)  # ~60s at 2Hz
         self._wall_map_cache: Optional[list] = None           # cached wall map grid
         self._wall_map_last_t: float = 0.0
+
+        # ── Fall Detection Engine (ported from RuView fall_risk.rs) ───────────
+        self._fall_detector = FallDetector(
+            fall_risk_threshold=70.0,
+            phase_accel_threshold=-2.5,
+            debounce_frames=3,
+            cooldown_s=5.0,
+            warmup_s=10.0,
+        )
+        self._last_fall_result = None   # FallResult from last tick
 
         # companion support for ruview-sensing-server
         self.feature_file = os.environ.get("RUVIEW_FEATURE_JSON")
@@ -967,6 +999,17 @@ class SensingWebSocketServer:
                 unwrapped_phase = np.unwrap(np.array(self._phase_history))
                 velocity = self.tracker.estimate_velocity_doppler(unwrapped_phase, dt)
             
+            # ── Run Fall Detection Engine (RuView port) ───────────────────────
+            self._last_fall_result = self._fall_detector.tick(
+                motion_power=float(motion_power),
+                phase_velocity=float(velocity),
+            )
+            if self._last_fall_result.event:
+                if self._last_fall_result.event == "fall_detected":
+                    logger.warning("[FALL DETECTED] score=%.1f", self._last_fall_result.fall_risk_score)
+                elif self._last_fall_result.event == "fall_risk_elevated":
+                    logger.warning("[FALL RISK ELEVATED] score=%.1f", self._last_fall_result.fall_risk_score)
+            
             # Use Fresnel Solver if CSI data is available, else fallback to Variance
             if csi_data and "amplitude" in csi_data and len(csi_data["amplitude"]) > 3:
                 # Mock wavelength observations based on 5.8 GHz channels (simplified)
@@ -1139,11 +1182,48 @@ class SensingWebSocketServer:
                 occ["distance_from_laptop_ft"] = round(d_from_laptop * 3.28084, 2)
                 occ["router_to_laptop_m"]      = round(d_rl, 2)
                 occ["router_to_laptop_ft"]     = round(d_rl * 3.28084, 2)
-                occ["speed_mps"]               = speed_mps
-                occ["motion_status"]           = motion_status
+                # Exponential Moving Average (EMA) smoothing for speed magnitude
+                prev_speed = occ.get("speed_smoothed", speed_mps)
+                speed_smoothed = round(0.7 * prev_speed + 0.3 * speed_mps, 3)
+                occ["speed_smoothed"] = speed_smoothed
+                occ["speed_mps"]      = speed_smoothed
+                occ["motion_status"]  = "moving" if speed_smoothed > 0.18 else ("adjusting" if speed_smoothed > 0.05 else "stationary")
+
+                # ── Accurate Per-Occupant Posture & Activity Engine ──
+                room_har_pred = csi_data.get("har_prediction") if csi_data else None
+                if not room_har_pred:
+                    room_har_pred = getattr(self.collector, "har_last_prediction", "sit")
+                
+                prev_act = occ.get("activity", "sit")
+
+                # Increased variance thresholds (Filters out small seated arm/torso shifts):
+                # 1) True walking across the room (>0.25 m/s) -> WALKING
+                # 2) Upright body movement / stepping (>0.12 m/s) -> STANDING
+                # 3) Seated micro-movements (<=0.12 m/s) -> SITTING (or room AI prediction)
+                if speed_smoothed > 0.25:
+                    occ_activity = "walk"
+                elif speed_smoothed > 0.12:
+                    occ_activity = "stand"
+                else:
+                    occ_activity = room_har_pred if room_har_pred in ("sit", "stand", "fall", "empty") else "sit"
+
+                # ── Fall Detection Override (RuView port) ───────────────────
+                # If the fall detector fires, immediately flag ALL occupants as 'fall'
+                # regardless of velocity (a fallen person may have zero speed)
+                fall_result = self._last_fall_result
+                if fall_result and fall_result.fall_detected:
+                    occ_activity = "fall"
+                
+                occ["activity"]         = occ_activity
+                occ["har_prediction"]   = occ_activity
+                occ["fall_risk_score"]  = fall_result.fall_risk_score if fall_result else 0.0
+                occ["fall_detected"]    = (occ_activity == "fall")
 
         else:
             self.tracker.occupants.clear()
+
+        # ── Global fall state for the room-level broadcast ───────────────────
+        fall_result_global = self._last_fall_result
 
         # ── Room Layout Metadata (broadcast to frontend) ─────────────────────────
         room_layout = {
@@ -1262,6 +1342,12 @@ class SensingWebSocketServer:
             "har_prediction": csi_data.get("har_prediction") if csi_data else None,
             "har_confidence": csi_data.get("har_confidence") if csi_data else None,
             "signal_field": signal_field,
+            "fall_detection": {
+                "fall_detected":       fall_result_global.fall_detected if fall_result_global else False,
+                "fall_risk_score":     fall_result_global.fall_risk_score if fall_result_global else 0.0,
+                "fall_risk_elevated":  fall_result_global.above_risk_threshold if fall_result_global else False,
+                "fall_event":          fall_result_global.event if fall_result_global else None,
+            },
         }
         return json.dumps(msg)
 

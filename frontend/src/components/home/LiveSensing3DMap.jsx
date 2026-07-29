@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Line, Grid, Environment } from '@react-three/drei';
+import { OrbitControls, Line, Grid, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import HumanTwinModel from '../twin/HumanTwinModel';
 
@@ -177,18 +177,97 @@ function AnimatedOccupant({ index, occupant, sensing, mode, isPrimary }) {
         enableControls={false}
       />
 
-      {/* Floating distance badge above the head */}
-      <group position={[0, 2.2, 0]}>
-        <mesh>
-          <planeGeometry args={[1.4, 0.45]} />
-          <meshBasicMaterial color={isNightMode ? '#1e1b4b' : '#ffffff'} transparent opacity={0.82} />
-        </mesh>
-        {/* We use a simple sprite-style text approximation via color-coded ring */}
-        <mesh position={[-0.35, 0, 0.01]}>
-          <circleGeometry args={[0.12, 16]} />
-          <meshBasicMaterial color={twinColor} />
-        </mesh>
-      </group>
+      {/* Dynamic 3D Floating Activity Banner above occupant's head */}
+      <Html position={[0, 2.3, 0]} center distanceFactor={12} zIndexRange={[100, 0]}>
+        {(() => {
+          // Resolve individual occupant activity or fallback to global room prediction
+          const rawAct = (
+            occupant?.activity ||
+            occupant?.har_prediction ||
+            (isMovingState ? 'walk' : sensing.harPrediction) ||
+            'sit'
+          ).toLowerCase();
+
+          const actConfig = {
+            walk:    { label: 'WALKING',  color: '#4edea3', icon: '🚶', bg: 'rgba(78, 222, 163, 0.18)', border: '#4edea3' },
+            stand:   { label: 'STANDING', color: '#adc6ff', icon: '🚶‍♂️', bg: 'rgba(173, 198, 255, 0.18)', border: '#adc6ff' },
+            sit:     { label: 'SITTING',  color: '#ffb786', icon: '🪑', bg: 'rgba(255, 183, 134, 0.18)', border: '#ffb786' },
+            fall:    { label: 'FALL ALERT', color: '#EF4444', icon: '⚠️', bg: 'rgba(239, 68, 68, 0.3)', border: '#EF4444' },
+            empty:   { label: 'EMPTY',    color: '#9CA3AF', icon: '⚪', bg: 'rgba(156, 163, 175, 0.15)', border: '#9CA3AF' },
+          };
+
+          const cfg = actConfig[rawAct] || (rawAct.includes('sit') ? actConfig.sit : actConfig.stand);
+          const personLabel = isPrimary ? 'Person #1 (Primary)' : `Person #${occupant?.id ?? (index + 1)}`;
+          const distStr = `${distFromProbe.toFixed(1)}m`;
+
+          return (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              pointerEvents: 'none',
+              userSelect: 'none',
+              fontFamily: 'system-ui, -apple-system, sans-serif'
+            }}>
+              <div style={{
+                background: isNightMode ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.9)',
+                border: `1.5px solid ${cfg.border}`,
+                boxShadow: `0 8px 24px ${cfg.color}33, 0 2px 8px rgba(0,0,0,0.4)`,
+                borderRadius: '20px',
+                padding: '5px 12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                backdropFilter: 'blur(12px)',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.3s ease'
+              }}>
+                <span style={{ fontSize: '13px' }}>{cfg.icon}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignSelf: 'center' }}>
+                  <span style={{
+                    fontSize: '9px',
+                    fontWeight: 700,
+                    letterSpacing: '0.06em',
+                    color: isNightMode ? '#94a3b8' : '#64748b',
+                    lineHeight: '1.1'
+                  }}>
+                    {personLabel}
+                  </span>
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    letterSpacing: '0.05em',
+                    color: cfg.color,
+                    lineHeight: '1.2'
+                  }}>
+                    {cfg.label}
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '10px',
+                  fontWeight: 600,
+                  color: isNightMode ? '#cbd5e1' : '#475569',
+                  background: isNightMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+                  padding: '2px 6px',
+                  borderRadius: '10px',
+                  marginLeft: '4px'
+                }}>
+                  {distStr}
+                </span>
+              </div>
+              {/* Pointer triangle */}
+              <div style={{
+                width: 0,
+                height: 0,
+                borderLeft: '5px solid transparent',
+                borderRight: '5px solid transparent',
+                borderTop: `6px solid ${cfg.border}`,
+                marginTop: '-1px'
+              }} />
+            </div>
+          );
+        })()}
+      </Html>
     </group>
   );
 }
